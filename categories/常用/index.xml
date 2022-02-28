@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>常用 on cOOl &#39;s blog</title>
+    <link>https://coollllllll.github.io/categories/%E5%B8%B8%E7%94%A8/</link>
+    <description>Recent content in 常用 on cOOl &#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E5%B8%B8%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SQL注入相关</title>
+      <link>https://coollllllll.github.io/p/sql/</link>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/sql/</guid>
+      <description>SQL注入相关(配合sqli-labs) 基础总结+sqli-lab，lab过程偏向白盒，省略黑盒探测过程 数据库相关 分类 关系型数据库 表格存储，</description>
+    </item>
+    
+  </channel>
+</rss>

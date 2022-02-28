@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>渗透测试 on cOOl &#39;s blog</title>
+    <link>https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</link>
+    <description>Recent content in 渗透测试 on cOOl &#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 09 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux提权学习</title>
+      <link>https://coollllllll.github.io/p/1/</link>
+      <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/1/</guid>
+      <description>Linux提权 suid和sudo提权 suid SUID，英文全称是Set owner User ID up on execution，它是一种特殊的文件权限，能够让用户(如Tom)</description>
+    </item>
+    
+  </channel>
+</rss>
