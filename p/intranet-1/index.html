@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>域相关概念</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/intranet-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='域相关概念'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/intranet-1/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-09-10T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-09-10T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/intranet-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="域相关概念">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/intranet-1/">
+                <img src="/p/intranet-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/intranet-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/intranet-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post 域相关概念" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%86%85%E7%BD%91/" style="background-color: #2a9d8f; color: #fff;">
+                内网
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/intranet-1/">域相关概念</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 10, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="域相关概念">域相关概念</h1>
+<p>应用服务器区：OA、开发、数据库等</p>
+<p>网络代理：内网出网代理、多层代理</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 161; 
+			flex-basis: 386px"
+	>
+	<a href="/p/intranet-1/image-20211222221813292.png" data-size="1606x996">
+		<img src="/p/intranet-1/image-20211222221813292.png"
+			width="1606"
+			height="996"
+			srcset="/p/intranet-1/image-20211222221813292_hub56d1c251281ea92a0554a036bd1f903_457053_480x0_resize_box_3.png 480w, /p/intranet-1/image-20211222221813292_hub56d1c251281ea92a0554a036bd1f903_457053_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p><strong>场景</strong></p>
+<p>原本DMZ区是不能访问内网的，比如DMZ区有邮件服务器(可以有两种认证实现：第一种即自己构建认证机制；第二种是依赖认证服务器进行认证)，如果采用第二种认证实现：依赖于内网的认证服务器，那么一旦DMZ区沦陷就会将认证服务器暴露出来</p>
+<p><strong>折合解决方法</strong></p>
+<p>在DMZ区建一台域服务器，要求该域服务器只能从内网认证服务器进行读，而不能向内网认证服务器进行写。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 135; 
+			flex-basis: 324px"
+	>
+	<a href="/p/intranet-1/image-20220112220130657.png" data-size="716x530">
+		<img src="/p/intranet-1/image-20220112220130657.png"
+			width="716"
+			height="530"
+			srcset="/p/intranet-1/image-20220112220130657_huc1ae32db266abf05f1d7b3ff00b094b1_207695_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220112220130657_huc1ae32db266abf05f1d7b3ff00b094b1_207695_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>DSRM password：恢复模式密码，当自身故障不能恢复时，需要大的xx来进行恢复</p>
+</blockquote>
+<h2 id="基本概念">基本概念</h2>
+<h3 id="域domain">域(Domain)</h3>
+<p>域是企业网络中人为定义的一组计算机和用户的集合，目的是统一集中管理，具有严格的安全边界(一个域中的用户无法访问另一个域中的资源)</p>
+<h3 id="域控制器domain-server">域控制器(Domain Server)</h3>
+<p>域内一台具备管理功能的服务器。域控制器负责所有连入的计算机和用户的验证工作(存放活动目录)。</p>
+<h4 id="作用">作用</h4>
+<p>其存在由这个域的账户、密码、属于这个域的计算机等信息构成的数据库。当计算机要进入域，DS首先鉴别该计算机是否属于这个域，以及用户使用的账号是否存在、密码是否正确。</p>
+<h3 id="域中的环境">域中的环境</h3>
+<h4 id="父子域"><strong>父子域</strong></h4>
+<p>一般同一个域内的信息交互式非常多的，且不压缩，占用带宽较大，所以需要在网络中划分多个域，多个域之间的交互式较少的，且可以压缩。第一个域称为父域，各分部的域称为该域的子域。</p>
+<p>第一种-自己划分形成父子域：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 135; 
+			flex-basis: 324px"
+	>
+	<a href="/p/intranet-1/image-20220112220621926.png" data-size="738x546">
+		<img src="/p/intranet-1/image-20220112220621926.png"
+			width="738"
+			height="546"
+			srcset="/p/intranet-1/image-20220112220621926_hu84f8613788669e41657624cc2aa27e30_172592_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220112220621926_hu84f8613788669e41657624cc2aa27e30_172592_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>第二种-建立和其他域的信任关系形成父子域：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 170; 
+			flex-basis: 409px"
+	>
+	<a href="/p/intranet-1/image-20220112221449631.png" data-size="791x464">
+		<img src="/p/intranet-1/image-20220112221449631.png"
+			width="791"
+			height="464"
+			srcset="/p/intranet-1/image-20220112221449631_hu05c52e319f8c5f482b33740f09ee2cf9_167409_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220112221449631_hu05c52e319f8c5f482b33740f09ee2cf9_167409_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="域森林"><strong>域森林</strong></h4>
+<p>域树(父子域)通过建立<strong>信任关系</strong>组成集合成为域森林。</p>
+<h4 id="域森林间">域森林间</h4>
+<p>森林与森林间建立信任关系：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 185; 
+			flex-basis: 446px"
+	>
+	<a href="/p/intranet-1/image-20220112221844119.png" data-size="775x417">
+		<img src="/p/intranet-1/image-20220112221844119.png"
+			width="775"
+			height="417"
+			srcset="/p/intranet-1/image-20220112221844119_hu2b5cf4b374ee0338369c54521c06959e_92369_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220112221844119_hu2b5cf4b374ee0338369c54521c06959e_92369_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="域名服务器"><strong>域名服务器</strong></h4>
+<p>域中的计算机使用DNS来定位域控制器、服务器及其他计算机、网络服务的，所以域的名字就是DNS域的名字。</p>
+<p>内网环境中，一般是通过寻找DNS服务器来确定域控制器的位置(DNS服务器和域控制器一般配置在同一台机器上)。</p>
+<h3 id="活动目录">活动目录</h3>
+<p>目录用于存储有关网络对象(用户、组、计算机、共享资源、打印机和联系人等)的信息。目录服务帮助用户快速、准确找到其所需要的信息。活动目录的实现为企业提供了网络环境的集中式管理机制。</p>
+<p>活动目录更像一本字典的索引。</p>
+<h4 id="举例">举例</h4>
+<p>甲公司分有财务科、人事科等，分为为每个科建立一个域，可将这几个域构成域树交给甲公司管理；甲公司、乙公司等属于A集团，那么每个公司的域树可构成域森林交给A集团管理。因此A集团可以按**&ldquo;A集团(域森林)-&gt;子公司(域树)-&gt;部门(域)-&gt;员工&quot;的方式对网络进行层次分明的管理**。</p>
+<h4 id="功能">功能</h4>
+<ul>
+<li>账号集中管理：所有账号均存储在服务器中</li>
+<li>软件集中管理：统一推送软件、安装网络打印机等</li>
+<li>环境集中管理：统一客户端桌面、TCP/IP协议等设置</li>
+<li>增强安全性：统一部署杀毒软件和病毒扫描任务、集中管理用户计算机权限、统一制定用户密码策略</li>
+</ul>
+<h3 id="ds和活动目录的关系">DS和活动目录的关系</h3>
+<p>在规模较大的网络中，将计算机、用户、用户组、打印机、共享文件等多个对象有序放在一起，并将检索信息整理好以便查找和使用。这个拥有层次结构的数据库就是活动目录数据库，简称AD库。</p>
+<p>将AD库放在一台计算机上，那么这台计算机就称为DC。</p>
+<h2 id="域中计算机的分类">域中计算机的分类</h2>
+<h3 id="域控制器">域控制器</h3>
+<p>用于管理所有的网络访问。</p>
+<p>可以有多台计算机被配置为DS，以分担用户的登录、访问操作。多个DS可以一起工作，自动备份用户账户和活动目录数据。</p>
+<h3 id="成员服务器">成员服务器</h3>
+<p>加入了域但没有安装AD的应用服务器、文件服务器、数据库服务器等</p>
+<h3 id="客户机">客户机</h3>
+<p>用户利用客户机和域账号即可登录进入某个域。</p>
+<h3 id="独立服务器">独立服务器</h3>
+<p>独立服务器和域没有关系。即：不加入域也不安装AD。</p>
+<h2 id="域分组">域分组</h2>
+<p>组是用户账号的集合。通过向一组用户分配权限，就可不必为每个用户分别分配权限。</p>
+<h3 id="域本地组">域本地组</h3>
+<p>只能作用于特定对象，例如证书发布、打印操作、备份操作等。</p>
+<h3 id="全局组">全局组</h3>
+<p>只能作用于本域，不能跨域或跨森林。</p>
+<p>一般每个全局组都有一个自己的名字，以便区分和使用。</p>
+<h3 id="通用组">通用组</h3>
+<p>作用于整个森林域，表示在整个森林内部的所有域间通用，因此该组的变动尽可能小(每次变动都要同步更新到全局数据库中)。</p>
+<h3 id="组之间的关系">组之间的关系</h3>
+<p>域本地组不能加入其他安全组；全局组可以加入到全局组、通用组、域本地组；通用组可以加入到通用组、域本地组</p>
+<blockquote>
+<p>通用组涉及跨域，即其他域的成员可以加入通用组</p>
+</blockquote>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 118; 
+			flex-basis: 284px"
+	>
+	<a href="/p/intranet-1/image-20220122173825170.png" data-size="553x466">
+		<img src="/p/intranet-1/image-20220122173825170.png"
+			width="553"
+			height="466"
+			srcset="/p/intranet-1/image-20220122173825170_hu5cf9b531e502b787abaaf2bb15417615_78676_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220122173825170_hu5cf9b531e502b787abaaf2bb15417615_78676_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>域本地组直接对应资源。一个用户加入域中，会被分配至某个全局组；而域本地组成员一般是全局组，全局组成员才是用户。</p>
+<p>通用组比较特殊，只存在于森林的根域中，所以其成员只能是根域的全局组；同时，由于通用组作用范围为森林内部的所有域，所以当作用于特定域(例如下图中的A域)时，该通用组又隶属于A域的某个域本地组，得以访问A域的资源。</p>
+</blockquote>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 136; 
+			flex-basis: 328px"
+	>
+	<a href="/p/intranet-1/image-20220122181734194.png" data-size="687x502">
+		<img src="/p/intranet-1/image-20220122181734194.png"
+			width="687"
+			height="502"
+			srcset="/p/intranet-1/image-20220122181734194_hub712d4de5a76ddefea508c498a485e0e_117153_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220122181734194_hub712d4de5a76ddefea508c498a485e0e_117153_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>例如Enterprise Admins是一个通用组，它的成员是：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 370; 
+			flex-basis: 888px"
+	>
+	<a href="/p/intranet-1/image-20220205154827059.png" data-size="311x84">
+		<img src="/p/intranet-1/image-20220205154827059.png"
+			width="311"
+			height="84"
+			srcset="/p/intranet-1/image-20220205154827059_hu920f8141ce3734228d61d29707128f53_4635_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220205154827059_hu920f8141ce3734228d61d29707128f53_4635_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>而当它作用于hack域时，又隶属于某个域本地组：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 344; 
+			flex-basis: 826px"
+	>
+	<a href="/p/intranet-1/image-20220205155036318.png" data-size="348x101">
+		<img src="/p/intranet-1/image-20220205155036318.png"
+			width="348"
+			height="101"
+			srcset="/p/intranet-1/image-20220205155036318_hua297b32815fd7db494e4eabdd34b2c68_5425_480x0_resize_box_3.png 480w, /p/intranet-1/image-20220205155036318_hua297b32815fd7db494e4eabdd34b2c68_5425_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<h3 id="常见的组">常见的组</h3>
+<ul>
+<li>域管理组(Domain Admins)</li>
+</ul>
+<p>对域内所有控制器、服务器、主机和活动目录有完全的控制权限。隶属于Users容器，容器路径：<code>CN=Domain Admins,CN=Users,DC=hack,DC=testlab</code>。</p>
+<ul>
+<li>管理员组(Administrators)</li>
+</ul>
+<p>该组仅对域服务器和活动目录有完全控制权，是域本地组范畴。隶属于Builtin容器，容器路径：<code>CN=Administrators,CN=Builtin,DC=hack,DC=testlab</code>。</p>
+<blockquote>
+<p>注意：</p>
+<p>Domain Admins和Administrators并不相同，前者为域全局组而后者为域本地组，且Domain Admins组是Administrators组的成员。</p>
+</blockquote>
+<ul>
+<li>企业管理组(Enterprise Admins)，是通用组范畴，只存在于根域，每个子域将该组加入本域的Administrators组，因而具备在当前子域的完全控制权限。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-5/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Kerberosating 攻击"
+                        data-key="intranet-5" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kerberosating 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-4/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-4/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PTH 攻击"
+                        data-key="intranet-4" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PTH 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-8/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-8/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 内网代理转发"
+                        data-key="intranet-8" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">内网代理转发</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 组策略相关"
+                        data-key="intranet-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">组策略相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-7/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 黄金票据、白银票据"
+                        data-key="intranet-7" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">黄金票据、白银票据</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#基本概念">基本概念</a>
+      <ol>
+        <li><a href="#域domain">域(Domain)</a></li>
+        <li><a href="#域控制器domain-server">域控制器(Domain Server)</a>
+          <ol>
+            <li><a href="#作用">作用</a></li>
+          </ol>
+        </li>
+        <li><a href="#域中的环境">域中的环境</a>
+          <ol>
+            <li><a href="#父子域"><strong>父子域</strong></a></li>
+            <li><a href="#域森林"><strong>域森林</strong></a></li>
+            <li><a href="#域森林间">域森林间</a></li>
+            <li><a href="#域名服务器"><strong>域名服务器</strong></a></li>
+          </ol>
+        </li>
+        <li><a href="#活动目录">活动目录</a>
+          <ol>
+            <li><a href="#举例">举例</a></li>
+            <li><a href="#功能">功能</a></li>
+          </ol>
+        </li>
+        <li><a href="#ds和活动目录的关系">DS和活动目录的关系</a></li>
+      </ol>
+    </li>
+    <li><a href="#域中计算机的分类">域中计算机的分类</a>
+      <ol>
+        <li><a href="#域控制器">域控制器</a></li>
+        <li><a href="#成员服务器">成员服务器</a></li>
+        <li><a href="#客户机">客户机</a></li>
+        <li><a href="#独立服务器">独立服务器</a></li>
+      </ol>
+    </li>
+    <li><a href="#域分组">域分组</a>
+      <ol>
+        <li><a href="#域本地组">域本地组</a></li>
+        <li><a href="#全局组">全局组</a></li>
+        <li><a href="#通用组">通用组</a></li>
+        <li><a href="#组之间的关系">组之间的关系</a></li>
+        <li><a href="#常见的组">常见的组</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

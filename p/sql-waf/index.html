@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>SQL 注入绕 WAF</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/sql-waf/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='SQL 注入绕 WAF'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/sql-waf/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/sql-waf/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="SQL 注入绕 WAF">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/sql-waf/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/sql-waf/">
+                <img src="/p/sql-waf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/sql-waf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/sql-waf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post SQL 注入绕 WAF" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/sql-waf/">SQL 注入绕 WAF</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="sql注入绕waf规则">SQL注入绕WAF规则</h1>
+<h2 id="waf简述">WAF简述</h2>
+<p>WAF(Web Application Firewall)，web应用防火墙，其通过执行一系列针对HTTP/HTTPS的安全策略来专门为Web应用提供保护。</p>
+<p>即通过一系列规则对请求内容进行检测，对所有不符合其定义的安全规则的请求进行拦截。</p>
+<h3 id="工作流程">工作流程</h3>
+<p><strong>请求预处理 -&gt; 规则检测 -&gt; 后处理</strong></p>
+<p>预处理：判断流量是否为http/s -&gt; 判断url是否在白名单，是则直接交后端，否则进行规则检测</p>
+<p>规则检测：对http/s请求内容进行规则匹配</p>
+<p>后处理：根据检测结果拦截请求，给出相应的响应</p>
+<h3 id="分类">分类</h3>
+<h4 id="软waf">软WAF</h4>
+<p>以纯软件方式实现并安装在服务器上，直接拦截流量并分析</p>
+<p>如：安全狗、云锁、D盾等</p>
+<h4 id="硬waf">硬WAF</h4>
+<p>以硬件形式部署在链路中，支持多种部署方式，当串联在链路中可以拦截恶意流量，在旁路监听时只警告和记录但不拦截</p>
+<p>如：imperva、天清WAG等</p>
+<h4 id="云waf">云WAF</h4>
+<p>一般以反向代理的方式工作，通过配置NS或CNAME记录使得对网站的请求先经过WAF，经过过滤后再放给实际后台服务器</p>
+<h4 id="嵌入式自定义waf">嵌入式自定义WAF</h4>
+<p>一般会在Web中嵌入自定义的WAF功能，更加自由，与具体业务紧密结合</p>
+<h2 id="基本绕过">基本绕过</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MySQL</th>
+<th>Oracle</th>
+<th>MSSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>注释</td>
+<td>/**/、#、/*!*/、&ndash;+、&ndash;<code> </code></td>
+<td>&ndash;、/**/</td>
+<td>&ndash;、/**/</td>
+</tr>
+<tr>
+<td>空白符</td>
+<td>%09、%0A、%0B、%0C、%0D、%20、%a0</td>
+<td>%09、%0A、%0B、%0C、%0D、%20、%a0</td>
+<td>%00-%20</td>
+</tr>
+</tbody>
+</table>
+<h3 id="空格过滤">空格过滤</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="n">seelect</span><span class="w"> </span><span class="k">User</span><span class="p">,</span><span class="n">Password</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">Host</span><span class="o">=</span><span class="mi">1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="k">union</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="k">select</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="k">user</span><span class="p">,</span><span class="mi">2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="k">from</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="n">test</span><span class="p">;</span><span class="w">
+</span></code></pre></div><h4 id="mysql">MySQL</h4>
+<p>位置(1)：</p>
+<ul>
+<li>利用控制字符替换空格：%09、%0A、%0B、%0C、%0D、%20、%a0</li>
+<li>利用注释符替换空格：/**/、/*!*/、—+haha%0d%0a</li>
+<li>利用数学运算和数据类型：Host=0.1、Host=0E0、Host=\N</li>
+</ul>
+<blockquote>
+<p>内联注释<code>/*!*/</code></p>
+<pre tabindex="0"><code>/*!50173sleep(3)*/ 
+# 感叹号！ 后所接的数字是版本号 ,当目前数据库版本号大于等于所写版本号时，注释里的sql语句会被执行，反之则会被当作注释。
+</code></pre></blockquote>
+<p>位置(2)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用括号：union(select user,2)</li>
+</ul>
+<p>位置(3):</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用特性符号：+、-、~、!、@</li>
+<li>利用小括号：union select (user),2</li>
+</ul>
+<p>位置(4)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用数学运算和数据类型：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">union</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="n">from</span><span class="w"> </span><span class="n">test</span><span class="p">;</span><span class="w">
+</span><span class="w"></span><span class="k">union</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="mi">2</span><span class="n">E0from</span><span class="w"> </span><span class="n">test</span><span class="p">;</span><span class="w">
+</span><span class="w"></span><span class="k">union</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="err">\</span><span class="n">Nfrom</span><span class="w"> </span><span class="n">test</span><span class="p">;</span><span class="w">
+</span></code></pre></div><ul>
+<li>利用花括号:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="k">union</span><span class="w"> </span><span class="k">select</span><span class="err">{</span><span class="n">x</span><span class="w"> </span><span class="o">`</span><span class="k">user</span><span class="o">`</span><span class="err">}</span><span class="p">,</span><span class="mi">2</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">test</span><span class="p">;</span><span class="w">
+</span><span class="w"></span><span class="k">union</span><span class="w"> </span><span class="k">select</span><span class="err">{</span><span class="n">x</span><span class="w"> </span><span class="k">user</span><span class="err">}</span><span class="p">,</span><span class="mi">2</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">test</span><span class="p">;</span><span class="w">
+</span></code></pre></div><p>位置(5)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用花括号：union select user,2 from{x`test`};</li>
+<li>利用反引号：union select user,2 from`test`;</li>
+<li>利用小括号：union select user,2 from(test);</li>
+</ul>
+<h4 id="sql-server">SQL Server</h4>
+<p>位置(1)：</p>
+<ul>
+<li>利用控制字符替换空格：%01~%0F、%11~%1F</li>
+<li>利用注释符替换空格：/**/、&ndash;+haha%0d0a</li>
+<li>利用数学运算符及数据类型：Host=0.1、Host=0E0、Host=1-1</li>
+</ul>
+<p>位置(2)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用+替换空格：union+select</li>
+</ul>
+<p>位置(3)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用：+、-、~、.(其中后三个符号需要select后的第一个字段为数字型才可以)</li>
+<li>利用小括号</li>
+</ul>
+<p>位置(4)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用：%80-%FF(需要在IIS环境下)</li>
+<li>利用数学运算及数据类型</li>
+</ul>
+<p>位置(5)：</p>
+<ul>
+<li>利用控制字符和注释符</li>
+<li>利用.替换空格：from.test</li>
+<li>利用中括号：from[test]</li>
+<li>利用：%80-%FF(需要在IIS环境下)</li>
+</ul>
+<h4 id="oracle">Oracle</h4>
+<p>位置(1)：</p>
+<ul>
+<li>利用控制字符：%00、%09、%0a、%0b、%0c、%0d、%1f、%1d、%20</li>
+<li>利用.替换空格</li>
+</ul>
+<p>位置(2)：</p>
+<ul>
+<li>利用控制字符</li>
+</ul>
+<p>位置(3)：</p>
+<ul>
+<li>利用控制字符</li>
+<li>利用：+、-、%ad</li>
+</ul>
+<p>位置(4)：</p>
+<ul>
+<li>利用部分控制字符：%09、%0a、%0c、%0d</li>
+</ul>
+<p>位置(5)：</p>
+<ul>
+<li>利用部分控制字符：%09、%0a、%0c、%0d</li>
+<li>利用：%30-%ff、%24、%7b%22-%7b%76</li>
+</ul>
+<h3 id="敏感函数关键字过滤">敏感函数、关键字过滤</h3>
+<h4 id="大小写绕过">大小写绕过</h4>
+<p>UniOn、SelEct等</p>
+<h4 id="双写绕过">双写绕过</h4>
+<p>uniunionon</p>
+<h4 id="编码绕过">编码绕过</h4>
+<ul>
+<li>双重或多重url编码绕过</li>
+<li>在IIS服务器环境下，可以使用unicode编码进行绕过：IIS会处理unicode编码的字符，而WAF中可能会不处理从而绕过、</li>
+</ul>
+<h4 id="配合特殊字符绕过">配合特殊字符绕过</h4>
+<p>user()函数 =&gt; user/**/()</p>
+<h4 id="函数等价替换">函数等价替换</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mid(str,1,1)</td>
+<td>substr(user() from 1 for 1)</td>
+</tr>
+<tr>
+<td>mid(str,1,1)</td>
+<td>LPAD(user(),1,1)</td>
+</tr>
+<tr>
+<td>mid(str,1,1)</td>
+<td>LPAD(REVERSE(TRIM( lpad(user(),1,SPACE(1)) )),1,SPACE(1)</td>
+</tr>
+<tr>
+<td>ascii(char)、ord(char)</td>
+<td>conv(hex(char),16,10)</td>
+</tr>
+<tr>
+<td>..</td>
+<td>..</td>
+</tr>
+</tbody>
+</table>
+<h4 id="关键字等价替换">关键字等价替换</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>逗号过滤：if(mid(str,1,1)=&lsquo;a&rsquo;,1,1)</td>
+<td>case when mid(str from 1 for 1)=&lsquo;a&rsquo; then 1 else 0 end</td>
+</tr>
+<tr>
+<td>逗号过滤：union select 1,2</td>
+<td>union select * from (select 1)a join (select 2)b</td>
+</tr>
+<tr>
+<td>逗号过滤：limit 2,1</td>
+<td>limit 1 offset 2</td>
+</tr>
+<tr>
+<td>=</td>
+<td>like、rlike、regexp、!(id&lt;&gt;1)、strcmp()、find_in_set()</td>
+</tr>
+<tr>
+<td>&lt;,&gt;</td>
+<td>least(ord(&lsquo;r&rsquo;),115)、greatest()、between n and m</td>
+</tr>
+</tbody>
+</table>
+<h2 id="其他方式绕过">其他方式绕过</h2>
+<h3 id="异常method绕过">异常method绕过</h3>
+<p>有些WAF在获取到的参数后(Apache 2.x 无论method为何值都会取出GET中的内容)，判断为GET、POST方法进行才进行检测，因此可以随意构造异常的method进行绕过</p>
+<h3 id="大数据包绕过">大数据包绕过</h3>
+<p>有些WAF只检测</p>
+<h3 id="http参数污染绕过">HTTP参数污染绕过</h3>
+<p>当传入同名的多个参数值时，服务端与waf的处理方式可能会有不同，因此可利用进行绕过。主流的服务端配置对同名参数的处理情况：</p>
+<table>
+<thead>
+<tr>
+<th>Web服务器</th>
+<th>获取到的参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHP/Apache</td>
+<td>最后一个</td>
+</tr>
+<tr>
+<td>JSP/Tomcat</td>
+<td>第一个</td>
+</tr>
+<tr>
+<td>Perl(CGI)/Apache</td>
+<td>第一个</td>
+</tr>
+<tr>
+<td>Python/Apache</td>
+<td>所有(返回list)</td>
+</tr>
+<tr>
+<td>ASP/IIS</td>
+<td>所有(返回以逗号分隔的字符串)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="协议未覆盖绕过">协议未覆盖绕过</h3>
+<p>Content-Type类型：</p>
+<ul>
+<li>Content-Type:multipart/form-data</li>
+<li>Content-Type:application/x-www-form-urlencoded</li>
+<li>Content-Type: text/xml</li>
+<li>Content-Type: application/json</li>
+</ul>
+<p>有些WAF可能只对一种Content-Type进行检测，可以尝试使用其他类型进行绕过</p>
+<h3 id="宽字节绕过">宽字节绕过</h3>
+<p>当使用GBK编码，且为了防止SQL注入对单引号进行转义，即在单引号前加入反斜杠，因此可以预先加入一个可被识别为GBK编码的 一字节，转义后加入反斜杠，两字节被识别为GBK编码的汉字，成功吃掉反斜杠实现单引号逃逸</p>
+<h3 id="00截断绕过">%00截断绕过</h3>
+<p>部分WAF解析参数遇到%00就认为结束，因此可通过在%00后加入参数绕过WAF检测</p>
+<h3 id="http请求走私">HTTP请求走私</h3>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#waf简述">WAF简述</a>
+      <ol>
+        <li><a href="#工作流程">工作流程</a></li>
+        <li><a href="#分类">分类</a>
+          <ol>
+            <li><a href="#软waf">软WAF</a></li>
+            <li><a href="#硬waf">硬WAF</a></li>
+            <li><a href="#云waf">云WAF</a></li>
+            <li><a href="#嵌入式自定义waf">嵌入式自定义WAF</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#基本绕过">基本绕过</a>
+      <ol>
+        <li><a href="#空格过滤">空格过滤</a>
+          <ol>
+            <li><a href="#mysql">MySQL</a></li>
+            <li><a href="#sql-server">SQL Server</a></li>
+            <li><a href="#oracle">Oracle</a></li>
+          </ol>
+        </li>
+        <li><a href="#敏感函数关键字过滤">敏感函数、关键字过滤</a>
+          <ol>
+            <li><a href="#大小写绕过">大小写绕过</a></li>
+            <li><a href="#双写绕过">双写绕过</a></li>
+            <li><a href="#编码绕过">编码绕过</a></li>
+            <li><a href="#配合特殊字符绕过">配合特殊字符绕过</a></li>
+            <li><a href="#函数等价替换">函数等价替换</a></li>
+            <li><a href="#关键字等价替换">关键字等价替换</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#其他方式绕过">其他方式绕过</a>
+      <ol>
+        <li><a href="#异常method绕过">异常method绕过</a></li>
+        <li><a href="#大数据包绕过">大数据包绕过</a></li>
+        <li><a href="#http参数污染绕过">HTTP参数污染绕过</a></li>
+        <li><a href="#协议未覆盖绕过">协议未覆盖绕过</a></li>
+        <li><a href="#宽字节绕过">宽字节绕过</a></li>
+        <li><a href="#00截断绕过">%00截断绕过</a></li>
+        <li><a href="#http请求走私">HTTP请求走私</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

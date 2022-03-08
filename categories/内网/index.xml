@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>内网 on cOOl &#39;s blog</title>
+    <link>https://coollllllll.github.io/categories/%E5%86%85%E7%BD%91/</link>
+    <description>Recent content in 内网 on cOOl &#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 02 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E5%86%85%E7%BD%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kerberosating 攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-5/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-5/</guid>
+      <description>Kerberosating 攻击 第九节-Kerberosating攻击 背景 Kerberoasting 攻击是 Tim Medin 在 DerbyCon 2014 上发布的一种域口令攻击方法，Tim Medin 同时发布了配套的攻击工具 kerbero</description>
+    </item>
+    
+    <item>
+      <title>PTH 攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-4/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-4/</guid>
+      <description>PTH 攻击 定义 PTH(Pass The Hash) 当获取到某主机本地管理员组成员账号的口令NTLM后，不需要破解获取口令明文，使用PTH方式将管理员账号及NTLM注入当前到当</description>
+    </item>
+    
+    <item>
+      <title>内网代理转发</title>
+      <link>https://coollllllll.github.io/p/intranet-8/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-8/</guid>
+      <description>内网代理转发 假如有这样的环境： 外网服务器存在双网卡，内网服务器不可访问公网但可以直接和外网服务器进行通信。基于这个场景，攻击者以外网服务器作</description>
+    </item>
+    
+    <item>
+      <title>组策略相关</title>
+      <link>https://coollllllll.github.io/p/intranet-3/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-3/</guid>
+      <description>组策略相关 本地组策略和域内组策略 Server Manager 的组策略管理工具：主要用来管理本地内的组策略 更专业的组策略管理工具GPMC：可以管理多个域 组策略分作主机</description>
+    </item>
+    
+    <item>
+      <title>黄金票据、白银票据</title>
+      <link>https://coollllllll.github.io/p/intranet-7/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-7/</guid>
+      <description>黄金票据 BlackHat 2014上， Mimikatz的作者剖析了微软实现的Kerberos协议中存在的安全缺陷，即黄金票据（Golden Ticket） ，对</description>
+    </item>
+    
+    <item>
+      <title>ACL 相关</title>
+      <link>https://coollllllll.github.io/p/intranet-6/</link>
+      <pubDate>Fri, 10 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-6/</guid>
+      <description>ACL 相关 Access Control Link 所有的Windows对象都称为安全对象，文件、进程、注册表、内存等 为每个安全对象赋予一个安全描述符(Security descriptor) Security identifiers (SIDs)for the owner</description>
+    </item>
+    
+    <item>
+      <title>域信息获取及分析</title>
+      <link>https://coollllllll.github.io/p/intranet-2/</link>
+      <pubDate>Fri, 10 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-2/</guid>
+      <description>域信息获取及分析 基础信息获取及分析 当前主机所在域的域名、网段、域服务器 多少域 域分组、用户、主机、服务器、账户策略(口令策略等) # 获取域信息 whoami</description>
+    </item>
+    
+    <item>
+      <title>域相关概念</title>
+      <link>https://coollllllll.github.io/p/intranet-1/</link>
+      <pubDate>Fri, 10 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-1/</guid>
+      <description>域相关概念 应用服务器区：OA、开发、数据库等 网络代理：内网出网代理、多层代理 场景 原本DMZ区是不能访问内网的，比如DMZ区有邮件服务器(可以</description>
+    </item>
+    
+  </channel>
+</rss>

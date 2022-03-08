@@ -6,7 +6,25 @@
     <description>Recent content in Categories on cOOl &#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 01 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>漏洞复现</title>
+      <link>https://coollllllll.github.io/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link>
+      <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>内网</title>
+      <link>https://coollllllll.github.io/categories/%E5%86%85%E7%BD%91/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/categories/%E5%86%85%E7%BD%91/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>常用</title>
       <link>https://coollllllll.github.io/categories/%E5%B8%B8%E7%94%A8/</link>
@@ -17,47 +35,11 @@
     </item>
     
     <item>
-      <title>Test</title>
-      <link>https://coollllllll.github.io/categories/test/</link>
-      <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://coollllllll.github.io/categories/test/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>测试</title>
-      <link>https://coollllllll.github.io/categories/%E6%B5%8B%E8%AF%95/</link>
-      <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://coollllllll.github.io/categories/%E6%B5%8B%E8%AF%95/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>渗透测试</title>
       <link>https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</link>
-      <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://coollllllll.github.io/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>syntax</title>
-      <link>https://coollllllll.github.io/categories/syntax/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://coollllllll.github.io/categories/syntax/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>themes</title>
-      <link>https://coollllllll.github.io/categories/themes/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://coollllllll.github.io/categories/themes/</guid>
       <description></description>
     </item>
     

