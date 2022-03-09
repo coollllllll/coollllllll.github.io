@@ -35,6 +35,15 @@
     </item>
     
     <item>
+      <title>MS14-068 漏洞分析</title>
+      <link>https://coollllllll.github.io/p/intranet-9/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-9/</guid>
+      <description>MS14-068 漏洞分析 简介 2014.11.18 日，微软发布 MS14-068 补丁，修复了一个影响全部版本 Windows 服务器的严重漏洞。用于解决 Microsoft Windows Kerberos KDC 漏洞，该漏洞允许黑客任意普通用户提升权限成为域</description>
+    </item>
+    
+    <item>
       <title>PTH 攻击</title>
       <link>https://coollllllll.github.io/p/intranet-4/</link>
       <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
