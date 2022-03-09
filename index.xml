@@ -572,10 +572,8 @@ main (int argc, char *argv[])
 			height=&#34;910&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301200717914_hub9d474f01ade6b02015eca07fb6e36a3_522987_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301200717914_hub9d474f01ade6b02015eca07fb6e36a3_522987_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301200717914&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301200717914&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Server如何判断Client的该有什么样的权限？&lt;/strong&gt;&lt;/p&gt;
@@ -600,10 +598,8 @@ main (int argc, char *argv[])
 			height=&#34;1008&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301203107524_hufa07d1bf47ecc622f14eecd308f2f24f_892912_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301203107524_hufa07d1bf47ecc622f14eecd308f2f24f_892912_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301203107524&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301203107524&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;Client 向 KDC 的 AS 模块发起认证请求，AS 返回 TGT 时，会根据 Client 所在的组，生成 PAC，包含 Client 的 User SID、Group SID，以及用于确保 PAC 不被篡改的 2 个签名。将 PAC 作为 TGT 的一部分，发送给 Client。&lt;/p&gt;
@@ -624,10 +620,8 @@ main (int argc, char *argv[])
 			height=&#34;451&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301204714998_hu1bf18fa760aca5f12851a15be238b0cb_303008_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301204714998_hu1bf18fa760aca5f12851a15be238b0cb_303008_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301204714998&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301204714998&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;figure 
@@ -643,10 +637,8 @@ main (int argc, char *argv[])
 			height=&#34;916&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301204800061_hu8468567b593c518a833972a995e87e3c_989926_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301204800061_hu8468567b593c518a833972a995e87e3c_989926_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301204800061&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301204800061&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -687,10 +679,8 @@ main (int argc, char *argv[])
 			height=&#34;518&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301212054817_hub036e7033719af24c09e555007b28d7a_274382_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301212054817_hub036e7033719af24c09e555007b28d7a_274382_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301212054817&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301212054817&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -710,10 +700,8 @@ main (int argc, char *argv[])
 			height=&#34;406&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301212436065_hu5bb9449dbcfdb385129f3b4f9df78066_176277_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301212436065_hu5bb9449dbcfdb385129f3b4f9df78066_176277_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301212436065&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301212436065&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -732,10 +720,8 @@ main (int argc, char *argv[])
 			height=&#34;375&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-9/image-20220301214857818_hu6b3d1657566dab04532c0c9a107a78e8_228924_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-9/image-20220301214857818_hu6b3d1657566dab04532c0c9a107a78e8_228924_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			alt=&#34;image-20220301214857818&#34;&gt;
+			&gt;
 	&lt;/a&gt;
-	
-	&lt;figcaption&gt;image-20220301214857818&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 </description>
