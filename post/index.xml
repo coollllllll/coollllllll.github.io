@@ -6,7 +6,25 @@
     <description>Recent content in Posts on cOOl &#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 01 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>java 反序列化-1</title>
+      <link>https://coollllllll.github.io/p/java-1/</link>
+      <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/java-1/</guid>
+      <description>java 反序列化-1 基础 相关方法 # 序列化 ObjectOutputStream 类的 writeObject() # 反序列化 ObjectInputStream 类的 readObject() 前提 实现 java.io.Serializable 接口才可被反序列化，而且所有属性必须是可序列化的(用 transient 关键字修饰的属性</description>
+    </item>
+    
+    <item>
+      <title>基于域信任关系的域攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-14/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-14/</guid>
+      <description>基于域信任关系的域攻击 域信任 建立域之间的信任关系，是为了一个域的用户能方便地访问其他域的资源，同时也方便了对域网络的管理和维护。这种模式在带</description>
+    </item>
+    
     <item>
       <title>pkexec 本地提权</title>
       <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</link>
@@ -14,6 +32,51 @@
       
       <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</guid>
       <description>pkexec 本地提权 CVE-2021-4034 简介 Polkit是一个用于控制类Unix系统中控制系统范围权限的组件，它为非特权进程与特权进程的通信提供了一种有组织的方式。 pk</description>
+    </item>
+    
+    <item>
+      <title>DCShadow 攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-11/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-11/</guid>
+      <description>DCShadow 攻击 背景 2018 年 1 月 24 日，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 在 BlueHat IL 会议期间公布了针对域活动目录的一种新型攻击技术 DCShado</description>
+    </item>
+    
+    <item>
+      <title>DCSync 攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-10/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-10/</guid>
+      <description>DCSync 攻击 背景 2015 年 8 月，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，</description>
+    </item>
+    
+    <item>
+      <title>Windows 认证</title>
+      <link>https://coollllllll.github.io/p/intranet-12/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-12/</guid>
+      <description>Windows 认证 Windows 认证方式主要有两种：NTLM 认证、kerberos 认证。同时，Windows Access Token 记录着用户的SID、组ID、Session、及权限等</description>
+    </item>
+    
+    <item>
+      <title>内网横向</title>
+      <link>https://coollllllll.github.io/p/intranet-15/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-15/</guid>
+      <description>内网横向 Windows 密码与 Hash 抓取 mimikatz 直接读取明文密码 privilege::debug sekurlsa::logonpasswords 通过SAM 和 SYSTEM 文件抓取密码 导出SAM 和 SYSTEM文件 reg save hklm\sam sam.hive reg save hklm\system system.hive mimikatz 离线读取文件获得 NTLM lsadump::sam /sam:sam.hive system:system.hive</description>
+    </item>
+    
+    <item>
+      <title>基于域委派的攻击</title>
+      <link>https://coollllllll.github.io/p/intranet-13/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-13/</guid>
+      <description>基于域委派的攻击 定义 委派 Identity delegation is a feature of Active Directo ry Federation Services (AD FS) that allows administrator-specified accounts to impersonate users. The account that impersonates the user is called the dele gate This delegation capability is critical for many distributed applications for which there is a series of access control checks that must be made sequentially for each application,</description>
     </item>
     
     <item>

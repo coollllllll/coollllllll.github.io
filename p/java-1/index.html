@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>java 反序列化-1</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/java-1/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='java 反序列化-1'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/java-1/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-03-10T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-03-10T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="java 反序列化-1">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/java-1/">
+                <img src="/p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post java 反序列化-1" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="background-color: #2a9d8f; color: #fff;">
+                代码审计
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/java-1/">java 反序列化-1</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 10, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="java-反序列化-1">java 反序列化-1</h1>
+<h2 id="基础">基础</h2>
+<h3 id="相关方法">相关方法</h3>
+<pre tabindex="0"><code># 序列化
+ObjectOutputStream 类的 writeObject()
+
+# 反序列化
+ObjectInputStream 类的 readObject()
+</code></pre><h3 id="前提">前提</h3>
+<p>实现 <code>java.io.Serializable</code> 接口才可被反序列化，而且所有属性必须是可序列化的(用 <code>transient</code> 关键字修饰的属性除外，不参与序列化过程)。</p>
+<h2 id="基本原理">基本原理</h2>
+<p><strong>Demo：</strong></p>
+<pre tabindex="0"><code>public static void main (String args[]) throws Exception {
+    String obj = &quot;hello world!&quot;;
+    
+    // 创建一个包含对象进行反序列化信息的”object”数据文件
+    FileOutputStream fos = new FileOutputStream(&quot;object&quot;);
+    ObjectOutputStream os = new ObjectOutputStream(fos);
+    
+    // writeObject()方法将obj对象写入object文件
+    
+    os.writeObject(obj);
+    os.close();
+    
+    // 从文件中反序列化obj对象
+    FileInputStream fis = new FileInputStream(&quot;object&quot;);
+    ObjectInputStream ois = new ObjectInputStream(fis);
+    
+    // 恢复对象
+    String obj2 = (String)ois.readObject();
+    System.out.print(obj2);
+    ois.close();
+}
+</code></pre><ul>
+<li>序列化后写入 object 文件的数据如下</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1010; 
+			flex-basis: 2424px"
+	>
+	<a href="/p/java-1/image-20220313210555398.png" data-size="879x87">
+		<img src="/p/java-1/image-20220313210555398.png"
+			width="879"
+			height="87"
+			srcset="/p/java-1/image-20220313210555398_hu27c0e7a514bc3bd3e9249cb929cf2024_8829_480x0_resize_box_3.png 480w, /p/java-1/image-20220313210555398_hu27c0e7a514bc3bd3e9249cb929cf2024_8829_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>序列化后的数据开头包含两字节的魔术数字：<code>ACED</code>。接下来是两字节的版本号 <code>0005</code> 的数据。此外还包含了类名、成员变量的类型和个数等。</p>
+<ul>
+<li>写入 object 后，使用<code>readObject</code>方法读取序列化后的数据</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 640; 
+			flex-basis: 1536px"
+	>
+	<a href="/p/java-1/image-20220313211009425.png" data-size="525x82">
+		<img src="/p/java-1/image-20220313211009425.png"
+			width="525"
+			height="82"
+			srcset="/p/java-1/image-20220313211009425_huf357fa920edd07d76831133f2ef00fe7_8229_480x0_resize_box_3.png 480w, /p/java-1/image-20220313211009425_huf357fa920edd07d76831133f2ef00fe7_8229_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220313211009425">
+	</a>
+	
+	<figcaption>image-20220313211009425</figcaption>
+	
+</figure></p>
+<p>漏洞就发生在当<code>readObject()</code> 方法被重写，反序列化该类时调用便是重写后的 <code>readObject()</code> 方法。如果该方法使用不当的话就有可能引发恶意代码的执行。</p>
+<p>例如：</p>
+<pre tabindex="0"><code>class MyObject implements Serializable{
+    public String name;
+    // 重写readObject()方法
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
+        // 执行默认的readObject()方法
+        in.defaultReadObject();
+        // 执行打开计算器程序命令
+        Runtime.getRuntime().exec(name);
+    }
+}
+</code></pre><p>当进行对象的反序列化时，就会执行<code>readObject</code>方法里的命令执行方法：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 229; 
+			flex-basis: 551px"
+	>
+	<a href="/p/java-1/image-20220313212213010.png" data-size="2131x928">
+		<img src="/p/java-1/image-20220313212213010.png"
+			width="2131"
+			height="928"
+			srcset="/p/java-1/image-20220313212213010_hu926cb49c5044207f8f1df22bf577f766_293445_480x0_resize_box_3.png 480w, /p/java-1/image-20220313212213010_hu926cb49c5044207f8f1df22bf577f766_293445_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>实际情况下的反序列化会比较复杂，与 java 各类特性相关。</p>
+<h2 id="java-反射特性">Java 反射特性</h2>
+<p>反射是大部分语言都有的，对象可以通过反射获取他的类，类可以通过反射拿到所有方法（包括私有），拿到的⽅法可以调用，总之通过<strong>反射</strong>，可以将Java这种静态语言附加上动态特性。</p>
+<blockquote>
+<p>动态特性：</p>
+<p>⼀段代码，改变其中的变量，将会导致这段代码产⽣功能性的变化</p>
+</blockquote>
+<p>例如如下 Demo, 当不知道传入参数值时，是无法晓得他的实际作用。</p>
+<p><strong>Demo1：</strong></p>
+<pre tabindex="0"><code>public void execute(String className, String methodName) throws Exception {
+ Class clazz = Class.forName(className);
+ clazz.getMethod(methodName).invoke(clazz.newInstance());
+}
+</code></pre><p>上述例子中包含了几个重要的与反射相关的方法：</p>
+<ul>
+<li>获取类对象的方法：<code>forName</code></li>
+<li>实例化类对象的方法：<code>newInstance</code></li>
+<li>获取函数的方法：<code>getMethod</code></li>
+<li>执行函数的方法：<code>invoke</code></li>
+</ul>
+<h3 id="获取类对象的方法">获取类对象的方法</h3>
+<p>Java 中类本身也是一个对象，<code>java.lang.Class</code> 类的实例，这个实例称为类对象：</p>
+<ul>
+<li>类对象用于提供类本身的信息，比如有几种构造方法， 有多少属性，有哪些普通方法</li>
+</ul>
+<p>想要获得一个类的属性和方法，就必须先获得该类的类对象。</p>
+<p><strong>方法：</strong></p>
+<ul>
+<li><code>obj.getClass() </code>如果上下文中存在某个类的实例 obj ，可以直接通过 <code>obj.getClass() </code>来获取它的类</li>
+<li><code>Test.class </code>如果已经加载了某个类，只是想获取到它的 <code>java.lang.Class </code>对象，那么就直接拿它的 class 属性即可。这个方法其实不属于反射</li>
+<li><code>Class.forName </code>如果知道某个类的名字，想获取到这个类，就可以使用 forName 来获取</li>
+</ul>
+<h3 id="利用类对象创建实例">利用类对象创建实例</h3>
+<p>假设目前有一个Person类：</p>
+<pre tabindex="0"><code>public class Person implements Serializable {
+    private String name;
+    private Integer age;
+
+    public Person(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+    public Integer getAge() {
+        return this.age;
+    }
+    
+}
+</code></pre><p>与直接<code>new Person()</code>不同，基于反射必须先拿到类对象，然后通过类对象获取构造器对象，再通过构造器对象创建一个对象。</p>
+<pre tabindex="0"><code>public static void main (String args[]) throws Exception {
+    Class PersonClass = Class.forName(&quot;Person&quot;);
+    Constructor constructor = PersonClass.getConstructor(String.class, Integer.class);
+    Person p = (Person)constructor.newInstance(&quot;cool&quot;, 18);
+
+    System.out.println(p.getName());
+}
+</code></pre><p>有了实例，就可以访问其属性，使用其方法。</p>
+<h3 id="利用反射执行代码">利用反射执行代码</h3>
+<pre tabindex="0"><code>// java.lang.Runtime.getRuntime().exec(&quot;calc.exe&quot;);
+Class clazz = Class.forName(&quot;java.lang.Runtime&quot;);
+clazz.getMethod(&quot;exec&quot;, String.class).invoke(clazz.getMethod(&quot;getRuntime&quot;).invoke(clazz),
+&quot;calc.exe&quot;);
+</code></pre><p>上述代码本质上就是调用了<code>java.lang.Runtime.getRuntime().exec(&quot;calc.exe&quot;)</code>。</p>
+<p>使用到了<code>getMethod</code>和<code>invoke</code>：</p>
+<ul>
+<li>getMethod</li>
+</ul>
+<p><code>getMethod</code> 的作用是通过反射获取一个类的某个特定的公有方法。Java中支持类的重载，不能仅通过函数名来确定一个函数。所以，在调用 getMethod 的时候，需要传给他需要获取的函数的参数类型列表。</p>
+<p>而这里<code>Runtime.exec</code>有6个重载：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 331; 
+			flex-basis: 796px"
+	>
+	<a href="/p/java-1/image-20220313221949328.png" data-size="697x210">
+		<img src="/p/java-1/image-20220313221949328.png"
+			width="697"
+			height="210"
+			srcset="/p/java-1/image-20220313221949328_hud8f72b4e66c691f776ed84543815d95a_71681_480x0_resize_box_3.png 480w, /p/java-1/image-20220313221949328_hud8f72b4e66c691f776ed84543815d95a_71681_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="image-20220313221949328">
+	</a>
+	
+	<figcaption>image-20220313221949328</figcaption>
+	
+</figure></p>
+<p>这里使用第一个，所以使用<code>getMethod(&quot;exec&quot;, String.class)</code>获取到了第一个方法。</p>
+<ul>
+<li>invoke</li>
+</ul>
+<p>invoke 的作用是执行方法，它的第一个参数是：</p>
+<pre tabindex="0"><code>如果这个方法是一个普通方法，那么第一个参数是类对象
+如果这个方法是一个静态方法，那么第一个参数是类
+</code></pre><p>正常执行方法是 [1].method([2], [3], [4]&hellip;) ，在反射里就是 method.invoke([1], [2], [3], [4]&hellip;) 。</p>
+<p>所以上述例子可分解为：</p>
+<pre tabindex="0"><code>class clazz = Class.forName(&quot;java.lang.Runtime&quot;);
+Method execMethod = clazz.getMethod(&quot;exec&quot;, String.class);
+Method getRuntimeMethod = clazz.getMethod(&quot;getRuntime&quot;);
+Object runtime = getRuntimeMethod.invoke(clazz);
+execMethod.invoke(runtime, &quot;calc.exe&quot;);
+</code></pre><p>另一种常用的执行命令的方式是 <code>ProcessBuilder</code>，通过反射来获取其构造函数，然后调用 <code>start()</code> 来执行命令:</p>
+<pre tabindex="0"><code>Class clazz = Class.forName(&quot;java.lang.ProcessBuilder&quot;);
+
+clazz.getMethod(&quot;start&quot;).invoke(clazz.getConstructor(List.class).newInstance(Arrays.asList(&quot;open&quot;, &quot;/System/Applications/Calculator.app&quot;)));
+</code></pre><h3 id="获取私有方法">获取私有方法</h3>
+<p>当一个方法是私有方法(例如私有构造函数)，能否通过反射执行它？</p>
+<p>使用<code>getDeclared </code>系列的反射，它与普通的 <code>getMethod 、 getConstructor</code> 区别：</p>
+<ul>
+<li><code>getMethod</code> 系列方法获取的是当前类中所有公共方法，包括从父类继承的方法</li>
+<li><code>getDeclaredMethod</code> 系列方法获取的是当前类中“声明”的方法，是实在写在这个类里的，包括私有的方法，但从父类里继承来的就不包含了</li>
+</ul>
+<p><code>getDeclaredMethod </code>的具体用法和 <code>getMethod</code> 类似， <code>getDeclaredConstructor</code> 的具体用法 <code>getConstructor </code>类似。</p>
+<p>例如，Runtime这个类的构造函数是私有的，之前需要用 <code>Runtime.getRuntime()</code> 来获取对象。其实现在也可以直接用 <code>getDeclaredConstructor()</code> 来获取这个私有的构造方法来实例化对象，进而执行命令：</p>
+<pre tabindex="0"><code>class clazz = Class.forName(&quot;java.lang.Runtime&quot;);
+Constructor m = clazz.getDeclaredConstructor();
+m.setAccessible(true);  // 获取到一个私有方法后，必须用 setAccessible 修改它的作用域，否则仍然不能调用
+clazz.getMethod(&quot;exec&quot;, String.class).invoke(m.newInstance(), &quot;calc.exe&quot;);
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#基础">基础</a>
+      <ol>
+        <li><a href="#相关方法">相关方法</a></li>
+        <li><a href="#前提">前提</a></li>
+      </ol>
+    </li>
+    <li><a href="#基本原理">基本原理</a></li>
+    <li><a href="#java-反射特性">Java 反射特性</a>
+      <ol>
+        <li><a href="#获取类对象的方法">获取类对象的方法</a></li>
+        <li><a href="#利用类对象创建实例">利用类对象创建实例</a></li>
+        <li><a href="#利用反射执行代码">利用反射执行代码</a></li>
+        <li><a href="#获取私有方法">获取私有方法</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

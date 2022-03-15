@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>代码审计 on cOOl &#39;s blog</title>
+    <link>https://coollllllll.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
+    <description>Recent content in 代码审计 on cOOl &#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>java 反序列化-1</title>
+      <link>https://coollllllll.github.io/p/java-1/</link>
+      <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/java-1/</guid>
+      <description>java 反序列化-1 基础 相关方法 # 序列化 ObjectOutputStream 类的 writeObject() # 反序列化 ObjectInputStream 类的 readObject() 前提 实现 java.io.Serializable 接口才可被反序列化，而且所有属性必须是可序列化的(用 transient 关键字修饰的属性</description>
+    </item>
+    
+  </channel>
+</rss>

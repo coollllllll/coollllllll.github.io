@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Windows 认证</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/intranet-12/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Windows 认证'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/intranet-12/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-12-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-12-15T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="Windows 认证">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/intranet-12/">
+                <img src="/p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/intranet-12/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post Windows 认证" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%86%85%E7%BD%91/" style="background-color: #2a9d8f; color: #fff;">
+                内网
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/intranet-12/">Windows 认证</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 15, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="windows-认证">Windows 认证</h1>
+<p>Windows 认证方式主要有两种：NTLM 认证、kerberos 认证。同时，Windows Access Token 记录着用户的SID、组ID、Session、及权限等信息，也起到了权限认证的作用。</p>
+<p>其中 NTLM 认证主要有<strong>本地认证</strong>和<strong>网络认证</strong>两种方式。</p>
+<h2 id="本地认证">本地认证</h2>
+<h3 id="ntlm">NTLM</h3>
+<p>NTLM Hash 是支持 Net NTLM 认证协议及本地认证过程中的一个重要参与物，其长度为 32 位，由数字与字母组成。 Windows 本身不存储用户的明文密码，它会将用户的明文密码经过加密算法后存储在 SAM 数据库中。 当用户登录时,将用户输入的明文密码也加密成 NTLM Hash,与 SAM 数据库中的 NTLM Hash 进行比较。NTLM Hash 的前身是 LM Hash，目前基本淘汰，但是还是存在。</p>
+<p>SAM 文件一般在<code>%SystemRoot%\system32\config\sam</code>：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 105; 
+			flex-basis: 253px"
+	>
+	<a href="/p/intranet-12/image-20220314170924968.png" data-size="851x807">
+		<img src="/p/intranet-12/image-20220314170924968.png"
+			width="851"
+			height="807"
+			srcset="/p/intranet-12/image-20220314170924968_hube41ac9a0b62677678cba31dad5a6fe1_233701_480x0_resize_box_3.png 480w, /p/intranet-12/image-20220314170924968_hube41ac9a0b62677678cba31dad5a6fe1_233701_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>NTLM hash 的产生：</p>
+<pre tabindex="0"><code>admin -&gt; hex(16进制编码) = 61646d696e
+61646d696e -&gt; Unicode = 610064006d0069006e00
+610064006d0069006e00 -&gt; MD4 = 209c6174da490caeb422f3fa5a7ae634
+</code></pre><h3 id="流程">流程</h3>
+<ul>
+<li>Windows Logon Process，即 winlogon.exe， 是 Windows NT 用户登陆程序，用于管理用户登录和退出。</li>
+<li>LSASS 是微软 Windows 系统的安全机制。用于本地安全和登录策略。</li>
+</ul>
+<pre tabindex="0"><code>winlogon.exe -&gt; 接收用户输入的账密 -&gt; lsass.exe -&gt; 转换NTLM hash 并与 SAM 文件中的进行对比 -&gt; 相同则将user SID 和 group SID 发给 winlogon.exe，准备桌面，登录成功
+</code></pre><h2 id="网络认证">网络认证</h2>
+<p>内网渗透中，经常遇到工作组环境，而工作组环境是一个逻辑上的网络环境(工作区)，隶属于工作组的机器之间无法互相建立一个完美的信任机制，只能点对点，是比较落后的认证方式，没有信托机构。</p>
+<p>网络认证则是基于一种 Challenge/Response 认证机制(<strong>NTLM 协议</strong>)的认证模式。例如 SMB 文件共享。</p>
+<h3 id="流程-1">流程</h3>
+<ul>
+<li>协商：主要用于确认双方协议版本、加密等级等。</li>
+<li>质询
+<ul>
+<li>客户端向服务器端发送用户信息(用户名)。</li>
+<li>服务器收到请求，生成 <strong>16 位随机数</strong>，称之为&quot;Challenge&quot;，随后使用登录用户名对应的 NTLM hash 加密 Challenge，得到 Challenge1。将 Challenge 发送给客户端。</li>
+<li>客户端得到 Challenge 后，使用登录账户的 NTLM hash 加密 Challenge 得到 Response，随后将Response 发送给服务端。</li>
+</ul>
+</li>
+<li>验证：服务端校验收到的 Response 是否与 Chanllenge1 相等，相等则认证通过。</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 462; 
+			flex-basis: 1110px"
+	>
+	<a href="/p/intranet-12/image-20220314193038084.png" data-size="1161x251">
+		<img src="/p/intranet-12/image-20220314193038084.png"
+			width="1161"
+			height="251"
+			srcset="/p/intranet-12/image-20220314193038084_hu1be0987448aea897ecff590ac33943a9_128787_480x0_resize_box_3.png 480w, /p/intranet-12/image-20220314193038084_hu1be0987448aea897ecff590ac33943a9_128787_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="ntlm-v1-和-v2-区别">NTLM v1 和 v2 区别</h3>
+<ul>
+<li>
+<p>NTLM v1 的 Challenge 有 <code>8</code> 位，NTLM v2 的 Challenge 为 <code>16</code> 位</p>
+</li>
+<li>
+<p>NTLM v1 的主要加密算法是 <code>DES</code>，NTLM v2 的主要加密算法是 <code>HMAC-MD5</code>(实际实现下，可能使用更好的算法)。</p>
+</li>
+</ul>
+<h2 id="windows-access-token">Windows Access Token</h2>
+<h3 id="简介">简介</h3>
+<p>Windows Token，也叫Access Token(访问令牌)，它是一个描述<strong>进程或者线程安全上下文</strong>的一个对象。不同的用户登录计算机后，都会生成一个Access Token，这个 Token 在用户创建进程或者线程时会被使用，并不断拷贝，这也就解释了A用户创建一个进程而该进程没有B用户的权限。</p>
+<h3 id="种类">种类</h3>
+<ul>
+<li>Delegation token(授权令牌):用于交互会话登录(例如本地用户直接登录、远程桌面登录)</li>
+<li>Impersonation token(模拟令牌):用于非交互登录(利用net use访问共享文件夹)</li>
+</ul>
+<p>一般情况下，用户双击运行一个程序，都会拷贝“explorer.exe”的 Access Token。</p>
+<p><strong>当用户注销，系统将会使主令牌切换为模拟令牌，不会将令牌清除，只有在重启机器后才会清除。</strong></p>
+<p><strong>Access Token 的组成：</strong></p>
+<ul>
+<li>用户帐户的安全标识符(SID)</li>
+<li>用户所属的组的SID</li>
+<li>用于标识当前登录会话的登录SID</li>
+<li>用户或用户组所拥有的权限列表</li>
+<li>所有者SID</li>
+<li>主要组的SID</li>
+<li>访问控制列表</li>
+<li>访问令牌的来源</li>
+<li>令牌是主要令牌还是模拟令牌</li>
+<li>限制SID的可选列表</li>
+<li>目前的模拟等级</li>
+<li>其他统计数据</li>
+</ul>
+<h3 id="产生">产生</h3>
+<p>每个进程创建时都会根据登录会话权限由 LSA(Local Security Authority)分配一个 Token，如果CreaetProcess时自己指定了 Token, LSA 会使用该 Token， 否则就使用父进程 Token 的一份拷贝。</p>
+<h3 id="令牌假冒">令牌假冒</h3>
+<p>本质就是利用：用户注销后，系统将会使主令牌切换为模拟令牌，不会将令牌清除。</p>
+<ul>
+<li>Cobalt Strike</li>
+</ul>
+<pre tabindex="0"><code>steal_token
+</code></pre><ul>
+<li>MSF</li>
+</ul>
+<pre tabindex="0"><code>meterpreter &gt; getsystem
+meterpreter &gt; load incognito 
+meterpreter &gt; list_tokens –u
+meterpreter &gt; impersonate_token &quot;PAYLOADS\\Administrator”
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-14/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-14/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 基于域信任关系的域攻击"
+                        data-key="intranet-14" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">基于域信任关系的域攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-11/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-11/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCShadow 攻击"
+                        data-key="intranet-11" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCShadow 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-10/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-10/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCSync 攻击"
+                        data-key="intranet-10" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCSync 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-15/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-15/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 内网横向"
+                        data-key="intranet-15" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">内网横向</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-13/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-13/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 基于域委派的攻击"
+                        data-key="intranet-13" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">基于域委派的攻击</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#本地认证">本地认证</a>
+      <ol>
+        <li><a href="#ntlm">NTLM</a></li>
+        <li><a href="#流程">流程</a></li>
+      </ol>
+    </li>
+    <li><a href="#网络认证">网络认证</a>
+      <ol>
+        <li><a href="#流程-1">流程</a></li>
+        <li><a href="#ntlm-v1-和-v2-区别">NTLM v1 和 v2 区别</a></li>
+      </ol>
+    </li>
+    <li><a href="#windows-access-token">Windows Access Token</a>
+      <ol>
+        <li><a href="#简介">简介</a></li>
+        <li><a href="#种类">种类</a></li>
+        <li><a href="#产生">产生</a></li>
+        <li><a href="#令牌假冒">令牌假冒</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
