@@ -126,10 +126,10 @@
     
     <item>
       <title>Web 容器安全</title>
-      <link>https://coollllllll.github.io/p/web/</link>
+      <link>https://coollllllll.github.io/p/web-2/</link>
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://coollllllll.github.io/p/web/</guid>
+      <guid>https://coollllllll.github.io/p/web-2/</guid>
       <description>Web容器安全 简介 Web中间件 提供系统软件与应用软件之间连接的软件。他处在操作系统和更高一级应用程序之间，他充当的功能是：将应用程序运行环境</description>
     </item>
     
@@ -153,10 +153,10 @@
     
     <item>
       <title>同源策略</title>
-      <link>https://coollllllll.github.io/p/web/</link>
+      <link>https://coollllllll.github.io/p/web-1/</link>
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://coollllllll.github.io/p/web/</guid>
+      <guid>https://coollllllll.github.io/p/web-1/</guid>
       <description>同源策略 同源定义 要素：协议、域名、端口 如果两个url的协议、域名和端口相同，那么这两个url同源，否则不同源。 示例： URL 是否同源 原因 http://test.com/haha/1.html 参照 https://test.com/2.html 不</description>
     </item>
     
