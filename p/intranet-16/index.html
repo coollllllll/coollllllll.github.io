@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>NTLM Relay</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/intranet-16/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='NTLM Relay'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/intranet-16/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-02-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-01T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="NTLM Relay">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/intranet-16/">
+                <img src="/p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post NTLM Relay" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%86%85%E7%BD%91/" style="background-color: #2a9d8f; color: #fff;">
+                内网
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/intranet-16/">NTLM Relay</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 01, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="ntlm-relay">NTLM Relay</h1>
+<p>NTLM 中间人(重放)攻击。</p>
+<h2 id="简介">简介</h2>
+<p>B 是一个 smb 服务器，A 来进行认证，B 将 A 的认证信息转发到 C 上，如果 A 的凭证在 C 上认证成功就能进行下一步操作，如创建服务、执行命令。</p>
+<p>如果在域中控制了某些常用服务，如：WEB OA 系统、文件共享等服务则可以尝试使用 SMB 中继攻击来引诱域管理员访问，并转发凭证，从而达到获取其他机器权限的目的。</p>
+<h2 id="ntlm-认证过程">NTLM 认证过程</h2>
+<p><strong>客户端-服务端：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 529; 
+			flex-basis: 1269px"
+	>
+	<a href="/p/intranet-16/image-20220320094903187.png" data-size="1217x230">
+		<img src="/p/intranet-16/image-20220320094903187.png"
+			width="1217"
+			height="230"
+			srcset="/p/intranet-16/image-20220320094903187_hu072da9f0d06d5d2662e6b86be60676cc_127670_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220320094903187_hu072da9f0d06d5d2662e6b86be60676cc_127670_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>客户端-服务端-DC端：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 388; 
+			flex-basis: 933px"
+	>
+	<a href="/p/intranet-16/image-20220320145004971.png" data-size="1011x260">
+		<img src="/p/intranet-16/image-20220320145004971.png"
+			width="1011"
+			height="260"
+			srcset="/p/intranet-16/image-20220320145004971_hud3ed56c740c4680928b6861bfb3de1ce_98416_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220320145004971_hud3ed56c740c4680928b6861bfb3de1ce_98416_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>在域环境下，用户的 NT Hash 不再存储在服务器上，而是存储在域控制器上。用户要认证的服务器会收到客户端对 Challenge 加密的响应报文，但它不能检查该响应是否有效，因此，服务端需要把验证身份的任务委托给域控制器。</p>
+<p>而服务端在和域控制器通信时，使用<code>Netlogon</code>服务，该服务能够与域控制器建立安全会话，被称为安全通道(<code>Secure Channel</code>)，从而安全传输客户端发来的响应。</p>
+</blockquote>
+<h2 id="中继攻击原理">中继攻击原理</h2>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 174; 
+			flex-basis: 418px"
+	>
+	<a href="/p/intranet-16/image-20220320145645711.png" data-size="1504x862">
+		<img src="/p/intranet-16/image-20220320145645711.png"
+			width="1504"
+			height="862"
+			srcset="/p/intranet-16/image-20220320145645711_hue394022a13ad267d8372ce408331c228_245553_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220320145645711_hue394022a13ad267d8372ce408331c228_245553_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>基本流程如上图所示，攻击者介于客户端和服务器之间，同时充当了服务端和客户端。攻击者所做的事情就是让诱导客户端访问自己所建立的服务端，成功拿到请求，而攻击者又充当客户端向受害服务端转发认证请求，受害服务端返回<code>challenge</code>，攻击者转发，真正的客户端使用 NTLM 加密返回给攻击者，攻击者再转发给受害服务端，认证完成。</p>
+<p>那么以服务端视角来看，即是这样的流程：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 127; 
+			flex-basis: 305px"
+	>
+	<a href="/p/intranet-16/image-20220320150321308.png" data-size="609x479">
+		<img src="/p/intranet-16/image-20220320150321308.png"
+			width="609"
+			height="479"
+			srcset="/p/intranet-16/image-20220320150321308_hu18a2fe20987d03bed8590ad0447c25de_119878_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220320150321308_hu18a2fe20987d03bed8590ad0447c25de_119878_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>最终，攻击者等同于代表真正客户端用户去访问受害服务器。</p>
+<h2 id="http---smb-攻击流程">HTTP -&gt; SMB 攻击流程</h2>
+<ul>
+<li>nmap 探测 SMB 签名</li>
+</ul>
+<pre tabindex="0"><code>nmap -p445 --script=smb-security-mode.nse IP --open
+</code></pre><blockquote>
+<p>选择那些未开启 smb 签名的主机作为目标。</p>
+</blockquote>
+<ul>
+<li>开启 HTTP 服务并中继到目标 smb</li>
+</ul>
+<pre tabindex="0"><code>ntlmrelayx.py -t IP(受害者) -socks -smb2support
+</code></pre><blockquote>
+<p>完成后会攻击机本地会开启 socks 端口。</p>
+</blockquote>
+<ul>
+<li>基于 socks 代理 dump 目标机器上用户 NTLM</li>
+</ul>
+<pre tabindex="0"><code>proxychains python3 secretsdump.py pentest.com/Administrator@IP
+</code></pre><h2 id="认证与会话">认证与会话</h2>
+<p>认证与会话是分离的，即：先进行认证，认证完成后再进行会话通信，例如 HTTP 访问、SMB 访问共享文件等。</p>
+<p><strong>两个过程相互独立，那意味着可以从一个协议中继到另一个协议</strong>，称为<strong>跨协议中继</strong>：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 185; 
+			flex-basis: 444px"
+	>
+	<a href="/p/intranet-16/image-20220320171629559.png" data-size="864x466">
+		<img src="/p/intranet-16/image-20220320171629559.png"
+			width="864"
+			height="466"
+			srcset="/p/intranet-16/image-20220320171629559_hudd75533bdc2728ae8a82209e7df1cf0a_133004_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220320171629559_hudd75533bdc2728ae8a82209e7df1cf0a_133004_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>为了验证通信数据的真实性，引入了签名机制，即防止任意一个用户修改通信内容。实际上，在<strong>NTLM Negotiation</strong> 阶段会让客户端或服务器了解对方是否支持签名(<strong>Negotiate Flags</strong>)。</p>
+<blockquote>
+<p>当 Negotiate Sign flag 为 1 时，表明客户端支持签名。但是并不意味着签名是必要的，只是说明客户端有签名的能力。同理，服务端也是类似的。对于某些协议，即使客户端和服务器都支持签名，这并不一定意味着数据包会被签名。</p>
+</blockquote>
+<h3 id="签名实现">签名实现</h3>
+<p>可以通过一些选项来表明签名是否强制执行。</p>
+<ul>
+<li><strong>Disabled</strong>：禁用签名</li>
+<li><strong>Enabled</strong>：可以在需要时处理签名，但不强制签名。</li>
+<li><strong>Mandatory</strong>：表明不仅支持签名，而且必须对数据包进行签名才能继续会话。</li>
+</ul>
+<h3 id="smb-协议的配置">SMB 协议的配置</h3>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 540; 
+			flex-basis: 1297px"
+	>
+	<a href="/p/intranet-16/image-20220321091751438.png" data-size="1038x192">
+		<img src="/p/intranet-16/image-20220321091751438.png"
+			width="1038"
+			height="192"
+			srcset="/p/intranet-16/image-20220321091751438_hua5d9d2373d2d4f99ec981b8c1ac65df9_252166_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220321091751438_hua5d9d2373d2d4f99ec981b8c1ac65df9_252166_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>
+<p>Microsoft 客户端：表示作为 SMB 客户端时，是否要对通信进行签名</p>
+</li>
+<li>
+<p>Microsoft 服务端：表示作为 SMB 客户端时，是否要对通信进行签名</p>
+</li>
+<li>
+<p>SMB 协商阶段中有关签名的参数：</p>
+</li>
+</ul>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 397; 
+			flex-basis: 953px"
+	>
+	<a href="/p/intranet-16/image-20220321092618634.png" data-size="449x113">
+		<img src="/p/intranet-16/image-20220321092618634.png"
+			width="449"
+			height="113"
+			srcset="/p/intranet-16/image-20220321092618634_hu3c189c5bfb4c5309f487e54705d2fde9_56777_480x0_resize_box_3.png 480w, /p/intranet-16/image-20220321092618634_hu3c189c5bfb4c5309f487e54705d2fde9_56777_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>Enabled：可以支持签名，能够处理签名</p>
+<p>Required：但是不需要签名</p>
+<p>也就是客户端 或 服务端只要有一个开启 Required，那么数据包就会被签名</p>
+</blockquote>
+<h3 id="ldap-协议的配置">LDAP 协议的配置</h3>
+<ul>
+<li><strong>Disabled</strong>：不支持数据包签名。</li>
+<li><strong>Negotiated</strong>：表示可以处理签名，如果与之通信的机器也可以处理签名的话，那么后续的数据将被签名。</li>
+<li><strong>Required</strong>：表示不仅支持签名，而且必须对数据包进行签名才能继续会话。</li>
+</ul>
+<p>与 SMBv2 相比，LDAP 只要有一个开启 <strong>Negotiated</strong>，那么数据包就会被签名。LDAP 使用与 NTLM 协商中相同的 flag 标志位。在客户端和服务器都支持 LDAP 签名的情况下，将设置 <code>NEGOTIATE_SIGN</code> 标志并对数据包进行签名。<strong>如果一方要求签名，而另一方不支持，则会话根本不会开始。需要签名的一方将忽略未签名的数据包。</strong></p>
+<p>因此，想要实现 LDAP 的身份验证中继，需要具备两个条件：</p>
+<ul>
+<li>服务器必须不需要数据包签名，<strong>默认情况下所有机器都是这种情况</strong></li>
+<li>客户端不得将 NEGOTIATE_SIGN 标志设置为 1。如果他这样做了，那么服务器将需要签名，并且由于我们不知道用户的密钥，就无法对伪造的 LDAP 数据包进行签名。</li>
+</ul>
+<blockquote>
+<p>Windows SMB 客户端设置 NEGOTIATE_SIGN 该参数为 1，默认情况下，无法将 SMB 身份验证中继到 LDAP。</p>
+</blockquote>
+<blockquote>
+<p>首先想到，是否可以修改 NEGOTIATE_SIGN 这个标志，实际上，该标志最终收到 MIC(Message Integrity Code) 的保护，所以无法直接修改该标志。</p>
+</blockquote>
+<h2 id="session-key">Session Key</h2>
+<p>签名涉及到用户的密钥，但实际情况下，并不是真正的用户的密钥，而是基于用户密钥生成的 Session Key。</p>
+<p>Session Key 的计算方法：</p>
+<pre tabindex="0"><code># NTLMv1
+Key = MD4(NT Hash)
+
+# NTLMv2
+NTLMv2 Hash = HMAC_MD5(NT Hash, Uppercase(Username) + UserDomain)
+Key = HMAC_MD5(NTLMv2 Hash, HMAC_MD5(NTLMv2 Hash, NTLMv2 Response + Challenge))
+</code></pre><p>客户端是可以计算 Session Key 的，问题是：在域环境下，应用服务器并不知道用户的 NTLM，无法完成 key 计算，所以会依靠域控去帮它完成计算。</p>
+<p>对于域帐户的身份验证，服务器会让域控制器为它计算 Session Key，然后将其返回。服务器以 <code>NETLOGON_NETWORK_INFO</code> 结构向域控制器发送请求，域控制器以 <code>NETLOGON_VALIDATION_SAM_INFO4</code> 结构响应。如果身份验证成功，会话密钥将在域控制器的此响应中发送。</p>
+<blockquote>
+<p>CVE-2015-005</p>
+<p>域控制器没有验证正在发送<code>NETLOGON</code>消息的机器是否是真正的域内的应用服务器。这意味着任何加入域的机器都可以向域控制器传递身份验证，并获取域内任何会话的 Session Key。</p>
+</blockquote>
+<p>后来微软修复了该 BUG：域控制器将验证 <code>AUTHENTICATE</code> 响应中的目标计算机与发出 <code>NetLogon</code> 请求的主机是否相同。</p>
+<h2 id="cve-2015-0005">CVE-2015-0005</h2>
+<p>影响范围： Windows Server 2012 及以下，对个人 PC 无影响。</p>
+<h3 id="原理">原理</h3>
+<p>应用服务器在收到用户客户端的认证信息后，由于本身没有存储用户的口令信息，所以必须依赖域服务器进行认证，将收到的认证信息发送给域服务器，这个过程基于 <code>NETLOGON</code> 协议。该协议在应用服务器和域服务器之间建立一个安全会话，安全会话共享密钥<strong>基于应用服务器主机账号的口令 <code>NTLM</code> 生成</strong>。</p>
+<p>通过该协议的通信，除了进行基本的认证，最终还依靠 DC 生成用于客户端和应用服务器之间用来签名、加密的<code>Session Key</code>。</p>
+<p><strong>域控制器没有验证正在发送<code>NETLOGON</code>消息的机器是否是真正的域内的应用服务器。这意味着任何加入域的机器都可以向域控制器传递身份验证，并获取域内任何会话的 Session Key。</strong></p>
+<h3 id="攻击">攻击</h3>
+<p>impacket 工具包中的 smbrelayx 可进行中间人攻击，如果目标机器强制使用 SMB 签名，该工具可尝试 NETLOGON 直接向域控读取<code>Session Key</code>。</p>
+<blockquote>
+<p>如果是非域内主机，只需要提供域内任意一台机器的机器账号和对应 NTLM，用以发起 NETLOGON 会话。</p>
+</blockquote>
+<pre tabindex="0"><code>python smbrelayx.py -h 目标主机IP -machine-account 域内某台主机的机器账号 -machine-hashes 对应NTLM -domain 域控IP
+
+-e:指定目标机器要执行的文件，默认 dump 目标机器上的 Hash
+-c:指定要执行的命令
+</code></pre><h3 id="防御">防御</h3>
+<p>微软发布了补丁 <code>MS15-027</code>，对 <code>ComputerName</code> 和 <code>NetBIOS</code> 这 2 个字段进行了校验，并且对这个消息认证块进行了签名校验。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-14/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-14/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 基于域信任关系的域攻击"
+                        data-key="intranet-14" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">基于域信任关系的域攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-11/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-11/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCShadow 攻击"
+                        data-key="intranet-11" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCShadow 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-10/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-10/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DCSync 攻击"
+                        data-key="intranet-10" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DCSync 攻击</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-12/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-12/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Windows 认证"
+                        data-key="intranet-12" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Windows 认证</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/intranet-15/">
+        
+        
+            <div class="article-image">
+                <img src="/p/intranet-15/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 内网横向"
+                        data-key="intranet-15" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">内网横向</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#ntlm-认证过程">NTLM 认证过程</a></li>
+    <li><a href="#中继攻击原理">中继攻击原理</a></li>
+    <li><a href="#http---smb-攻击流程">HTTP -&gt; SMB 攻击流程</a></li>
+    <li><a href="#认证与会话">认证与会话</a>
+      <ol>
+        <li><a href="#签名实现">签名实现</a></li>
+        <li><a href="#smb-协议的配置">SMB 协议的配置</a></li>
+        <li><a href="#ldap-协议的配置">LDAP 协议的配置</a></li>
+      </ol>
+    </li>
+    <li><a href="#session-key">Session Key</a></li>
+    <li><a href="#cve-2015-0005">CVE-2015-0005</a>
+      <ol>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#攻击">攻击</a></li>
+        <li><a href="#防御">防御</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

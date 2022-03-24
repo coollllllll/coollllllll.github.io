@@ -615,6 +615,250 @@ clazz.getMethod(&amp;quot;exec&amp;quot;, String.class).invoke(m.newInstance(), 
 </description>
         </item>
         <item>
+        <title>NTLM Relay</title>
+        <link>https://coollllllll.github.io/p/intranet-16/</link>
+        <pubDate>Tue, 01 Feb 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/intranet-16/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-16/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post NTLM Relay" /&gt;&lt;h1 id=&#34;ntlm-relay&#34;&gt;NTLM Relay&lt;/h1&gt;
+&lt;p&gt;NTLM 中间人(重放)攻击。&lt;/p&gt;
+&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
+&lt;p&gt;B 是一个 smb 服务器，A 来进行认证，B 将 A 的认证信息转发到 C 上，如果 A 的凭证在 C 上认证成功就能进行下一步操作，如创建服务、执行命令。&lt;/p&gt;
+&lt;p&gt;如果在域中控制了某些常用服务，如：WEB OA 系统、文件共享等服务则可以尝试使用 SMB 中继攻击来引诱域管理员访问，并转发凭证，从而达到获取其他机器权限的目的。&lt;/p&gt;
+&lt;h2 id=&#34;ntlm-认证过程&#34;&gt;NTLM 认证过程&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;客户端-服务端：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 529; 
+			flex-basis: 1269px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320094903187.png&#34; data-size=&#34;1217x230&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320094903187.png&#34;
+			width=&#34;1217&#34;
+			height=&#34;230&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320094903187_hu072da9f0d06d5d2662e6b86be60676cc_127670_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220320094903187_hu072da9f0d06d5d2662e6b86be60676cc_127670_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;客户端-服务端-DC端：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 388; 
+			flex-basis: 933px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145004971.png&#34; data-size=&#34;1011x260&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145004971.png&#34;
+			width=&#34;1011&#34;
+			height=&#34;260&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145004971_hud3ed56c740c4680928b6861bfb3de1ce_98416_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220320145004971_hud3ed56c740c4680928b6861bfb3de1ce_98416_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在域环境下，用户的 NT Hash 不再存储在服务器上，而是存储在域控制器上。用户要认证的服务器会收到客户端对 Challenge 加密的响应报文，但它不能检查该响应是否有效，因此，服务端需要把验证身份的任务委托给域控制器。&lt;/p&gt;
+&lt;p&gt;而服务端在和域控制器通信时，使用&lt;code&gt;Netlogon&lt;/code&gt;服务，该服务能够与域控制器建立安全会话，被称为安全通道(&lt;code&gt;Secure Channel&lt;/code&gt;)，从而安全传输客户端发来的响应。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;中继攻击原理&#34;&gt;中继攻击原理&lt;/h2&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 174; 
+			flex-basis: 418px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145645711.png&#34; data-size=&#34;1504x862&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145645711.png&#34;
+			width=&#34;1504&#34;
+			height=&#34;862&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320145645711_hue394022a13ad267d8372ce408331c228_245553_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220320145645711_hue394022a13ad267d8372ce408331c228_245553_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;基本流程如上图所示，攻击者介于客户端和服务器之间，同时充当了服务端和客户端。攻击者所做的事情就是让诱导客户端访问自己所建立的服务端，成功拿到请求，而攻击者又充当客户端向受害服务端转发认证请求，受害服务端返回&lt;code&gt;challenge&lt;/code&gt;，攻击者转发，真正的客户端使用 NTLM 加密返回给攻击者，攻击者再转发给受害服务端，认证完成。&lt;/p&gt;
+&lt;p&gt;那么以服务端视角来看，即是这样的流程：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 127; 
+			flex-basis: 305px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320150321308.png&#34; data-size=&#34;609x479&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320150321308.png&#34;
+			width=&#34;609&#34;
+			height=&#34;479&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320150321308_hu18a2fe20987d03bed8590ad0447c25de_119878_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220320150321308_hu18a2fe20987d03bed8590ad0447c25de_119878_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;最终，攻击者等同于代表真正客户端用户去访问受害服务器。&lt;/p&gt;
+&lt;h2 id=&#34;http---smb-攻击流程&#34;&gt;HTTP -&amp;gt; SMB 攻击流程&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;nmap 探测 SMB 签名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nmap -p445 --script=smb-security-mode.nse IP --open
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;选择那些未开启 smb 签名的主机作为目标。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;开启 HTTP 服务并中继到目标 smb&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ntlmrelayx.py -t IP(受害者) -socks -smb2support
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;完成后会攻击机本地会开启 socks 端口。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;基于 socks 代理 dump 目标机器上用户 NTLM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;proxychains python3 secretsdump.py pentest.com/Administrator@IP
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;认证与会话&#34;&gt;认证与会话&lt;/h2&gt;
+&lt;p&gt;认证与会话是分离的，即：先进行认证，认证完成后再进行会话通信，例如 HTTP 访问、SMB 访问共享文件等。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;两个过程相互独立，那意味着可以从一个协议中继到另一个协议&lt;/strong&gt;，称为&lt;strong&gt;跨协议中继&lt;/strong&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 185; 
+			flex-basis: 444px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320171629559.png&#34; data-size=&#34;864x466&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320171629559.png&#34;
+			width=&#34;864&#34;
+			height=&#34;466&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220320171629559_hudd75533bdc2728ae8a82209e7df1cf0a_133004_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220320171629559_hudd75533bdc2728ae8a82209e7df1cf0a_133004_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;为了验证通信数据的真实性，引入了签名机制，即防止任意一个用户修改通信内容。实际上，在&lt;strong&gt;NTLM Negotiation&lt;/strong&gt; 阶段会让客户端或服务器了解对方是否支持签名(&lt;strong&gt;Negotiate Flags&lt;/strong&gt;)。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;当 Negotiate Sign flag 为 1 时，表明客户端支持签名。但是并不意味着签名是必要的，只是说明客户端有签名的能力。同理，服务端也是类似的。对于某些协议，即使客户端和服务器都支持签名，这并不一定意味着数据包会被签名。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;签名实现&#34;&gt;签名实现&lt;/h3&gt;
+&lt;p&gt;可以通过一些选项来表明签名是否强制执行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Disabled&lt;/strong&gt;：禁用签名&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Enabled&lt;/strong&gt;：可以在需要时处理签名，但不强制签名。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mandatory&lt;/strong&gt;：表明不仅支持签名，而且必须对数据包进行签名才能继续会话。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;smb-协议的配置&#34;&gt;SMB 协议的配置&lt;/h3&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 540; 
+			flex-basis: 1297px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321091751438.png&#34; data-size=&#34;1038x192&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321091751438.png&#34;
+			width=&#34;1038&#34;
+			height=&#34;192&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321091751438_hua5d9d2373d2d4f99ec981b8c1ac65df9_252166_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220321091751438_hua5d9d2373d2d4f99ec981b8c1ac65df9_252166_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Microsoft 客户端：表示作为 SMB 客户端时，是否要对通信进行签名&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Microsoft 服务端：表示作为 SMB 客户端时，是否要对通信进行签名&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;SMB 协商阶段中有关签名的参数：&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 397; 
+			flex-basis: 953px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321092618634.png&#34; data-size=&#34;449x113&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321092618634.png&#34;
+			width=&#34;449&#34;
+			height=&#34;113&#34;
+			srcset=&#34;https://coollllllll.github.io/p/intranet-16/image-20220321092618634_hu3c189c5bfb4c5309f487e54705d2fde9_56777_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-16/image-20220321092618634_hu3c189c5bfb4c5309f487e54705d2fde9_56777_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Enabled：可以支持签名，能够处理签名&lt;/p&gt;
+&lt;p&gt;Required：但是不需要签名&lt;/p&gt;
+&lt;p&gt;也就是客户端 或 服务端只要有一个开启 Required，那么数据包就会被签名&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;ldap-协议的配置&#34;&gt;LDAP 协议的配置&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Disabled&lt;/strong&gt;：不支持数据包签名。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Negotiated&lt;/strong&gt;：表示可以处理签名，如果与之通信的机器也可以处理签名的话，那么后续的数据将被签名。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Required&lt;/strong&gt;：表示不仅支持签名，而且必须对数据包进行签名才能继续会话。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;与 SMBv2 相比，LDAP 只要有一个开启 &lt;strong&gt;Negotiated&lt;/strong&gt;，那么数据包就会被签名。LDAP 使用与 NTLM 协商中相同的 flag 标志位。在客户端和服务器都支持 LDAP 签名的情况下，将设置 &lt;code&gt;NEGOTIATE_SIGN&lt;/code&gt; 标志并对数据包进行签名。&lt;strong&gt;如果一方要求签名，而另一方不支持，则会话根本不会开始。需要签名的一方将忽略未签名的数据包。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因此，想要实现 LDAP 的身份验证中继，需要具备两个条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;服务器必须不需要数据包签名，&lt;strong&gt;默认情况下所有机器都是这种情况&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;客户端不得将 NEGOTIATE_SIGN 标志设置为 1。如果他这样做了，那么服务器将需要签名，并且由于我们不知道用户的密钥，就无法对伪造的 LDAP 数据包进行签名。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Windows SMB 客户端设置 NEGOTIATE_SIGN 该参数为 1，默认情况下，无法将 SMB 身份验证中继到 LDAP。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;首先想到，是否可以修改 NEGOTIATE_SIGN 这个标志，实际上，该标志最终收到 MIC(Message Integrity Code) 的保护，所以无法直接修改该标志。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;session-key&#34;&gt;Session Key&lt;/h2&gt;
+&lt;p&gt;签名涉及到用户的密钥，但实际情况下，并不是真正的用户的密钥，而是基于用户密钥生成的 Session Key。&lt;/p&gt;
+&lt;p&gt;Session Key 的计算方法：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# NTLMv1
+Key = MD4(NT Hash)
+
+# NTLMv2
+NTLMv2 Hash = HMAC_MD5(NT Hash, Uppercase(Username) + UserDomain)
+Key = HMAC_MD5(NTLMv2 Hash, HMAC_MD5(NTLMv2 Hash, NTLMv2 Response + Challenge))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;客户端是可以计算 Session Key 的，问题是：在域环境下，应用服务器并不知道用户的 NTLM，无法完成 key 计算，所以会依靠域控去帮它完成计算。&lt;/p&gt;
+&lt;p&gt;对于域帐户的身份验证，服务器会让域控制器为它计算 Session Key，然后将其返回。服务器以 &lt;code&gt;NETLOGON_NETWORK_INFO&lt;/code&gt; 结构向域控制器发送请求，域控制器以 &lt;code&gt;NETLOGON_VALIDATION_SAM_INFO4&lt;/code&gt; 结构响应。如果身份验证成功，会话密钥将在域控制器的此响应中发送。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CVE-2015-005&lt;/p&gt;
+&lt;p&gt;域控制器没有验证正在发送&lt;code&gt;NETLOGON&lt;/code&gt;消息的机器是否是真正的域内的应用服务器。这意味着任何加入域的机器都可以向域控制器传递身份验证，并获取域内任何会话的 Session Key。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;后来微软修复了该 BUG：域控制器将验证 &lt;code&gt;AUTHENTICATE&lt;/code&gt; 响应中的目标计算机与发出 &lt;code&gt;NetLogon&lt;/code&gt; 请求的主机是否相同。&lt;/p&gt;
+&lt;h2 id=&#34;cve-2015-0005&#34;&gt;CVE-2015-0005&lt;/h2&gt;
+&lt;p&gt;影响范围： Windows Server 2012 及以下，对个人 PC 无影响。&lt;/p&gt;
+&lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
+&lt;p&gt;应用服务器在收到用户客户端的认证信息后，由于本身没有存储用户的口令信息，所以必须依赖域服务器进行认证，将收到的认证信息发送给域服务器，这个过程基于 &lt;code&gt;NETLOGON&lt;/code&gt; 协议。该协议在应用服务器和域服务器之间建立一个安全会话，安全会话共享密钥&lt;strong&gt;基于应用服务器主机账号的口令 &lt;code&gt;NTLM&lt;/code&gt; 生成&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;通过该协议的通信，除了进行基本的认证，最终还依靠 DC 生成用于客户端和应用服务器之间用来签名、加密的&lt;code&gt;Session Key&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;域控制器没有验证正在发送&lt;code&gt;NETLOGON&lt;/code&gt;消息的机器是否是真正的域内的应用服务器。这意味着任何加入域的机器都可以向域控制器传递身份验证，并获取域内任何会话的 Session Key。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;攻击&#34;&gt;攻击&lt;/h3&gt;
+&lt;p&gt;impacket 工具包中的 smbrelayx 可进行中间人攻击，如果目标机器强制使用 SMB 签名，该工具可尝试 NETLOGON 直接向域控读取&lt;code&gt;Session Key&lt;/code&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果是非域内主机，只需要提供域内任意一台机器的机器账号和对应 NTLM，用以发起 NETLOGON 会话。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;python smbrelayx.py -h 目标主机IP -machine-account 域内某台主机的机器账号 -machine-hashes 对应NTLM -domain 域控IP
+
+-e:指定目标机器要执行的文件，默认 dump 目标机器上的 Hash
+-c:指定要执行的命令
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;防御&#34;&gt;防御&lt;/h3&gt;
+&lt;p&gt;微软发布了补丁 &lt;code&gt;MS15-027&lt;/code&gt;，对 &lt;code&gt;ComputerName&lt;/code&gt; 和 &lt;code&gt;NetBIOS&lt;/code&gt; 这 2 个字段进行了校验，并且对这个消息认证块进行了签名校验。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>pkexec 本地提权</title>
         <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</link>
         <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>

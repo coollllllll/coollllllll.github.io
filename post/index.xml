@@ -26,6 +26,15 @@
     </item>
     
     <item>
+      <title>NTLM Relay</title>
+      <link>https://coollllllll.github.io/p/intranet-16/</link>
+      <pubDate>Tue, 01 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/intranet-16/</guid>
+      <description>NTLM Relay NTLM 中间人(重放)攻击。 简介 B 是一个 smb 服务器，A 来进行认证，B 将 A 的认证信息转发到 C 上，如果 A 的凭证在 C 上认证成功就能进行下一步操作，如创</description>
+    </item>
+    
+    <item>
       <title>pkexec 本地提权</title>
       <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</link>
       <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
