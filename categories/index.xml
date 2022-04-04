@@ -6,7 +6,16 @@
     <description>Recent content in Categories on cOOl &#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>漏洞复现</title>
+      <link>https://coollllllll.github.io/categories/fuxian/</link>
+      <pubDate>Mon, 04 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/categories/fuxian/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>代码审计</title>
       <link>https://coollllllll.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
@@ -22,15 +31,6 @@
       <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://coollllllll.github.io/categories/%E5%86%85%E7%BD%91/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>漏洞复现</title>
-      <link>https://coollllllll.github.io/categories/fuxian/</link>
-      <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://coollllllll.github.io/categories/fuxian/</guid>
       <description></description>
     </item>
     

