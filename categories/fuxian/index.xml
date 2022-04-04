@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>漏洞复现 on cOOl &#39;s blog</title>
+    <link>https://coollllllll.github.io/categories/fuxian/</link>
+    <description>Recent content in 漏洞复现 on cOOl &#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 01 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/fuxian/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pkexec 本地提权</title>
+      <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</link>
+      <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-1/</guid>
+      <description>pkexec 本地提权 CVE-2021-4034 简介 Polkit是一个用于控制类Unix系统中控制系统范围权限的组件，它为非特权进程与特权进程的通信提供了一种有组织的方式。 pk</description>
+    </item>
+    
+    <item>
+      <title>Activemq 任意文件写入漏洞</title>
+      <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/</link>
+      <pubDate>Tue, 02 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-2/</guid>
+      <description>Activemq 任意文件写入漏洞 简介 ActiveMQ的web控制台分三个应用，admin、api和fileserver，其中admin是管理员页面，api</description>
+    </item>
+    
+    <item>
+      <title>thinkphp5.1.* - 反序列化</title>
+      <link>https://coollllllll.github.io/p/php-5/</link>
+      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/php-5/</guid>
+      <description>thinkphp5.1.* - 反序列化 环境 thinkphp-5.1.37 PHP 7.0.33 反序列化触发链 全局搜索__destruct()关键字，找到漏洞的起点： 跟进removeFiles() 发现$this-&amp;</description>
+    </item>
+    
+  </channel>
+</rss>
