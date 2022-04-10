@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Spring Beans RCE 复现</title>
-      <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/</link>
+      <link>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/</link>
       <pubDate>Mon, 04 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-4/</guid>
+      <guid>https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/</guid>
       <description>Spring Beans RCE 复现 影响范围 JDK &amp;gt;= 9 使用了 Spring 框架及其衍生框架spring-beans-*.jar文件或存在CachedIntrospectionResu</description>
     </item>
     

