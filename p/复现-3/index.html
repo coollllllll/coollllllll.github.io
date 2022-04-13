@@ -250,7 +250,7 @@ cmd: &lt;%out.println(123);%&gt;
 	</a>
 	
 </figure></p>
-<p><strong>法一存在缺陷，无法写入<code>&quot;</code>，存在转义：</strong></p>
+<p><strong>法一存在缺陷，无法直接写入<code>&quot;</code>，存在转义：</strong></p>
 <p><figure 
 	
 		class="gallery-image" 
@@ -268,6 +268,7 @@ cmd: &lt;%out.println(123);%&gt;
 	</a>
 	
 </figure></p>
+<p>可以直接在 pattern 里写<code>&quot;</code>，然后依靠<code>%{xxx}i</code> 从头中读取<code>%</code>字符，或者使用下述法二。</p>
 <pre tabindex="0"><code># 法二：根据定义使用 `%{xxx}t` 直接写入以 simpleDateFormat 格式定义的 timestamp，这个 timestamp 是可以包含 `%` 和 `&quot;` 字符
 
 class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=888

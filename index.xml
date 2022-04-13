@@ -127,7 +127,7 @@ cmd: &amp;lt;%out.println(123);%&amp;gt;
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;法一存在缺陷，无法写入&lt;code&gt;&amp;quot;&lt;/code&gt;，存在转义：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;法一存在缺陷，无法直接写入&lt;code&gt;&amp;quot;&lt;/code&gt;，存在转义：&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	
 		class=&#34;gallery-image&#34; 
@@ -145,6 +145,7 @@ cmd: &amp;lt;%out.println(123);%&amp;gt;
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;可以直接在 pattern 里写&lt;code&gt;&amp;quot;&lt;/code&gt;，然后依靠&lt;code&gt;%{xxx}i&lt;/code&gt; 从头中读取&lt;code&gt;%&lt;/code&gt;字符，或者使用下述法二。&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 法二：根据定义使用 `%{xxx}t` 直接写入以 simpleDateFormat 格式定义的 timestamp，这个 timestamp 是可以包含 `%` 和 `&amp;quot;` 字符
 
 class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=888
