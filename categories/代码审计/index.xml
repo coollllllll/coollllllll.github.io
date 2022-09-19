@@ -6,7 +6,34 @@
     <description>Recent content in 代码审计 on cOOl &#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 10 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 31 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://coollllllll.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>java 动态加载字节码</title>
+      <link>https://coollllllll.github.io/p/java-4/</link>
+      <pubDate>Wed, 31 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/java-4/</guid>
+      <description>Java 动态加载字节码 几种常见的动态加载字节码方式。 何为字节码？ 狭义上 Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类</description>
+    </item>
+    
+    <item>
+      <title>java 反序列化-2</title>
+      <link>https://coollllllll.github.io/p/java-2/</link>
+      <pubDate>Wed, 31 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/java-2/</guid>
+      <description>Java 反序列化-2 URLDNS URLDNS 就是ysoserial中⼀个利用链的名字，但准确来说，这个其实不能称作“利用链”。因为其参数不是⼀个可以“利用”的命令，而</description>
+    </item>
+    
+    <item>
+      <title>java 反序列化-3</title>
+      <link>https://coollllllll.github.io/p/java-3/</link>
+      <pubDate>Wed, 31 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://coollllllll.github.io/p/java-3/</guid>
+      <description>Java 反序列化-3 背景 Commons Collections Apache Commons是 Apache 软件基金会的项目，曾经隶属于 Jakarta 项目。Commons 的目的是提供可重用的、解决各种实际的通用问题且开</description>
+    </item>
+    
     <item>
       <title>java 反序列化-1</title>
       <link>https://coollllllll.github.io/p/java-1/</link>

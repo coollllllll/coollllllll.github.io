@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='go!'><title>java 动态加载字节码</title>
+
+<link rel='canonical' href='https://coollllllll.github.io/p/java-4/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='java 动态加载字节码'>
+<meta property='og:description' content='go!'>
+<meta property='og:url' content='https://coollllllll.github.io/p/java-4/'>
+<meta property='og:site_name' content='cOOl &#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2022-08-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-08-31T00:00:00&#43;00:00'/><meta property='og:image' content='https://coollllllll.github.io/p/java-4/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+<meta name="twitter:title" content="java 动态加载字节码">
+<meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://coollllllll.github.io/p/java-4/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
+    <link rel="shortcut icon" href="/temp.ico" />
+
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/java-4/">
+                <img src="/p/java-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg"
+                        srcset="/p/java-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_800x0_resize_q75_box.jpg 800w, /p/java-4/pawel-czerwinski-8uZPynIu-rQ-unsplash_hud7e36f7e20e71be184458283bdae4646_55974_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post java 动态加载字节码" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="background-color: #2a9d8f; color: #fff;">
+                代码审计
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/java-4/">java 动态加载字节码</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        go!
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 31, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h1 id="java-动态加载字节码">Java 动态加载字节码</h1>
+<p>几种常见的动态加载字节码方式。</p>
+<h2 id="何为字节码">何为字节码？</h2>
+<p>狭义上 Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在 .class 文件中。</p>
+<p>更广义一些：<strong>所有能够恢复成一个类并在 JVM 虚拟机里加载的字节序列</strong>都可成为字节码。</p>
+<h2 id="urlclassloader">URLClassLoader</h2>
+<p>ClassLoader 是什么呢？它就是一个“加载器”，告诉 Java 虚拟机如何加载这个类。Java 默认的 ClassLoader 就是根据类名来加载类，这个类名是类完整路径，如 <code>java.lang.Runtime </code>。</p>
+<p>URLClassLoader 实际上是平时默认使用的 AppClassLoader 的父类，所以，解释 URLClassLoader 的工作过程实际上就是在解释默认的 Java 类加载器的工作流程。</p>
+<p>正常情况下，Java 会根据配置项 sun.boot.class.path 和 java.class.path 中列举到的基础路径(这些路径是经过处理后的 java.net.URL 类)来寻找<code>.class</code>文件来加载，而这个基础路径有分为三种情况：</p>
+<ul>
+<li>URL未以斜杠 / 结尾，则认为是一个 JAR 文件，使用 JarLoader 来寻找类，即为在 Jar 包中寻 找<code>.class</code>文件</li>
+<li>URL以斜杠 / 结尾，且协议名是 file ，则使用 FileLoader 来寻找类，即为在本地文件系统中寻 找<code>.class</code>文件</li>
+<li>URL以斜杠 / 结尾，且协议名不是 file ，则使用最基础的 Loader 来寻找类</li>
+</ul>
+<p>也就是说，当使用 http 协议时会用到<code>Loader</code>来寻找类。</p>
+<p><strong>Demo：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">demo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URLClassLoader</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestClassLoader</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">URL</span><span class="o">[]</span> <span class="n">urls</span> <span class="o">=</span> <span class="o">{</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&#34;http://localhost:8000/&#34;</span><span class="o">)};</span>
+        <span class="n">URLClassLoader</span> <span class="n">loader</span> <span class="o">=</span> <span class="n">URLClassLoader</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">urls</span><span class="o">);</span>
+        <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">);</span>
+        <span class="n">c</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><p><strong>Hello 类：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Hello</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;my test~&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 237; 
+			flex-basis: 570px"
+	>
+	<a href="/p/java-4/image-20220905153607246.png" data-size="3071x1293">
+		<img src="/p/java-4/image-20220905153607246.png"
+			width="3071"
+			height="1293"
+			srcset="/p/java-4/image-20220905153607246_hu798ef874338d9f0341b23076783d430e_143683_480x0_resize_box_3.png 480w, /p/java-4/image-20220905153607246_hu798ef874338d9f0341b23076783d430e_143683_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可看到成功请求 HTTP 服务器托管的 class 文件，并加载执行。</p>
+<h2 id="classloaderdefineclass">ClassLoader#defineClass</h2>
+<p>无论是加载远程 class 文件，还是本地 class 或 jar 文件，整个加载过程会经历下列三个方法调用：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 690; 
+			flex-basis: 1656px"
+	>
+	<a href="/p/java-4/image-20220905161301859.png" data-size="1974x286">
+		<img src="/p/java-4/image-20220905161301859.png"
+			width="1974"
+			height="286"
+			srcset="/p/java-4/image-20220905161301859_hu3f73287c7440929f4547ee72e1817387_65146_480x0_resize_box_3.png 480w, /p/java-4/image-20220905161301859_hu3f73287c7440929f4547ee72e1817387_65146_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<ul>
+<li>loadClass 的作用是从已加载的类缓存、父加载器等位置寻找类（这里实际上是双亲委派机 制），在前面没有找到的情况下，执行 findClass</li>
+<li>findClass 的作用是根据基础 URL 指定的方式来加载类的字节码，就比如会在本地文件系统、jar 包或远程 http 服务器上读取字节码，然后交给 defineClass</li>
+<li>defineClass 的作用是处理前面传入的字节码，将其处理成真正的 Java 类</li>
+</ul>
+<p>综上，<code>defineClass</code>决定了如何将一段字节流转变成一个 Java 类，Java 默认的 <code>ClassLoader#defineClass</code>是一个 native 方法，逻辑在 JVM 的 C 语言代码中。</p>
+<p><strong>Demo:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">demo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Base64</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestClassLoader</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">Method</span> <span class="n">defineClass</span> <span class="o">=</span> <span class="n">ClassLoader</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getDeclaredMethod</span><span class="o">(</span><span class="s">&#34;defineClass&#34;</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[].</span><span class="na">class</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">defineClass</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">code</span> <span class="o">=</span> <span class="n">Base64</span><span class="o">.</span><span class="na">getDecoder</span><span class="o">().</span><span class="na">decode</span><span class="o">(</span><span class="s">&#34;yv66vgAAADQAHgoABgAQCQARABIIABMKABQAFQcAFgcAFwEABjxpbml0PgEAAygpVgEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBABJMb2NhbFZhcmlhYmxlVGFibGUBAAR0aGlzAQAHTEhlbGxvOwEAClNvdXJjZUZpbGUBAApIZWxsby5qYXZhDAAHAAgHABgMABkAGgEACG15IHRlc3R+BwAbDAAcAB0BAAVIZWxsbwEAEGphdmEvbGFuZy9PYmplY3QBABBqYXZhL2xhbmcvU3lzdGVtAQADb3V0AQAVTGphdmEvaW8vUHJpbnRTdHJlYW07AQATamF2YS9pby9QcmludFN0cmVhbQEAB3ByaW50bG4BABUoTGphdmEvbGFuZy9TdHJp&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;bmc7KVYAIQAFAAYAAAAAAAEAAQAHAAgAAQAJAAAAPwACAAEAAAANKrcAAbIAAhIDtgAEsQAAAAIACgAAAA4AAwAAAAIABAADAAwABAALAAAADAABAAAADQAMAA0AAAABAA4AAAACAA8=&#34;</span><span class="o">)</span> <span class="o">;</span>
+        <span class="n">Class</span> <span class="n">hello</span> <span class="o">=</span> <span class="o">(</span><span class="n">Class</span><span class="o">)</span><span class="n">defineClass</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">ClassLoader</span><span class="o">.</span><span class="na">getSystemClassLoader</span><span class="o">(),</span> <span class="s">&#34;Hello&#34;</span><span class="o">,</span> <span class="n">code</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">code</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="n">hello</span><span class="o">.</span><span class="na">newInstance</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><blockquote>
+<p>需要注意的是：</p>
+<ul>
+<li>defineClass 被调用的时候，类对象是不会被初始化的，只有这个对象显式地调用其构造 函数，初始化代码才能被执行。而且，即使将初始化代码放在类的 static 块中，在 defineClass 时也无法被直接调用到。所以，如果我们要使用 defineClass 在目标机器上执行任意代码，需要想办法调用构造函数。</li>
+<li><code>ClassLoader#defineClass </code>是一个保护属性，所以我们无法直接在外部访问，不得不使用反射的形式来调用。</li>
+<li>在实际场景中，因为 defineClass 方法作用域是不开放的，所以攻击者很少能直接利用到它，但它却是常用的一个攻击链 TemplatesImpl 的基石。</li>
+</ul>
+</blockquote>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 207; 
+			flex-basis: 497px"
+	>
+	<a href="/p/java-4/image-20220905163653155.png" data-size="2684x1295">
+		<img src="/p/java-4/image-20220905163653155.png"
+			width="2684"
+			height="1295"
+			srcset="/p/java-4/image-20220905163653155_huc756ea0c2ba06bcdc0d0226f5a9e3277_124770_480x0_resize_box_3.png 480w, /p/java-4/image-20220905163653155_huc756ea0c2ba06bcdc0d0226f5a9e3277_124770_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="templatesimpl">TemplatesImpl</h2>
+<p>虽然大部分上层开发者不会直接使用到 defineClass 方法，但是 Java 底层还是有一些类用到了它，这就是 <code>TemplatesImpl</code> 。</p>
+<p><code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl </code>这个类中定义了一个内部类<code>TransletClassLoader </code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">TransletClassLoader</span> <span class="kd">extends</span> <span class="n">ClassLoader</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span><span class="n">Class</span><span class="o">&gt;</span> <span class="n">_loadedExternalExtensionFunctions</span><span class="o">;</span>
+
+         <span class="n">TransletClassLoader</span><span class="o">(</span><span class="n">ClassLoader</span> <span class="n">parent</span><span class="o">)</span> <span class="o">{</span>
+             <span class="kd">super</span><span class="o">(</span><span class="n">parent</span><span class="o">);</span>
+            <span class="n">_loadedExternalExtensionFunctions</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="n">TransletClassLoader</span><span class="o">(</span><span class="n">ClassLoader</span> <span class="n">parent</span><span class="o">,</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Class</span><span class="o">&gt;</span> <span class="n">mapEF</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">parent</span><span class="o">);</span>
+            <span class="n">_loadedExternalExtensionFunctions</span> <span class="o">=</span> <span class="n">mapEF</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">loadClass</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+            <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">ret</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="c1">// The _loadedExternalExtensionFunctions will be empty when the
+</span><span class="c1"></span>            <span class="c1">// SecurityManager is not set and the FSP is turned off
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">_loadedExternalExtensionFunctions</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">_loadedExternalExtensionFunctions</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">loadClass</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">ret</span><span class="o">;</span>
+         <span class="o">}</span>
+
+        <span class="cm">/**
+</span><span class="cm">         * Access to final protected superclass member from outer class.
+</span><span class="cm">         */</span>
+        <span class="n">Class</span> <span class="nf">defineClass</span><span class="o">(</span><span class="kd">final</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">defineClass</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div><p>这个类里重写了 defineClass 方法，并且这里没有显式地声明其定义域。<strong>Java 中默认情况下，如果一个</strong>
+<strong>方法没有显式声明作用域，其作用域为 default</strong>。所以也就是说这里的 defineClass 由其父类的 protected 类型变成了一个 default 类型的方法，可以被类外部调用。</p>
+<p>现在追踪看下如何调用到 defineClass 方法。</p>
+<p>先关注 TemplatesImpl 的 getOutputProperties 方法：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 274; 
+			flex-basis: 658px"
+	>
+	<a href="/p/java-4/image-20220905172154698.png" data-size="895x326">
+		<img src="/p/java-4/image-20220905172154698.png"
+			width="895"
+			height="326"
+			srcset="/p/java-4/image-20220905172154698_hu95283940d68d4a1b6a71af8f380d7127_37191_480x0_resize_box_3.png 480w, /p/java-4/image-20220905172154698_hu95283940d68d4a1b6a71af8f380d7127_37191_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>跟进 <code>newTransformer()</code>：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 175; 
+			flex-basis: 420px"
+	>
+	<a href="/p/java-4/image-20220905172328391.png" data-size="1213x692">
+		<img src="/p/java-4/image-20220905172328391.png"
+			width="1213"
+			height="692"
+			srcset="/p/java-4/image-20220905172328391_hu1a232c0266d45dcdaec4d0fccf2ae6b9_93417_480x0_resize_box_3.png 480w, /p/java-4/image-20220905172328391_hu1a232c0266d45dcdaec4d0fccf2ae6b9_93417_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>发现在 <code>new TransformerImpl</code>对象时会进入到<code>getTransletInstance()</code>中，继续跟进：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 266; 
+			flex-basis: 638px"
+	>
+	<a href="/p/java-4/image-20220905172457536.png" data-size="1192x448">
+		<img src="/p/java-4/image-20220905172457536.png"
+			width="1192"
+			height="448"
+			srcset="/p/java-4/image-20220905172457536_hu7ec06ac0dccff664337559fdbb25d86b_66908_480x0_resize_box_3.png 480w, /p/java-4/image-20220905172457536_hu7ec06ac0dccff664337559fdbb25d86b_66908_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>在<code>getTransletInstance()</code>中，如果在<code>_name</code>不等于 null 且<code>_class</code>等于 null 时会进入到<code>defineTransletClasses()</code>中。继续往下看，打断点发现<code>_transletIndex</code>为 0，也就是说会对<code>_class</code>数组中的第一个类进行实例化，并且会强制转换为<code>AbstractTranslet</code>。</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 202; 
+			flex-basis: 487px"
+	>
+	<a href="/p/java-4/image-20220905172851264.png" data-size="2174x1071">
+		<img src="/p/java-4/image-20220905172851264.png"
+			width="2174"
+			height="1071"
+			srcset="/p/java-4/image-20220905172851264_huc3322388d7bae8e0620cac2d00380ab0_163104_480x0_resize_box_3.png 480w, /p/java-4/image-20220905172851264_huc3322388d7bae8e0620cac2d00380ab0_163104_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>现在问题是<code>_class</code>数组是如何来的？跟进<code>defineTransletClasses()</code>方法：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 175; 
+			flex-basis: 422px"
+	>
+	<a href="/p/java-4/image-20220905173513700.png" data-size="1785x1015">
+		<img src="/p/java-4/image-20220905173513700.png"
+			width="1785"
+			height="1015"
+			srcset="/p/java-4/image-20220905173513700_hub827ca792bcd081bcd9174ea7cc9b926_154303_480x0_resize_box_3.png 480w, /p/java-4/image-20220905173513700_hub827ca792bcd081bcd9174ea7cc9b926_154303_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>发现是通过循环遍历 <code>_bytecodes</code>数组并调用<code>defineClass </code>去加载，最终生成<code>_class</code>数组。需要注意的是：<code>_tfactory</code>不为 null，并且因为加载完类后会强制类型转换为<code>AbstractTranslet</code>，也就是说加载的类必须为<code>AbstractTranslet</code>的子类。</p>
+<p>综上整个调用用链如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">TemplatesImpl</span><span class="err">#</span><span class="n">getOutputProperties</span><span class="o">()</span>
+<span class="n">TemplatesImpl</span><span class="err">#</span><span class="n">newTransformer</span><span class="o">()</span>
+<span class="n">TemplatesImpl</span><span class="err">#</span><span class="n">getTransletInstance</span><span class="o">()</span>
+<span class="n">TemplatesImpl</span><span class="err">#</span><span class="n">defineTransletClasses</span><span class="o">()</span>
+<span class="n">TransletClassLoader</span><span class="err">#</span><span class="n">defineClass</span><span class="o">()</span>
+</code></pre></div><p>构造需要注意：</p>
+<ul>
+<li><code>_bytecodes[]</code>中加载的类需为<code>AbstractTranslet</code>的子类</li>
+<li><code>_name</code>不为 null</li>
+<li><code>_tfactory</code>不为 null</li>
+</ul>
+<p><strong>Demo:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">demo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Field</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Base64</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestClassLoader</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">code</span> <span class="o">=</span> <span class="n">Base64</span><span class="o">.</span><span class="na">getDecoder</span><span class="o">().</span><span class="na">decode</span><span class="o">(</span><span class="s">&#34;yv66vgAAADQALAoABgAdCQAeAB8IACAKACEAIgcAIwcAJAEACXRyYW5zZm9ybQEAcihMY29tL3N1bi&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtbTGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjspVgEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBABJMb2NhbFZhcmlhYmxlVGFibGUBAAR0aGlzAQATTFRlc3RUZW1wbGF0ZXNJbXBsOwEACGRvY3VtZW50AQAtTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007AQAIaGFuZGxlcnMBAEJbTGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjsBAApFeGNlcHRpb25zBwAlAQCmKExjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvRE9NO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL2R0bS9EVE1BeGlzSXRlcmF0b3I7TGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjspVgEACGl0ZXJhdG9yAQA1TGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvZHRtL0RUTUF4aXNJdGVyYXRvcjsBAAdoYW5kbGVyAQBBTGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjsBAAY8aW5pdD4BAAMoKVYBAApTb3VyY2VGaWxlAQAWVGVzdFRlbXBsYXRlc0ltcGwuamF2YQwAGQAaBwAmDAAnACgBABZteSB0ZXN0IFRlbXBsYXRlc0ltcGx+BwApDAAqACsBABFUZXN0VGVtcGxhdGVzSW1wbAEAQGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ydW50aW1lL0Fic3RyYWN0VHJhbnNsZXQBADljb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvVHJhbnNsZXRFeGNlcHRpb24BABBqYXZhL2xhbmcvU3lz&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;dGVtAQADb3V0AQAVTGphdmEvaW8vUHJpbnRTdHJlYW07AQATamF2YS9pby9QcmludFN0cmVhbQEAB3ByaW50bG4BABUoTGphdmEvbGFuZy9TdHJpbmc7KVYAIQAFAAYAAAAAAAMAAQAHAAgAAgAJAAAAPwAAAAMAAAABsQAAAAIACgAAAAYAAQAAAAkACwAAACAAAwAAAAEADAANAAAAAAABAA4ADwABAAAAAQAQABEAAgASAAAABAABABMAAQAHABQAAgAJAAAASQAAAAQAAAABsQAAAAIACgAAAAYAAQAAAAoACwAAACoABAAAAAEADAANAAAAAAABAA4ADwABAAAAAQAVABYAAgAAAAEAFwAYAAMAEgAAAAQAAQATAAEAGQAaAAEACQAAAD8AAgABAAAADSq&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;3AAGyAAISA7YABLEAAAACAAoAAAAOAAMAAAAMAAQADQAMAA4ACwAAAAwAAQAAAA0ADAANAAAAAQAbAAAAAgAc&#34;</span><span class="o">);</span>
+        <span class="n">TemplatesImpl</span> <span class="n">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TemplatesImpl</span><span class="o">();</span>
+        <span class="n">setFieldValue</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="s">&#34;_bytecodes&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[][]</span> <span class="o">{</span><span class="n">code</span><span class="o">});</span>
+        <span class="n">setFieldValue</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="s">&#34;_name&#34;</span><span class="o">,</span> <span class="s">&#34;TestTemplatesImpl&#34;</span><span class="o">);</span>
+        <span class="n">setFieldValue</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="s">&#34;_tfactory&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="n">TransformerFactoryImpl</span><span class="o">());</span>
+        <span class="n">obj</span><span class="o">.</span><span class="na">newTransformer</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setFieldValue</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">,</span> <span class="n">String</span> <span class="n">fieldName</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Field</span> <span class="n">field</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getDeclaredField</span><span class="o">(</span><span class="n">fieldName</span><span class="o">);</span>
+        <span class="n">field</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="n">field</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><p><strong>构造要加载的特殊类：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.DOM</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.TransletException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xml.internal.dtm.DTMAxisIterator</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xml.internal.serializer.SerializationHandler</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestTemplatesImpl</span> <span class="kd">extends</span> <span class="n">AbstractTranslet</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transform</span><span class="o">(</span><span class="n">DOM</span> <span class="n">document</span><span class="o">,</span> <span class="n">SerializationHandler</span><span class="o">[]</span> <span class="n">handlers</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TransletException</span> <span class="o">{}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transform</span><span class="o">(</span><span class="n">DOM</span> <span class="n">document</span><span class="o">,</span> <span class="n">DTMAxisIterator</span> <span class="n">iterator</span><span class="o">,</span> <span class="n">SerializationHandler</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TransletException</span> <span class="o">{}</span>
+    <span class="kd">public</span> <span class="nf">TestTemplatesImpl</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;my test TemplatesImpl~&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><p>结果：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 161; 
+			flex-basis: 388px"
+	>
+	<a href="/p/java-4/image-20220905190253043.png" data-size="2332x1442">
+		<img src="/p/java-4/image-20220905190253043.png"
+			width="2332"
+			height="1442"
+			srcset="/p/java-4/image-20220905190253043_hu5fdaf956b6b9b66ec2c42c5a92f06313_299278_480x0_resize_box_3.png 480w, /p/java-4/image-20220905190253043_hu5fdaf956b6b9b66ec2c42c5a92f06313_299278_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="bcel-classloader">BCEL ClassLoader</h2>
+<p>BCEL 的全名应该是 Apache Commons BCEL，属于 Apache Commons 项目下的一个子项目。BCEL 库提供了一系列用于分析、创建、修改 Java Class 文件的 API。</p>
+<p>与 Commons Collections 相比，其功能不及 CC，但特殊的一点是，它被包含在了原生的 JDK 中<code>com.sun.org.apache.bcel</code>。</p>
+<p>BCEL 这个包中有个类：<code>com.sun.org.apache.bcel.internal.util.ClassLoader</code>，他是一个 ClassLoader，但是他重写了 Java 内置的<code>ClassLoader#loadClass()</code>方法。</p>
+<p>在<code>ClassLoader#loadClass()</code>中，其会判断类名是否是<code>$$BCEL$$</code>开头，如果是的话，将会对这个字符串进行 decode。具体的算法这里就不详述，总之就是加载 BCEL 编码的&quot;字节码&quot;得到相应的类。</p>
+<p>BCEL 提供了两个类 Repository 和 Utility：</p>
+<ul>
+<li>Repository 用于将一个Java Class 先转换成原生字节码，当然也可以直接使用 javac 命令来编译 java 文件生成字节码</li>
+<li>Utility 用于将原生的字节码转换成BCEL格式的字节码</li>
+</ul>
+<p><strong>Demo：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">demo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.classfile.JavaClass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.classfile.Utility</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.Repository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.util.ClassLoder</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestBCEL</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="o">[]</span><span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">JavaClass</span> <span class="n">cls</span> <span class="o">=</span> <span class="n">Repository</span><span class="o">.</span><span class="na">lookupClass</span><span class="o">(</span><span class="n">demo</span><span class="o">.</span><span class="na">Evil</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">code</span> <span class="o">=</span> <span class="n">Utility</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">cls</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">code</span><span class="o">);</span>
+        <span class="k">new</span> <span class="n">ClassLoader</span><span class="o">().</span><span class="na">loadClass</span><span class="o">(</span><span class="s">&#34;$$BCEL$$&#34;</span> <span class="o">+</span> <span class="n">code</span><span class="o">).</span><span class="na">newInstance</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div><p><strong>Evil:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">demo</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Evil</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;calc.exe&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><p>BCEL ClassLoader 在 Fastjson 等漏洞的利用链构造时都有被用到，其实这个类和前面的 TemplatesImpl 都出自于同一个第三方库，Apache Xalan。但在 Java 8u251 的更新中，这个 ClassLoader 被移除。</p>
+<h2 id="参考">参考</h2>
+<p>参考自 phith0n 的文章。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/java-2/">
+        
+        
+            <div class="article-image">
+                <img src="/p/java-2/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post java 反序列化-2"
+                        data-key="java-2" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java 反序列化-2</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/java-3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/java-3/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post java 反序列化-3"
+                        data-key="java-3" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java 反序列化-3</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/p/java-1/">
+        
+        
+            <div class="article-image">
+                <img src="/p/java-1/_hud7e36f7e20e71be184458283bdae4646_55974_23a5d351d2fc2374f952239b6e9c423a.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post java 反序列化-1"
+                        data-key="java-1" 
+                        data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java 反序列化-1</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 cOOl &#39;s blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#何为字节码">何为字节码？</a></li>
+    <li><a href="#urlclassloader">URLClassLoader</a></li>
+    <li><a href="#classloaderdefineclass">ClassLoader#defineClass</a></li>
+    <li><a href="#templatesimpl">TemplatesImpl</a></li>
+    <li><a href="#bcel-classloader">BCEL ClassLoader</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

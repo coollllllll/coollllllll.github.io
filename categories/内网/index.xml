@@ -40,7 +40,7 @@
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://coollllllll.github.io/p/intranet-10/</guid>
-      <description>DCSync 攻击 背景 2015 年 8 月，Benjamin Delpy(神器 Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，</description>
+      <description>DCSync 攻击 背景 2015 年 8 月，Benjamin Delpy(Mimikatz 的作者)和 Vincent Le Toux 发布了新版本的 Mimikatz，新增加了 DCSync 功能。模仿一个域控制器 DC，从真实的域控制器</description>
     </item>
     
     <item>
